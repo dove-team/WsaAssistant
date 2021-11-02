@@ -45,12 +45,12 @@ namespace WSATools
             this.checkedListBox.FormattingEnabled = true;
             this.checkedListBox.Location = new System.Drawing.Point(0, 0);
             this.checkedListBox.Name = "checkedListBox";
-            this.checkedListBox.Size = new System.Drawing.Size(406, 454);
+            this.checkedListBox.Size = new System.Drawing.Size(447, 454);
             this.checkedListBox.TabIndex = 0;
             // 
             // buttonRefresh
             // 
-            this.buttonRefresh.Location = new System.Drawing.Point(166, 472);
+            this.buttonRefresh.Location = new System.Drawing.Point(186, 472);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(75, 28);
             this.buttonRefresh.TabIndex = 1;
@@ -60,7 +60,7 @@ namespace WSATools
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(288, 472);
+            this.buttonCancel.Location = new System.Drawing.Point(308, 472);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 28);
             this.buttonCancel.TabIndex = 2;
@@ -70,7 +70,7 @@ namespace WSATools
             // 
             // buttonInstall
             // 
-            this.buttonInstall.Location = new System.Drawing.Point(44, 472);
+            this.buttonInstall.Location = new System.Drawing.Point(64, 472);
             this.buttonInstall.Name = "buttonInstall";
             this.buttonInstall.Size = new System.Drawing.Size(75, 28);
             this.buttonInstall.TabIndex = 3;
@@ -82,7 +82,7 @@ namespace WSATools
             // 
             this.panelLoading.BackColor = System.Drawing.Color.Transparent;
             this.panelLoading.Controls.Add(this.label1);
-            this.panelLoading.Location = new System.Drawing.Point(103, 156);
+            this.panelLoading.Location = new System.Drawing.Point(123, 156);
             this.panelLoading.Name = "panelLoading";
             this.panelLoading.Size = new System.Drawing.Size(200, 200);
             this.panelLoading.TabIndex = 4;
@@ -100,7 +100,7 @@ namespace WSATools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(406, 512);
+            this.ClientSize = new System.Drawing.Size(447, 512);
             this.Controls.Add(this.panelLoading);
             this.Controls.Add(this.buttonInstall);
             this.Controls.Add(this.buttonCancel);
@@ -112,7 +112,6 @@ namespace WSATools
             this.Name = "WSAList";
             this.ShowInTaskbar = false;
             this.Text = "WSA环境安装";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.WSAList_Load);
             this.panelLoading.ResumeLayout(false);
             this.ResumeLayout(false);

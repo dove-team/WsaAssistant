@@ -8,16 +8,17 @@ namespace WSATools.Libs
 {
     public sealed class WSA
     {
-        public static List<string> PackageList { get; }
+        public static IEnumerable<string> PackageList { get; }
+        private const string WSA_PACKAGE_NAME = "";
         static WSA()
         {
-            PackageList = new List<string> { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
+            PackageList = new [] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
         }
         public static bool Init()
         {
             if (RuntimeInformation.OSDescription.Contains("Windows 11"))
             {
-                MessageBox.Show("提示", "只支持Windows 11系统！", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             int count = 0;
@@ -30,7 +31,7 @@ namespace WSATools.Libs
             }
             if (count < 3)
             {
-                if (MessageBox.Show("提示", "需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)",
+                if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
                     MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                     Command.Instance.Excute("shutdown -r -t 5", out _);
                 return false;
@@ -48,8 +49,25 @@ namespace WSATools.Libs
         }
         public static bool Pepair()
         {
-            using RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
-            return key.GetValueNames().Any(x => x.Contains(""));
+            bool result = false;
+            return result;
+            RegistryKey key = default;
+            try
+            {
+                key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
+                result = key.GetSubKeyNames().Any(x => x.Contains(WSA_PACKAGE_NAME));
+                if (!result)
+                {
+                    key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall");
+                    result = key.GetSubKeyNames().Any(x => x.Contains(WSA_PACKAGE_NAME));
+                }
+            }
+            catch
+            {
+                key?.Close();
+                key?.Dispose();
+            }
+            return result;
         }
     }
 }

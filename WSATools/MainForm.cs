@@ -34,11 +34,13 @@ namespace WSATools
                     }
                     else
                     {
-                        MessageBox.Show("提示", "未安装WSA无法进行操作，程序即将退出！", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("未安装WSA无法进行操作，程序即将退出！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         this.Close();
                     }
                 }
             }
+            else
+                Application.Exit();
             HideLoading();
         }
     }

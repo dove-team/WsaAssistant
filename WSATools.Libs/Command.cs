@@ -25,7 +25,7 @@ namespace WSATools.Libs
         {
             if (!await Adb.Instance.Pepair())
             {
-                MessageBox.Show("错误", "初始化ADB失败！请确保网络通畅！", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("初始化ADB失败！请确保网络通畅！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }

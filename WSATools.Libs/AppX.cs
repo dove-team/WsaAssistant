@@ -34,35 +34,12 @@ namespace WSATools.Libs
                     if (a != null)
                     {
                         var key = a.InnerHtml.ToString();
-                        if (IsSupport(key))
-                        {
-                            var value = a.Attributes["href"].Value;
-                            list.Add(key, value);
-                        }
+                        var value = a.Attributes["href"].Value;
+                        list.Add(key, value);
                     }
                 }
             }
             return list;
-        }
-        private static bool IsSupport(string name)
-        {
-            try
-            {
-                switch (RuntimeInformation.ProcessArchitecture)
-                {
-                    case Architecture.Arm:
-                    case Architecture.Arm64:
-                        return name.IndexOf("arm", StringComparison.CurrentCultureIgnoreCase) > -1;
-                    case Architecture.X64:
-                        return name.IndexOf("x64", StringComparison.CurrentCultureIgnoreCase) > -1;
-                    case Architecture.X86:
-                        return name.IndexOf("x86", StringComparison.CurrentCultureIgnoreCase) > -1;
-                    default:
-                        return true;
-                }
-            }
-            catch { }
-            return true;
         }
         public static async Task<bool> PepairAsync(Dictionary<string, string> urls)
         {
