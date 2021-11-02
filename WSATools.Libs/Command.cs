@@ -121,7 +121,8 @@ namespace WSATools.Libs
                 p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.UseShellExecute = false;
                 p.Start();
-                p.StandardInput.WriteLine($"{cmd}&exit");
+                p.StandardInput.WriteLine(cmd);
+                p.StandardInput.WriteLine("exit");
                 p.StandardInput.AutoFlush = true;
                 message = p.StandardOutput.ReadToEnd();
                 p.WaitForExit();

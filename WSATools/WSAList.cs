@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WSATools.Libs;
@@ -41,12 +42,13 @@ namespace WSATools
             }
             if (await AppX.PepairAsync(urls))
             {
+                StringBuilder shellBuilder = new StringBuilder();
                 foreach (var url in urls)
                 {
-                    string message = string.Empty;
                     var path = Path.Combine(Environment.CurrentDirectory, url.Key);
-                    PS.Excute($"Add-AppxPackage {path} -ForceApplicationShutdown", ref message);
+                    shellBuilder.AppendLine($"Add-AppxPackage {path} -ForceApplicationShutdown");
                 }
+                ExcuteCommand(shellBuilder);
                 DialogResult = DialogResult.OK;
             }
             else
@@ -55,6 +57,17 @@ namespace WSATools
                 MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             HideLoading();
+        }
+        private static void ExcuteCommand(StringBuilder shellBuilder)
+        {
+            Command.Instance.Excute("powershell Set-ExecutionPolicy RemoteSigned",out _);
+            Command.Instance.Excute("powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
+            var file = "install.ps1";
+            if (File.Exists(file))
+                File.Delete(file);
+            File.WriteAllText(file, shellBuilder.ToString());
+            Command.Instance.Excute($"powershell {Path.Combine(Environment.CurrentDirectory, file)}", out _);
+
         }
         private async void buttonRefresh_Click(object sender, EventArgs e)
         {

@@ -16,10 +16,10 @@ namespace WSATools.Libs
         }
         public static bool Init()
         {
-            if (RuntimeInformation.OSDescription.Contains("Windows 11"))
+            if (!RuntimeInformation.OSDescription.Contains("Windows 11"))
             {
-                MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                //MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return false;
             }
             int count = 0;
             foreach (var package in PackageList)

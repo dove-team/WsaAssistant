@@ -13,6 +13,27 @@ namespace WSATools.Libs
 {
     public sealed class AppX
     {
+        private static readonly string[] array;
+        static AppX()
+        {
+            array = new string[2];
+            switch (RuntimeInformation.ProcessArchitecture)
+            {
+                case Architecture.Arm:
+                case Architecture.Arm64:
+                    array[0] = "x86";
+                    array[1] = "x64";
+                    break;
+                case Architecture.X64:
+                    array[0] = "arm";
+                    array[1] = "x86";
+                    break;
+                case Architecture.X86:
+                    array[0] = "arm";
+                    array[1] = "x64";
+                    break;
+            }
+        }
         public static async Task<Dictionary<string, string>> GetFilePath()
         {
             Dictionary<string, string> list = new Dictionary<string, string>();
@@ -28,18 +49,38 @@ namespace WSATools.Libs
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
                 var table = doc.DocumentNode.SelectSingleNode("table");
-                foreach (var tr in table.SelectNodes("tr"))
+                if (table != null)
                 {
-                    var a = tr.SelectSingleNode("td").SelectSingleNode("a");
-                    if (a != null)
+                    foreach (var tr in table.SelectNodes("tr"))
                     {
-                        var key = a.InnerHtml.ToString();
-                        var value = a.Attributes["href"].Value;
-                        list.Add(key, value);
+                        var a = tr.SelectSingleNode("td").SelectSingleNode("a");
+                        if (a != null)
+                        {
+                            var key = a.InnerHtml.ToString();
+                            if (IsSupport(key))
+                            {
+                                var value = a.Attributes["href"].Value;
+                                list.Add(key, value);
+                            }
+                        }
                     }
                 }
             }
             return list;
+        }
+        private static bool IsSupport(string key)
+        {
+            if (key.EndsWith("appx") || key.EndsWith("msixbundle"))
+            {
+                var count = 0;
+                foreach (var type in array)
+                {
+                    if (key.Contains(type))
+                        count++;
+                }
+                return count == 0;
+            }
+            return false;
         }
         public static async Task<bool> PepairAsync(Dictionary<string, string> urls)
         {
