@@ -10,8 +10,19 @@ namespace WSATools
         {
             InitializeComponent();
         }
+        private void ShowLoading()
+        {
+            panelLoading.Visible = true;
+            panelLoading.BringToFront();
+        }
+        private void HideLoading()
+        {
+            panelLoading.Visible = false;
+            panelLoading.SendToBack();
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
+            ShowLoading();
             if (WSA.Init())
             {
                 if (!WSA.Pepair())
@@ -28,6 +39,7 @@ namespace WSATools
                     }
                 }
             }
+            HideLoading();
         }
     }
 }

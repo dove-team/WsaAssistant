@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,14 +34,37 @@ namespace WSATools.Libs
                     if (a != null)
                     {
                         var key = a.InnerHtml.ToString();
-                        var value = a.Attributes["href"].Value;
-                        list.Add(key, value);
+                        if (IsSupport(key))
+                        {
+                            var value = a.Attributes["href"].Value;
+                            list.Add(key, value);
+                        }
                     }
                 }
             }
             return list;
         }
-        public async Task<bool> PepairAsync(Dictionary<string, string> urls)
+        private static bool IsSupport(string name)
+        {
+            try
+            {
+                switch (RuntimeInformation.ProcessArchitecture)
+                {
+                    case Architecture.Arm:
+                    case Architecture.Arm64:
+                        return name.IndexOf("arm", StringComparison.CurrentCultureIgnoreCase) > -1;
+                    case Architecture.X64:
+                        return name.IndexOf("x64", StringComparison.CurrentCultureIgnoreCase) > -1;
+                    case Architecture.X86:
+                        return name.IndexOf("x86", StringComparison.CurrentCultureIgnoreCase) > -1;
+                    default:
+                        return true;
+                }
+            }
+            catch { }
+            return true;
+        }
+        public static async Task<bool> PepairAsync(Dictionary<string, string> urls)
         {
             try
             {

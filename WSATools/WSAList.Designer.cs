@@ -29,9 +29,14 @@ namespace WSATools
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WSAList));
             this.checkedListBox = new System.Windows.Forms.CheckedListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonInstall = new System.Windows.Forms.Button();
+            this.panelLoading = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panelLoading.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkedListBox
@@ -43,33 +48,63 @@ namespace WSATools
             this.checkedListBox.Size = new System.Drawing.Size(406, 454);
             this.checkedListBox.TabIndex = 0;
             // 
-            // button1
+            // buttonRefresh
             // 
-            this.button1.Location = new System.Drawing.Point(62, 472);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 28);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "安装";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonRefresh.Location = new System.Drawing.Point(166, 472);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 28);
+            this.buttonRefresh.TabIndex = 1;
+            this.buttonRefresh.Text = "刷新";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
-            // button2
+            // buttonCancel
             // 
-            this.button2.Location = new System.Drawing.Point(256, 472);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 28);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "取消";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonCancel.Location = new System.Drawing.Point(288, 472);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 28);
+            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.Text = "取消";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // buttonInstall
+            // 
+            this.buttonInstall.Location = new System.Drawing.Point(44, 472);
+            this.buttonInstall.Name = "buttonInstall";
+            this.buttonInstall.Size = new System.Drawing.Size(75, 28);
+            this.buttonInstall.TabIndex = 3;
+            this.buttonInstall.Text = "安装";
+            this.buttonInstall.UseVisualStyleBackColor = true;
+            this.buttonInstall.Click += new System.EventHandler(this.buttonInstall_Click);
+            // 
+            // panelLoading
+            // 
+            this.panelLoading.BackColor = System.Drawing.Color.Transparent;
+            this.panelLoading.Controls.Add(this.label1);
+            this.panelLoading.Location = new System.Drawing.Point(103, 156);
+            this.panelLoading.Name = "panelLoading";
+            this.panelLoading.Size = new System.Drawing.Size(200, 200);
+            this.panelLoading.TabIndex = 4;
+            this.panelLoading.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+            this.label1.Location = new System.Drawing.Point(77, 77);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 46);
+            this.label1.TabIndex = 0;
             // 
             // WSAList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(406, 512);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.panelLoading);
+            this.Controls.Add(this.buttonInstall);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.checkedListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -79,6 +114,7 @@ namespace WSATools
             this.Text = "WSA环境安装";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.WSAList_Load);
+            this.panelLoading.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -86,7 +122,10 @@ namespace WSATools
         #endregion
 
         private System.Windows.Forms.CheckedListBox checkedListBox;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonInstall;
+        private System.Windows.Forms.Panel panelLoading;
+        private System.Windows.Forms.Label label1;
     }
 }
