@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
+using WSATools.Libs;
 
-namespace WSATools.Untils
+namespace WSATools.Libs
 {
     public sealed class Adb
     {
@@ -23,23 +23,12 @@ namespace WSATools.Untils
             {
                 if (!HasBrige)
                 {
-                    HttpClient client = new HttpClient();
-                    using var httpResponse = await client.GetAsync("https://dl.google.com/android/repository/platform-tools-latest-windows.zip");
-                    using var stream = await httpResponse.Content.ReadAsStreamAsync();
+                    var url = "https://dl.google.com/android/repository/platform-tools-latest-windows.zip";
                     var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
-                    if (File.Exists(path))
-                        File.Delete(path);
-                    using var fs = new FileStream(path, FileMode.CreateNew);
-                    var buffer = new byte[4096];
-                    int readLength = 0, length = 0;
-                    while ((length = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                    {
-                        readLength += length;
-                        fs.Write(buffer, 0, length);
-                    }
-                    fs.Close();
-                    fs.Dispose();
-                    return Zipper.UnZip(path, Environment.CurrentDirectory);
+                    if (await Downloader.Create(url, path))
+                        return Zipper.UnZip(path, Environment.CurrentDirectory);
+                    else
+                        return false;
                 }
                 return true;
             }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WSATools.Untils
+namespace WSATools.Libs
 {
     public sealed class Command
     {
@@ -92,6 +91,13 @@ namespace WSATools.Untils
         public bool Disable(string packageName)
         {
             string command = $"adb -s {DeviceCode} shell pm disable-user {packageName}";
+            if (Adb.Instance.ExcuteCommand(command, out string message))
+                return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
+        public bool Install(string packagePath)
+        {
+            string command = $"adb -s{DeviceCode} install {packagePath}";
             if (Adb.Instance.ExcuteCommand(command, out string message))
                 return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
             return false;

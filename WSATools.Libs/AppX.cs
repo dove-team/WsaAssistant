@@ -1,16 +1,18 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WSATools.Untils
+namespace WSATools.Libs
 {
-    public sealed class Request
+    public sealed class AppX
     {
-        public async Task<Dictionary<string, string>> GetFilePath()
+        public static async Task<Dictionary<string, string>> GetFilePath()
         {
             Dictionary<string, string> list = new Dictionary<string, string>();
             var url = "https://store.rg-adguard.net/api/GetFiles";
@@ -28,13 +30,34 @@ namespace WSATools.Untils
                 foreach (var tr in table.SelectNodes("tr"))
                 {
                     var a = tr.SelectSingleNode("td").SelectSingleNode("a");
-                    var key = a.InnerHtml.ToString();
-                    var value = a.Attributes["href"].Value;
-                    list.Add(key, value);
+                    if (a != null)
+                    {
+                        var key = a.InnerHtml.ToString();
+                        var value = a.Attributes["href"].Value;
+                        list.Add(key, value);
+                    }
                 }
             }
             return list;
         }
-
+        public async Task<bool> PepairAsync(Dictionary<string, string> urls)
+        {
+            try
+            {
+                int count = 0, total = urls.Count;
+                foreach (var url in urls)
+                {
+                    var path = Path.Combine(Environment.CurrentDirectory, url.Key);
+                    if (await Downloader.Create(url.Value, path))
+                        count++;
+                }
+                return count == total;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }

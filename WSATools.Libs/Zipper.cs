@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace WSATools.Untils
+namespace WSATools.Libs
 {
     public sealed class Zipper
     {

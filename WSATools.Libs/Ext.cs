@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WSATools.Untils
+namespace WSATools.Libs
 {
     public static class Ext
     {
