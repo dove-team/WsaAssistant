@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -9,10 +7,9 @@ namespace WSATools.Libs
     public sealed class WSA
     {
         public static IEnumerable<string> PackageList { get; }
-        private const string WSA_PACKAGE_NAME = "";
         static WSA()
         {
-            PackageList = new [] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
+            PackageList = new[] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
         }
         public static int Init()
         {
@@ -49,25 +46,8 @@ namespace WSATools.Libs
         }
         public static bool Pepair()
         {
-            bool result = false;
-            return result;
-            RegistryKey key = default;
-            try
-            {
-                key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
-                result = key.GetSubKeyNames().Any(x => x.Contains(WSA_PACKAGE_NAME));
-                if (!result)
-                {
-                    key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall");
-                    result = key.GetSubKeyNames().Any(x => x.Contains(WSA_PACKAGE_NAME));
-                }
-            }
-            catch
-            {
-                key?.Close();
-                key?.Dispose();
-            }
-            return result;
+            Command.Instance.Shell("Get-AppxPackage|findstr 9p3395vx91nr", out string message);
+            return !string.IsNullOrEmpty(message);
         }
     }
 }
