@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace WSATools.Libs
@@ -13,11 +12,6 @@ namespace WSATools.Libs
         }
         public static int Init()
         {
-            if (!RuntimeInformation.OSDescription.Contains("Windows 11"))
-            {
-                MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
             int count = 0;
             foreach (var package in PackageList)
             {
@@ -46,7 +40,7 @@ namespace WSATools.Libs
         }
         public static bool Pepair()
         {
-            Command.Instance.Shell("Get-AppxPackage|findstr 9p3395vx91nr", out string message);
+            Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
             return !string.IsNullOrEmpty(message);
         }
     }

@@ -15,6 +15,7 @@ namespace WSATools
         public WSAList()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
         private void ShowLoading()
         {
@@ -26,9 +27,9 @@ namespace WSATools
             panelLoading.Visible = false;
             panelLoading.SendToBack();
         }
-        private async void WSAList_Load(object sender, EventArgs e)
+        private void WSAList_Load(object sender, EventArgs e)
         {
-            await GetList();
+            GetList();
         }
         private async void buttonInstall_Click(object sender, EventArgs e)
         {
@@ -67,24 +68,27 @@ namespace WSATools
             File.WriteAllText(file, shellBuilder.ToString());
             Command.Instance.Shell(Path.Combine(Environment.CurrentDirectory, file), out _);
         }
-        private async void buttonRefresh_Click(object sender, EventArgs e)
+        private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            await GetList();
+            GetList();
         }
-        private async Task GetList()
+        private void GetList()
         {
             ShowLoading();
-            if (List == null || List.Count == 0)
-                List = await AppX.GetFilePath();
-            if (List != null && List.Count > 0)
+            Task.Factory.StartNew(async () =>
             {
-                var names = List.Select(x => x.Key).ToArray();
-                checkedListBox.Items.AddRange(names);
-            }
-            else
-            {
-                MessageBox.Show("获取WSA环境包失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                if (List == null || List.Count == 0)
+                    List = await AppX.GetFilePath();
+                if (List != null && List.Count > 0)
+                {
+                    var names = List.Select(x => x.Key).ToArray();
+                    checkedListBox.Items.AddRange(names);
+                }
+                else
+                {
+                    MessageBox.Show("获取WSA环境包失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            });
             HideLoading();
         }
         private void buttonCancel_Click(object sender, EventArgs e)
