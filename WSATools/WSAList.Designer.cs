@@ -110,8 +110,8 @@ namespace WSATools
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WSAList";
-            this.ShowInTaskbar = false;
             this.Text = "WSA环境安装";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WSAList_FormClosing);
             this.Load += new System.EventHandler(this.WSAList_Load);
             this.panelLoading.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -23,10 +23,13 @@ namespace WSATools
         private void MainForm_Load(object sender, EventArgs e)
         {
             ShowLoading();
-            if (WSA.Init())
+            var idx = WSA.Init();
+            if (idx == 1)
             {
+                label4.Text = "已安装";
                 if (!WSA.Pepair())
                 {
+                    label5.Text = "未安装";
                     WSAList list = new WSAList();
                     if (list.ShowDialog(this) == DialogResult.OK)
                     {
@@ -38,9 +41,13 @@ namespace WSATools
                         this.Close();
                     }
                 }
+                else
+                    label5.Text = "已安装";
             }
-            else
+            else if (idx == -1)
                 Application.Exit();
+            else
+                label4.Text = "未安装";
             HideLoading();
         }
     }

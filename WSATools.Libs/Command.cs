@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Management.Automation.Runspaces;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -109,24 +110,47 @@ namespace WSATools.Libs
                 return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
             return false;
         }
+        public bool Shell(string cmd, out string message)
+        {
+            try
+            {
+                var process = new Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.FileName = @"powershell.exe";
+                process.StartInfo.Arguments = cmd;
+                process.Start();
+                message = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+                process.Close();
+                process.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
+            return false;
+        }
         public bool Excute(string cmd, out string message)
         {
             try
             {
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.UseShellExecute = false;
-                p.Start();
-                p.StandardInput.WriteLine(cmd);
-                p.StandardInput.WriteLine("exit");
-                p.StandardInput.AutoFlush = true;
-                message = p.StandardOutput.ReadToEnd();
-                p.WaitForExit();
-                p.Close();
+                Process process = new Process();
+                process.StartInfo.FileName = "cmd.exe";
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+                process.StandardInput.WriteLine(cmd);
+                process.StandardInput.WriteLine("exit");
+                process.StandardInput.AutoFlush = true;
+                message = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+                process.Close();
+                process.Dispose();
                 return true;
             }
             catch (Exception ex)

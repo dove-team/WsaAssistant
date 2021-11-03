@@ -14,12 +14,12 @@ namespace WSATools.Libs
         {
             PackageList = new [] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
         }
-        public static bool Init()
+        public static int Init()
         {
             if (!RuntimeInformation.OSDescription.Contains("Windows 11"))
             {
-                //MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return false;
+                MessageBox.Show("只支持Windows 11系统！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1;
             }
             int count = 0;
             foreach (var package in PackageList)
@@ -34,9 +34,9 @@ namespace WSATools.Libs
                 if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
                     MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                     Command.Instance.Excute("shutdown -r -t 5", out _);
-                return false;
+                return 0;
             }
-            return true;
+            return 1;
         }
         private static void Install(string packageName)
         {

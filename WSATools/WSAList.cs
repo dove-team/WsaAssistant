@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -60,14 +59,13 @@ namespace WSATools
         }
         private static void ExcuteCommand(StringBuilder shellBuilder)
         {
-            Command.Instance.Excute("powershell Set-ExecutionPolicy RemoteSigned",out _);
-            Command.Instance.Excute("powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
+            Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
+            Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
             var file = "install.ps1";
             if (File.Exists(file))
                 File.Delete(file);
             File.WriteAllText(file, shellBuilder.ToString());
-            Command.Instance.Excute($"powershell {Path.Combine(Environment.CurrentDirectory, file)}", out _);
-
+            Command.Instance.Shell(Path.Combine(Environment.CurrentDirectory, file), out _);
         }
         private async void buttonRefresh_Click(object sender, EventArgs e)
         {
@@ -93,6 +91,10 @@ namespace WSATools
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+        private void WSAList_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
         }
     }
 }
