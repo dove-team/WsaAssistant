@@ -33,12 +33,18 @@ namespace WSATools
             this.panelLoading = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.panelLoading.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -63,6 +69,12 @@ namespace WSATools
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button6);
+            this.panel1.Controls.Add(this.button5);
+            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.listView1);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label3);
@@ -75,12 +87,41 @@ namespace WSATools
             this.panel1.Size = new System.Drawing.Size(704, 468);
             this.panel1.TabIndex = 6;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.DarkRed;
+            this.label6.Location = new System.Drawing.Point(484, 30);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(202, 17);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "可能由于Github源的原因初始化失败";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(369, 23);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(109, 30);
+            this.button3.TabIndex = 3;
+            this.button3.Text = "安装ApkInstall";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // listView1
+            // 
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(33, 119);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(395, 337);
+            this.listView1.TabIndex = 2;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            // 
             // button2
             // 
             this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(238, 72);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(92, 29);
+            this.button2.Size = new System.Drawing.Size(92, 30);
             this.button2.TabIndex = 1;
             this.button2.Text = "检测并安装";
             this.button2.UseVisualStyleBackColor = true;
@@ -91,7 +132,7 @@ namespace WSATools
             this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(238, 24);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 29);
+            this.button1.Size = new System.Drawing.Size(92, 30);
             this.button1.TabIndex = 1;
             this.button1.Text = "检测并安装";
             this.button1.UseVisualStyleBackColor = true;
@@ -109,6 +150,7 @@ namespace WSATools
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.DarkRed;
             this.label5.Location = new System.Drawing.Point(157, 78);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(44, 17);
@@ -118,6 +160,7 @@ namespace WSATools
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.DarkRed;
             this.label4.Location = new System.Drawing.Point(157, 30);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(44, 17);
@@ -132,6 +175,36 @@ namespace WSATools
             this.label2.Size = new System.Drawing.Size(118, 17);
             this.label2.TabIndex = 0;
             this.label2.Text = "windows依赖状态：";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(473, 119);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 30);
+            this.button4.TabIndex = 5;
+            this.button4.Text = "安装";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(473, 175);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 30);
+            this.button5.TabIndex = 5;
+            this.button5.Text = "卸载";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(473, 227);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 30);
+            this.button6.TabIndex = 5;
+            this.button6.Text = "降级";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // MainForm
             // 
@@ -163,6 +236,12 @@ namespace WSATools
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button4;
     }
 }
 

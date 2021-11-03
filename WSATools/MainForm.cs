@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WSATools.Libs;
@@ -59,6 +60,7 @@ namespace WSATools
                     {
                         label5.Text = "已安装";
                         button2.Enabled = false;
+                        LoadApks();
                         MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
@@ -81,6 +83,10 @@ namespace WSATools
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+        private void LoadApks()
+        {
+
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             ShowLoading();
@@ -92,6 +98,40 @@ namespace WSATools
             ShowLoading();
             Task.Factory.StartNew(InitWSA);
             HideLoading();
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
+                targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
+                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.0/APKInstaller.zip", path)
+                && Zipper.UnZip(path, targetDirectory))
+                {
+                    Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
+                    Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
+                    var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
+                    File.Delete(path);
+                    Directory.Delete(targetDirectory, true);
+                    MessageBox.Show(msg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            });
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void button6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
