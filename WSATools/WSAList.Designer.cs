@@ -107,6 +107,7 @@ namespace WSATools
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.checkedListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "WSAList";

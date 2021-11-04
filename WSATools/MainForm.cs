@@ -25,9 +25,12 @@ namespace WSATools
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            ShowLoading();
-            Task.Factory.StartNew(InitVM);
-            HideLoading();
+            Task.Factory.StartNew(() =>
+            {
+                ShowLoading();
+                InitVM();
+                HideLoading();
+            });
         }
         private void InitVM()
         {
@@ -60,7 +63,7 @@ namespace WSATools
                     {
                         label5.Text = "已安装";
                         button2.Enabled = false;
-                        LoadApks();
+                        LinkWSA();
                         MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
@@ -83,21 +86,23 @@ namespace WSATools
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-        private void LoadApks()
-        {
-
-        }
         private void button1_Click(object sender, EventArgs e)
         {
-            ShowLoading();
-            Task.Factory.StartNew(InitVM);
-            HideLoading();
+            Task.Factory.StartNew(() =>
+            {
+                ShowLoading();
+                InitVM();
+                HideLoading();
+            });
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            ShowLoading();
-            Task.Factory.StartNew(InitWSA);
-            HideLoading();
+            Task.Factory.StartNew(() =>
+            {
+                ShowLoading();
+                InitWSA();
+                HideLoading();
+            });
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -120,21 +125,77 @@ namespace WSATools
                 }
             });
         }
+        private void LinkWSA(string condition = "")
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                ShowLoading();
+                if (await Adb.Instance.Pepair())
+                {
+                    Adb.Instance.Reload();
+                    var list = Adb.Instance.GetAll(condition);
+                    listView1.BeginUpdate();
+                    listView1.Items.Clear();
+                    foreach (var item in list)
+                        listView1.Items.Add(item);
+                    listView1.EndUpdate();
+                }
+                else
+                {
+                    MessageBox.Show("初始化ADB环境失败，请稍后重试！或者直接使用APKInstall进行管理！", "提示",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                HideLoading();
+            });
+        }
         private void button4_Click(object sender, EventArgs e)
         {
-
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (Adb.Instance.Install(openFileDialog1.FileName))
+                {
+                    MessageBox.Show("安装成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LinkWSA();
+                }
+                else
+                    MessageBox.Show("安装失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void button5_Click(object sender, EventArgs e)
         {
-
+            if (listView1.SelectedItems.Count > 0)
+            {
+                var packageName = listView1.SelectedItems[0].ToString();
+                if (Adb.Instance.Remove(packageName))
+                {
+                    MessageBox.Show("卸载成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LinkWSA();
+                }
+                else
+                    MessageBox.Show("卸载失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void button6_Click(object sender, EventArgs e)
         {
-
+            if (listView1.SelectedItems.Count > 0 && openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (Adb.Instance.Downgrade(openFileDialog1.FileName))
+                    MessageBox.Show("降级安装成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show("降级安装失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void button7_Click(object sender, EventArgs e)
+        {
+            LinkWSA();
+        }
+        private void button8_Click(object sender, EventArgs e)
+        {
+            LinkWSA(textBox1.Text);
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question)== DialogResult.Yes)
+            if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Downloader.Clear();
         }
     }

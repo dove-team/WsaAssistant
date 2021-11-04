@@ -31,7 +31,8 @@ namespace WSATools.Libs
         }
         private static void Install(string packageName)
         {
-            Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out _);
+            Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out string message);
+            LogManager.Instance.LogInfo("Install WSA:" + message);
         }
         private static bool Check(string packageName)
         {
@@ -42,6 +43,7 @@ namespace WSATools.Libs
         public static bool Pepair()
         {
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+            LogManager.Instance.LogInfo("Pepair WSA:" + message);
             return !string.IsNullOrEmpty(message);
         }
     }

@@ -45,6 +45,11 @@ namespace WSATools
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.button7 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.panelLoading.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +74,11 @@ namespace WSATools
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.button7);
             this.panel1.Controls.Add(this.button6);
+            this.panel1.Controls.Add(this.button8);
             this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.label6);
@@ -89,7 +98,7 @@ namespace WSATools
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(473, 227);
+            this.button6.Location = new System.Drawing.Point(458, 244);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 30);
             this.button6.TabIndex = 5;
@@ -99,7 +108,7 @@ namespace WSATools
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(473, 175);
+            this.button5.Location = new System.Drawing.Point(589, 200);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 30);
             this.button5.TabIndex = 5;
@@ -109,7 +118,7 @@ namespace WSATools
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(473, 119);
+            this.button4.Location = new System.Drawing.Point(458, 200);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 30);
             this.button4.TabIndex = 5;
@@ -141,6 +150,7 @@ namespace WSATools
             // 
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(33, 119);
+            this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(395, 337);
             this.listView1.TabIndex = 2;
@@ -206,6 +216,47 @@ namespace WSATools
             this.label2.TabIndex = 0;
             this.label2.Text = "windows依赖状态：";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "APK文件|*.apk";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(589, 244);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 30);
+            this.button7.TabIndex = 5;
+            this.button7.Text = "刷新";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(458, 138);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(121, 23);
+            this.textBox1.TabIndex = 6;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(602, 134);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(62, 30);
+            this.button8.TabIndex = 5;
+            this.button8.Text = "查询";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(458, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(56, 17);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "搜索包：";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -214,6 +265,7 @@ namespace WSATools
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelLoading);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "WSA助手";
@@ -243,6 +295,11 @@ namespace WSATools
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Label label7;
     }
 }
 

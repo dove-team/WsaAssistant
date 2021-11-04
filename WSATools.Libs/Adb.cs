@@ -1,15 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using WSATools.Libs;
 
 namespace WSATools.Libs
 {
     public sealed class Adb
     {
-        public string AdbRoot { get; }
-        public string AdbLocation { get; }
+        private string AdbRoot { get; }
+        private string AdbLocation { get; }
+        private string deviceCode;
+        public string DeviceCode
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(deviceCode))
+                {
+                    ExcuteCommand("adb connect 127.0.0.1:58526", out _);
+                    Thread.Sleep(200);
+                    if (ExcuteCommand("adb devices", out string message))
+                    {
+                        var lines = message.Substring("List of devices attached");
+                        var device = lines.Split("\r\n").FirstOrDefault(x => x.Contains("172."));
+                        if (device != null)
+                            deviceCode = device.Split('\t').FirstOrDefault();
+                    }
+                }
+                return deviceCode;
+            }
+        }
         public bool HasBrige => File.Exists(AdbLocation);
         public static Adb Instance { get; } = new Adb();
         private Adb()
@@ -48,25 +70,53 @@ namespace WSATools.Libs
             ExcuteCommand("adb devices", out string message);
             return message;
         }
+        public List<string> GetAll(string condition = "")
+        {
+            List<string> packages = new List<string>();
+            string command = string.IsNullOrEmpty(condition) ? $"adb -s {DeviceCode} shell pm list packages" :
+                $"adb -s {DeviceCode} shell pm list packages|grep {condition}";
+            if (ExcuteCommand(command, out string message))
+            {
+                var lines = message.Substring($"{command}&exit");
+                foreach (var item in lines.Split("\r\n"))
+                {
+                    if (!string.IsNullOrEmpty(item))
+                        packages.Add(item.Split(':').LastOrDefault());
+                }
+            }
+            return packages.OrderBy(x => x).ToList();
+        }
+        public bool Install(string packagePath)
+        {
+            string command = $"adb -s{DeviceCode} install {packagePath}";
+            if (ExcuteCommand(command, out string message))
+                return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
+        public bool Downgrade(string packagePath)
+        {
+            string command = $"adb -s{DeviceCode} -r -d install {packagePath}";
+            if (ExcuteCommand(command, out string message))
+                return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
+        public bool Remove(string packageName)
+        {
+            string command = $"adb -s {DeviceCode} shell pm uninstall --user 0 {packageName}";
+            if (ExcuteCommand(command, out string message))
+                return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
+            return false;
+        }
         public bool ExcuteCommand(string cmd, out string message)
         {
             try
             {
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.UseShellExecute = false;
-                p.Start();
-                p.StandardInput.WriteLine($"cd \"{AdbRoot}\"");
-                p.StandardInput.WriteLine($"{cmd}&exit");
-                p.StandardInput.AutoFlush = true;
-                message = p.StandardOutput.ReadToEnd();
-                p.WaitForExit();
-                p.Close();
-                return true;
+                List<string> cmds = new List<string>
+                {
+                    $"cd \"{AdbRoot}\"",
+                    cmd
+                };
+                return Command.Instance.Excute(cmds, out message);
             }
             catch (Exception ex)
             {

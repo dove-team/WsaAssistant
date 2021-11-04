@@ -48,13 +48,5 @@ namespace WSATools.Libs
             }
             catch { }
         }
-        public void LogInfo(string messageTemplate, params object[] propertyValues)
-        {
-            try
-            {
-                Logger.Information(messageTemplate, propertyValues);
-            }
-            catch { }
-        }
     }
 }
