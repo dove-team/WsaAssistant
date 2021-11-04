@@ -33,7 +33,11 @@ namespace WSATools
             this.panelLoading = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -46,10 +50,7 @@ namespace WSATools
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button7 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.panelLoading.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -74,6 +75,7 @@ namespace WSATools
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Controls.Add(this.button7);
@@ -96,6 +98,32 @@ namespace WSATools
             this.panel1.Size = new System.Drawing.Size(704, 468);
             this.panel1.TabIndex = 6;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(458, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(56, 17);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "搜索包：";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(458, 138);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(121, 23);
+            this.textBox1.TabIndex = 6;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(589, 244);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 30);
+            this.button7.TabIndex = 5;
+            this.button7.Text = "刷新";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // button6
             // 
             this.button6.Location = new System.Drawing.Point(458, 244);
@@ -105,6 +133,16 @@ namespace WSATools
             this.button6.Text = "降级";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(602, 134);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(62, 30);
+            this.button8.TabIndex = 5;
+            this.button8.Text = "查询";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button5
             // 
@@ -221,41 +259,15 @@ namespace WSATools
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "APK文件|*.apk";
             // 
-            // button7
+            // label8
             // 
-            this.button7.Location = new System.Drawing.Point(589, 244);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 30);
-            this.button7.TabIndex = 5;
-            this.button7.Text = "刷新";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(458, 138);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 23);
-            this.textBox1.TabIndex = 6;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(602, 134);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(62, 30);
-            this.button8.TabIndex = 5;
-            this.button8.Text = "查询";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(458, 106);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 17);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "搜索包：";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(490, 56);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(86, 17);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "下载进度：0%";
+            this.label8.Visible = false;
             // 
             // MainForm
             // 
@@ -300,6 +312,7 @@ namespace WSATools
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
     }
 }
 

@@ -17,6 +17,10 @@ namespace WSATools
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
         }
+        private void Downloader_ProcessChange(int receiveSize, long totalSize)
+        {
+            label2.Text = $"下载进度：{receiveSize / totalSize * 100}%";
+        }
         private void ShowLoading()
         {
             panelLoading.Visible = true;
@@ -30,19 +34,24 @@ namespace WSATools
         private void WSAList_Load(object sender, EventArgs e)
         {
             DialogResult = DialogResult.None;
+            Downloader.ProcessChange += Downloader_ProcessChange;
             GetList();
         }
         private async void buttonInstall_Click(object sender, EventArgs e)
         {
             ShowLoading();
+            textBox1.ReadOnly = true;
             Dictionary<string, string> urls = new Dictionary<string, string>();
             foreach (var item in checkedListBox.CheckedItems)
             {
                 var url = List.FirstOrDefault(x => x.Key == item.ToString());
                 urls.Add(url.Key, url.Value);
             }
-            if (await AppX.PepairAsync(urls))
+            label2.Visible = true;
+            var timeout = int.Parse(textBox1.Text);
+            if (await AppX.PepairAsync(urls, timeout))
             {
+                label2.Visible = false;
                 StringBuilder shellBuilder = new StringBuilder();
                 foreach (var url in urls)
                 {
@@ -54,9 +63,11 @@ namespace WSATools
             }
             else
             {
+                label2.Visible = false;
                 DialogResult = DialogResult.Cancel;
                 MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            textBox1.ReadOnly = false;
             HideLoading();
         }
         private static void ExcuteCommand(StringBuilder shellBuilder)
@@ -67,7 +78,9 @@ namespace WSATools
             if (File.Exists(file))
                 File.Delete(file);
             File.WriteAllText(file, shellBuilder.ToString());
-            Command.Instance.Shell(Path.Combine(Environment.CurrentDirectory, file), out _);
+            var shellFile = Path.Combine(Environment.CurrentDirectory, file);
+            Command.Instance.Shell(shellFile, out _);
+            File.Delete(shellFile);
         }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
@@ -99,7 +112,13 @@ namespace WSATools
         }
         private void WSAList_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Downloader.ProcessChange -= Downloader_ProcessChange;
             e.Cancel = DialogResult == DialogResult.None;
+        }
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 8 && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
         }
     }
 }

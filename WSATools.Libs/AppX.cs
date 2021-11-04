@@ -81,7 +81,7 @@ namespace WSATools.Libs
             }
             return false;
         }
-        public static async Task<bool> PepairAsync(Dictionary<string, string> urls)
+        public static async Task<bool> PepairAsync(Dictionary<string, string> urls, int timeout)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace WSATools.Libs
                 foreach (var url in urls)
                 {
                     var path = Path.Combine(Environment.CurrentDirectory, url.Key);
-                    if (await Downloader.Create(url.Value, path))
+                    if (await Downloader.Create(url.Value, path, timeout))
                         count++;
                 }
                 return count == total;

@@ -25,12 +25,17 @@ namespace WSATools
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Downloader.ProcessChange += Downloader_ProcessChange;
             Task.Factory.StartNew(() =>
             {
                 ShowLoading();
                 InitVM();
                 HideLoading();
             });
+        }
+        private void Downloader_ProcessChange(int receiveSize, long totalSize)
+        {
+            label8.Text = $"下载进度：{receiveSize / totalSize * 100}%";
         }
         private void InitVM()
         {
@@ -108,11 +113,14 @@ namespace WSATools
         {
             Task.Factory.StartNew(async () =>
             {
+                button3.Enabled = false;
                 string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
                 targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
-                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.0/APKInstaller.zip", path)
+                label8.Visible = true;
+                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.0/APKInstaller.zip", path, 60)
                 && Zipper.UnZip(path, targetDirectory))
                 {
+                    label8.Visible = false;
                     Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
                     Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
                     var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
@@ -121,8 +129,10 @@ namespace WSATools
                 }
                 else
                 {
+                    label8.Visible = false;
                     MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                button3.Enabled = true;
             });
         }
         private void LinkWSA(string condition = "")
@@ -195,6 +205,7 @@ namespace WSATools
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Downloader.ProcessChange -= Downloader_ProcessChange;
             if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Downloader.Clear();
         }

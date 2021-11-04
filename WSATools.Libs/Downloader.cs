@@ -3,32 +3,41 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace WSATools.Libs
 {
     public sealed class Downloader
     {
+        public static event ProgressHandler ProcessChange;
+        public delegate void ProgressHandler(int receiveSize, long totalSize);
         private static readonly List<string> array = new List<string>();
-        public static async Task<bool> Create(string url, string path)
+        public static async Task<bool> Create(string url, string path, int timeout = 30)
         {
             try
             {
                 DateTime startTime = DateTime.UtcNow;
                 WebRequest request = WebRequest.Create(url);
                 WebResponse response = request.GetResponse();
-                if (File.Exists(path))
+                if (File.Exists(path) && DialogResult.Yes == MessageBox.Show($"已存在文件{Path.GetFileName(path)},是否重新下载？",
+                    "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                     File.Delete(path);
                 using Stream responseStream = response.GetResponseStream();
                 using Stream fileStream = new FileStream(path, FileMode.CreateNew);
                 byte[] buffer = new byte[20480];
+                int sumSchedule = 0;
                 int bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
                 while (bytesRead > 0)
                 {
                     fileStream.Write(buffer, 0, bytesRead);
                     DateTime nowTime = DateTime.UtcNow;
-                    if ((nowTime - startTime).TotalMinutes > 30)
+                    if ((nowTime - startTime).TotalMinutes > timeout)
                         return false;
                     bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
+                    sumSchedule += 20480;
+                    ProcessChange?.Invoke(sumSchedule, responseStream.Length);
+                    Thread.Sleep(2);
                 }
                 array.Add(path);
                 return true;

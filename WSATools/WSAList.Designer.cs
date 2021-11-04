@@ -35,7 +35,10 @@ namespace WSATools
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonInstall = new System.Windows.Forms.Button();
             this.panelLoading = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.panelLoading.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +53,7 @@ namespace WSATools
             // 
             // buttonRefresh
             // 
-            this.buttonRefresh.Location = new System.Drawing.Point(186, 472);
+            this.buttonRefresh.Location = new System.Drawing.Point(261, 469);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(75, 28);
             this.buttonRefresh.TabIndex = 1;
@@ -60,7 +63,7 @@ namespace WSATools
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(308, 472);
+            this.buttonCancel.Location = new System.Drawing.Point(342, 469);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 28);
             this.buttonCancel.TabIndex = 2;
@@ -70,7 +73,7 @@ namespace WSATools
             // 
             // buttonInstall
             // 
-            this.buttonInstall.Location = new System.Drawing.Point(64, 472);
+            this.buttonInstall.Location = new System.Drawing.Point(180, 469);
             this.buttonInstall.Name = "buttonInstall";
             this.buttonInstall.Size = new System.Drawing.Size(75, 28);
             this.buttonInstall.TabIndex = 3;
@@ -81,12 +84,23 @@ namespace WSATools
             // panelLoading
             // 
             this.panelLoading.BackColor = System.Drawing.Color.Transparent;
+            this.panelLoading.Controls.Add(this.label2);
             this.panelLoading.Controls.Add(this.label1);
             this.panelLoading.Location = new System.Drawing.Point(123, 156);
             this.panelLoading.Name = "panelLoading";
             this.panelLoading.Size = new System.Drawing.Size(200, 200);
             this.panelLoading.TabIndex = 4;
             this.panelLoading.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(57, 138);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 17);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "下载进度：0%";
+            this.label2.Visible = false;
             // 
             // label1
             // 
@@ -96,11 +110,31 @@ namespace WSATools
             this.label1.Size = new System.Drawing.Size(46, 46);
             this.label1.TabIndex = 0;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(126, 472);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(43, 23);
+            this.textBox1.TabIndex = 5;
+            this.textBox1.Text = "30";
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 475);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(116, 17);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "超时时间（分钟）：";
+            // 
             // WSAList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(447, 512);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.panelLoading);
             this.Controls.Add(this.buttonInstall);
             this.Controls.Add(this.buttonCancel);
@@ -115,7 +149,9 @@ namespace WSATools
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WSAList_FormClosing);
             this.Load += new System.EventHandler(this.WSAList_Load);
             this.panelLoading.ResumeLayout(false);
+            this.panelLoading.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -127,5 +163,8 @@ namespace WSATools
         private System.Windows.Forms.Button buttonInstall;
         private System.Windows.Forms.Panel panelLoading;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label3;
     }
 }
