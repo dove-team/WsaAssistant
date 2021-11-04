@@ -2,11 +2,13 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WSATools.Libs
 {
     public sealed class Downloader
     {
+        private static readonly List<string> array = new List<string>();
         public static async Task<bool> Create(string url, string path)
         {
             try
@@ -28,12 +30,21 @@ namespace WSATools.Libs
                         return false;
                     bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
                 }
+                array.Add(path);
                 return true;
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("Create", ex);
                 return false;
+            }
+        }
+        public static void Clear()
+        {
+            foreach (var path in array)
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
             }
         }
     }

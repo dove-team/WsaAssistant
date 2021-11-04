@@ -43,15 +43,13 @@ namespace WSATools
             }
             if (await AppX.PepairAsync(urls))
             {
-                List<string> paths = new List<string>();
                 StringBuilder shellBuilder = new StringBuilder();
                 foreach (var url in urls)
                 {
                     var path = Path.Combine(Environment.CurrentDirectory, url.Key);
-                    paths.Add(path);
                     shellBuilder.AppendLine($"Add-AppxPackage {path} -ForceApplicationShutdown");
                 }
-                ExcuteCommand(shellBuilder, paths);
+                ExcuteCommand(shellBuilder);
                 DialogResult = DialogResult.OK;
             }
             else
@@ -61,7 +59,7 @@ namespace WSATools
             }
             HideLoading();
         }
-        private static void ExcuteCommand(StringBuilder shellBuilder, List<string> paths)
+        private static void ExcuteCommand(StringBuilder shellBuilder)
         {
             Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
             Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
@@ -70,8 +68,6 @@ namespace WSATools
                 File.Delete(file);
             File.WriteAllText(file, shellBuilder.ToString());
             Command.Instance.Shell(Path.Combine(Environment.CurrentDirectory, file), out _);
-            foreach (var path in paths)
-                File.Delete(path);
         }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {

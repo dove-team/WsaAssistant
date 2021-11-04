@@ -111,7 +111,6 @@ namespace WSATools
                     Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
                     Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
                     var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
-                    File.Delete(path);
                     Directory.Delete(targetDirectory, true);
                     MessageBox.Show(msg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -132,6 +131,11 @@ namespace WSATools
         private void button6_Click(object sender, EventArgs e)
         {
 
+        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question)== DialogResult.Yes)
+                Downloader.Clear();
         }
     }
 }
