@@ -36,7 +36,8 @@ namespace WSATools.Libs
         private static bool Check(string packageName)
         {
             Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
-            return message.Contains("状态 : 已启用");
+            LogManager.Instance.LogInfo("Check VM:" + message);
+            return message.Before("状态", "已启用");
         }
         public static bool Pepair()
         {

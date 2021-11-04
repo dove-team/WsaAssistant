@@ -1,7 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -38,7 +37,7 @@ namespace WSATools.Libs
         {
             Dictionary<string, string> list = new Dictionary<string, string>();
             var url = "https://store.rg-adguard.net/api/GetFiles";
-            var content = "type=ProductId&url=9p3395vx91nr&ring=WIF&lang=zh-CN";
+            var content = "type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN";
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             HttpClient httpClient = new HttpClient(handler);
             var stringContent = new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded");
@@ -97,7 +96,7 @@ namespace WSATools.Libs
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogManager.Instance.LogError("PepairAsync", ex);
                 return false;
             }
         }

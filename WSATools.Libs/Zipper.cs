@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace WSATools.Libs
@@ -18,7 +17,7 @@ namespace WSATools.Libs
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogManager.Instance.LogError("UnZip", ex);
             }
             return false;
         }

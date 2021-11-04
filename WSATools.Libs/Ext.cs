@@ -4,6 +4,14 @@ namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static bool Before(this string str, string start, string end)
+        {
+            var startIndex = str.IndexOf(start);
+            var endIndex = str.IndexOf(end);
+            if (startIndex != -1)
+                return startIndex < endIndex;
+            return false;
+        }
         public static long ToInt64(this string chars)
         {
             try

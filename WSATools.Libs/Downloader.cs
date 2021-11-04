@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace WSATools.Libs
@@ -12,26 +11,28 @@ namespace WSATools.Libs
         {
             try
             {
-                HttpClient client = new HttpClient();
-                using var httpResponse = await client.GetAsync(url);
-                using var stream = await httpResponse.Content.ReadAsStreamAsync();
+                DateTime startTime = DateTime.UtcNow;
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();
                 if (File.Exists(path))
                     File.Delete(path);
-                using var fs = new FileStream(path, FileMode.CreateNew);
-                var buffer = new byte[4096];
-                int readLength = 0, length = 0;
-                while ((length = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                using Stream responseStream = response.GetResponseStream();
+                using Stream fileStream = new FileStream(path, FileMode.CreateNew);
+                byte[] buffer = new byte[20480];
+                int bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
+                while (bytesRead > 0)
                 {
-                    readLength += length;
-                    fs.Write(buffer, 0, length);
+                    fileStream.Write(buffer, 0, bytesRead);
+                    DateTime nowTime = DateTime.UtcNow;
+                    if ((nowTime - startTime).TotalMinutes > 30)
+                        return false;
+                    bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
                 }
-                fs.Close();
-                fs.Dispose();
                 return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogManager.Instance.LogError("Create", ex);
                 return false;
             }
         }
