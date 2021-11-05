@@ -26,55 +26,44 @@ namespace WSATools
         private void MainForm_Load(object sender, EventArgs e)
         {
             Downloader.ProcessChange += Downloader_ProcessChange;
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
                 ShowLoading();
-                await InitVM();
+                var result = WSA.State();
+                buttonVM.Enabled = !result.VM;
+                labelVM.Text = result.VM ? "已安装" : "未安装";
+                buttonWSA.Enabled = !result.WSA;
+                labelWSA.Text = result.WSA ? "已安装" : "未安装";
+                if (result.VM && result.WSA)
+                    buttonRemove.Enabled = true;
                 HideLoading();
             });
         }
         private void Downloader_ProcessChange(int receiveSize, long totalSize)
         {
-            label8.Text = $"下载进度：{receiveSize / totalSize * 100}%";
-        }
-        private async Task InitVM()
-        {
-            var idx = WSA.Init();
-            if (idx == 1)
-            {
-                label4.Text = "已安装";
-                button1.Enabled = false;
-                await InitWSA();
-            }
-            else if (idx == -1)
-                Application.Exit();
-            else
-            {
-                label4.Text = "未安装";
-                button1.Enabled = true;
-            }
+            labelProgress.Text = $"下载进度：{receiveSize / totalSize * 100}%";
         }
         private async Task InitWSA()
         {
             if (!WSA.Pepair())
             {
-                label5.Text = "未安装";
-                button2.Enabled = true;
+                labelWSA.Text = "未安装";
+                buttonWSA.Enabled = true;
                 WSAList list = new WSAList();
                 if (list.ShowDialog(this) == DialogResult.OK)
                 {
                     var result = WSA.Pepair();
                     if (result)
                     {
-                        label5.Text = "已安装";
-                        button2.Enabled = false;
+                        labelWSA.Text = "已安装";
+                        buttonWSA.Enabled = false;
                         await LinkWSA();
                         MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        label5.Text = "未安装";
-                        button2.Enabled = true;
+                        labelWSA.Text = "未安装";
+                        buttonWSA.Enabled = true;
                         MessageBox.Show("很无语，看起来WSA环境安装失败了，请稍后试试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -86,22 +75,37 @@ namespace WSATools
             }
             else
             {
-                label5.Text = "已安装";
-                button2.Enabled = false;
+                labelWSA.Text = "已安装";
+                buttonWSA.Enabled = false;
                 await LinkWSA();
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonVM_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
-                await InitVM();
+                var idx = WSA.Init();
+                if (idx == 1)
+                {
+                    labelVM.Text = "已安装";
+                    buttonVM.Enabled = false;
+                    buttonRemove.Enabled = true;
+                    await InitWSA();
+                }
+                else if (idx == -1)
+                    Application.Exit();
+                else
+                {
+                    labelVM.Text = "未安装";
+                    buttonVM.Enabled = true;
+                    buttonRemove.Enabled = false;
+                }
                 HideLoading();
             });
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonWSA_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -110,18 +114,18 @@ namespace WSATools
                 HideLoading();
             });
         }
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonApkInstall_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
-                button3.Enabled = false;
+                buttonApkInstall.Enabled = false;
                 string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
                 targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
-                label8.Visible = true;
+                labelProgress.Visible = true;
                 if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.2/APKInstaller.zip", path, 60)
                 && Zipper.UnZip(path, targetDirectory))
                 {
-                    label8.Visible = false;
+                    labelProgress.Visible = false;
                     Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
                     Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
                     var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
@@ -130,10 +134,10 @@ namespace WSATools
                 }
                 else
                 {
-                    label8.Visible = false;
+                    labelProgress.Visible = false;
                     MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                button3.Enabled = true;
+                buttonApkInstall.Enabled = true;
             });
         }
         private async Task LinkWSA(string condition = "")
@@ -156,7 +160,7 @@ namespace WSATools
                 HideLoading();
             }
         }
-        private void button4_Click(object sender, EventArgs e)
+        private void buttonInstall_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -174,7 +178,7 @@ namespace WSATools
                     MessageBox.Show("安装失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void button5_Click(object sender, EventArgs e)
+        private void buttonUninstall_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
             {
@@ -193,7 +197,7 @@ namespace WSATools
                     MessageBox.Show("卸载失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void button6_Click(object sender, EventArgs e)
+        private void buttonDowngrade_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0 && openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -203,7 +207,7 @@ namespace WSATools
                     MessageBox.Show("降级安装失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void button7_Click(object sender, EventArgs e)
+        private void buttonRefresh_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -212,12 +216,12 @@ namespace WSATools
                 HideLoading();
             });
         }
-        private void button8_Click(object sender, EventArgs e)
+        private void buttonQuery_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
-                await LinkWSA(textBox1.Text);
+                await LinkWSA(textBoxCondition.Text);
                 HideLoading();
             });
         }
@@ -227,7 +231,7 @@ namespace WSATools
             if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Downloader.Clear();
         }
-        private void button9_Click(object sender, EventArgs e)
+        private void buttonRemove_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(() =>
             {

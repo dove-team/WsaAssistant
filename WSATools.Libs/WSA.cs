@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,6 +11,16 @@ namespace WSATools.Libs
         static WSA()
         {
             PackageList = new[] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
+        }
+        public static (bool VM, bool WSA) State()
+        {
+            var count = 0;
+            foreach (var package in PackageList)
+            {
+                if (Check(package))
+                    count++;
+            }
+            return (count == 3, Pepair());
         }
         public static int Init()
         {
@@ -50,8 +61,14 @@ namespace WSATools.Libs
         public static void Clear()
         {
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
-            var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault();
-            Command.Instance.Shell($"Remove-AppxPackage {packageName}", out _);
+            var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault().Trim();
+            Command.Instance.Shell($"Remove-AppxPackage {packageName}", out string packageMessage);
+            LogManager.Instance.LogInfo("Clear WSA:" + packageMessage);
+            foreach (var package in PackageList)
+            {
+                Command.Instance.Excute($"DISM /Online /Disable-Feature /All /FeatureName:{packageName} /NoRestart", out string resultMessage);
+                LogManager.Instance.LogInfo("Clear VM WSA:" + resultMessage);
+            }
         }
     }
 }

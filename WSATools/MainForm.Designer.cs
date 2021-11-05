@@ -33,25 +33,25 @@ namespace WSATools
             this.panelLoading = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
+            this.labelProgress = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.textBoxCondition = new System.Windows.Forms.TextBox();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.buttonDowngrade = new System.Windows.Forms.Button();
+            this.buttonQuery = new System.Windows.Forms.Button();
+            this.buttonUninstall = new System.Windows.Forms.Button();
+            this.buttonInstall = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.buttonApkInstall = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonRemove = new System.Windows.Forms.Button();
+            this.buttonWSA = new System.Windows.Forms.Button();
+            this.buttonVM = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelWSA = new System.Windows.Forms.Label();
+            this.labelVM = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button9 = new System.Windows.Forms.Button();
             this.panelLoading.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -76,23 +76,23 @@ namespace WSATools
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.labelProgress);
             this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.button7);
-            this.panel1.Controls.Add(this.button6);
-            this.panel1.Controls.Add(this.button8);
-            this.panel1.Controls.Add(this.button5);
-            this.panel1.Controls.Add(this.button4);
+            this.panel1.Controls.Add(this.textBoxCondition);
+            this.panel1.Controls.Add(this.buttonRefresh);
+            this.panel1.Controls.Add(this.buttonDowngrade);
+            this.panel1.Controls.Add(this.buttonQuery);
+            this.panel1.Controls.Add(this.buttonUninstall);
+            this.panel1.Controls.Add(this.buttonInstall);
             this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.buttonApkInstall);
             this.panel1.Controls.Add(this.listView1);
-            this.panel1.Controls.Add(this.button9);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.buttonRemove);
+            this.panel1.Controls.Add(this.buttonWSA);
+            this.panel1.Controls.Add(this.buttonVM);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.labelWSA);
+            this.panel1.Controls.Add(this.labelVM);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -100,15 +100,15 @@ namespace WSATools
             this.panel1.Size = new System.Drawing.Size(704, 468);
             this.panel1.TabIndex = 6;
             // 
-            // label8
+            // labelProgress
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(490, 56);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(86, 17);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "下载进度：0%";
-            this.label8.Visible = false;
+            this.labelProgress.AutoSize = true;
+            this.labelProgress.Location = new System.Drawing.Point(490, 56);
+            this.labelProgress.Name = "labelProgress";
+            this.labelProgress.Size = new System.Drawing.Size(86, 17);
+            this.labelProgress.TabIndex = 8;
+            this.labelProgress.Text = "下载进度：0%";
+            this.labelProgress.Visible = false;
             // 
             // label7
             // 
@@ -119,62 +119,62 @@ namespace WSATools
             this.label7.TabIndex = 7;
             this.label7.Text = "搜索包：";
             // 
-            // textBox1
+            // textBoxCondition
             // 
-            this.textBox1.Location = new System.Drawing.Point(458, 138);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 23);
-            this.textBox1.TabIndex = 6;
+            this.textBoxCondition.Location = new System.Drawing.Point(458, 138);
+            this.textBoxCondition.Name = "textBoxCondition";
+            this.textBoxCondition.Size = new System.Drawing.Size(121, 23);
+            this.textBoxCondition.TabIndex = 6;
             // 
-            // button7
+            // buttonRefresh
             // 
-            this.button7.Location = new System.Drawing.Point(589, 244);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 30);
-            this.button7.TabIndex = 5;
-            this.button7.Text = "刷新";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.buttonRefresh.Location = new System.Drawing.Point(589, 244);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 30);
+            this.buttonRefresh.TabIndex = 5;
+            this.buttonRefresh.Text = "刷新";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
-            // button6
+            // buttonDowngrade
             // 
-            this.button6.Location = new System.Drawing.Point(458, 244);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 30);
-            this.button6.TabIndex = 5;
-            this.button6.Text = "降级";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.buttonDowngrade.Location = new System.Drawing.Point(458, 244);
+            this.buttonDowngrade.Name = "buttonDowngrade";
+            this.buttonDowngrade.Size = new System.Drawing.Size(75, 30);
+            this.buttonDowngrade.TabIndex = 5;
+            this.buttonDowngrade.Text = "降级";
+            this.buttonDowngrade.UseVisualStyleBackColor = true;
+            this.buttonDowngrade.Click += new System.EventHandler(this.buttonDowngrade_Click);
             // 
-            // button8
+            // buttonQuery
             // 
-            this.button8.Location = new System.Drawing.Point(602, 134);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(62, 30);
-            this.button8.TabIndex = 5;
-            this.button8.Text = "查询";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.buttonQuery.Location = new System.Drawing.Point(602, 134);
+            this.buttonQuery.Name = "buttonQuery";
+            this.buttonQuery.Size = new System.Drawing.Size(62, 30);
+            this.buttonQuery.TabIndex = 5;
+            this.buttonQuery.Text = "查询";
+            this.buttonQuery.UseVisualStyleBackColor = true;
+            this.buttonQuery.Click += new System.EventHandler(this.buttonQuery_Click);
             // 
-            // button5
+            // buttonUninstall
             // 
-            this.button5.Location = new System.Drawing.Point(589, 200);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 30);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "卸载";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.buttonUninstall.Location = new System.Drawing.Point(589, 200);
+            this.buttonUninstall.Name = "buttonUninstall";
+            this.buttonUninstall.Size = new System.Drawing.Size(75, 30);
+            this.buttonUninstall.TabIndex = 5;
+            this.buttonUninstall.Text = "卸载";
+            this.buttonUninstall.UseVisualStyleBackColor = true;
+            this.buttonUninstall.Click += new System.EventHandler(this.buttonUninstall_Click);
             // 
-            // button4
+            // buttonInstall
             // 
-            this.button4.Location = new System.Drawing.Point(458, 200);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 30);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "安装";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonInstall.Location = new System.Drawing.Point(458, 200);
+            this.buttonInstall.Name = "buttonInstall";
+            this.buttonInstall.Size = new System.Drawing.Size(75, 30);
+            this.buttonInstall.TabIndex = 5;
+            this.buttonInstall.Text = "安装";
+            this.buttonInstall.UseVisualStyleBackColor = true;
+            this.buttonInstall.Click += new System.EventHandler(this.buttonInstall_Click);
             // 
             // label6
             // 
@@ -186,15 +186,15 @@ namespace WSATools
             this.label6.TabIndex = 4;
             this.label6.Text = "可能由于Github源的原因初始化失败";
             // 
-            // button3
+            // buttonApkInstall
             // 
-            this.button3.Location = new System.Drawing.Point(369, 23);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(109, 30);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "安装ApkInstall";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonApkInstall.Location = new System.Drawing.Point(369, 23);
+            this.buttonApkInstall.Name = "buttonApkInstall";
+            this.buttonApkInstall.Size = new System.Drawing.Size(109, 30);
+            this.buttonApkInstall.TabIndex = 3;
+            this.buttonApkInstall.Text = "安装ApkInstall";
+            this.buttonApkInstall.UseVisualStyleBackColor = true;
+            this.buttonApkInstall.Click += new System.EventHandler(this.buttonApkInstall_Click);
             // 
             // listView1
             // 
@@ -206,27 +206,38 @@ namespace WSATools
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
-            // button2
+            // buttonRemove
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(238, 72);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(92, 30);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "检测并安装";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonRemove.Enabled = false;
+            this.buttonRemove.Location = new System.Drawing.Point(369, 71);
+            this.buttonRemove.Name = "buttonRemove";
+            this.buttonRemove.Size = new System.Drawing.Size(109, 30);
+            this.buttonRemove.TabIndex = 1;
+            this.buttonRemove.Text = "卸载WSA环境";
+            this.buttonRemove.UseVisualStyleBackColor = true;
+            this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
-            // button1
+            // buttonWSA
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(238, 24);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 30);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "检测并安装";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonWSA.Enabled = false;
+            this.buttonWSA.Location = new System.Drawing.Point(238, 72);
+            this.buttonWSA.Name = "buttonWSA";
+            this.buttonWSA.Size = new System.Drawing.Size(92, 30);
+            this.buttonWSA.TabIndex = 1;
+            this.buttonWSA.Text = "检测并安装";
+            this.buttonWSA.UseVisualStyleBackColor = true;
+            this.buttonWSA.Click += new System.EventHandler(this.buttonWSA_Click);
+            // 
+            // buttonVM
+            // 
+            this.buttonVM.Enabled = false;
+            this.buttonVM.Location = new System.Drawing.Point(238, 24);
+            this.buttonVM.Name = "buttonVM";
+            this.buttonVM.Size = new System.Drawing.Size(92, 30);
+            this.buttonVM.TabIndex = 1;
+            this.buttonVM.Text = "检测并安装";
+            this.buttonVM.UseVisualStyleBackColor = true;
+            this.buttonVM.Click += new System.EventHandler(this.buttonVM_Click);
             // 
             // label3
             // 
@@ -237,25 +248,25 @@ namespace WSATools
             this.label3.TabIndex = 0;
             this.label3.Text = "WSA状态：";
             // 
-            // label5
+            // labelWSA
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.DarkRed;
-            this.label5.Location = new System.Drawing.Point(157, 78);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 17);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "检测中";
+            this.labelWSA.AutoSize = true;
+            this.labelWSA.ForeColor = System.Drawing.Color.DarkRed;
+            this.labelWSA.Location = new System.Drawing.Point(157, 78);
+            this.labelWSA.Name = "labelWSA";
+            this.labelWSA.Size = new System.Drawing.Size(44, 17);
+            this.labelWSA.TabIndex = 0;
+            this.labelWSA.Text = "检测中";
             // 
-            // label4
+            // labelVM
             // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.DarkRed;
-            this.label4.Location = new System.Drawing.Point(157, 30);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 17);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "检测中";
+            this.labelVM.AutoSize = true;
+            this.labelVM.ForeColor = System.Drawing.Color.DarkRed;
+            this.labelVM.Location = new System.Drawing.Point(157, 30);
+            this.labelVM.Name = "labelVM";
+            this.labelVM.Size = new System.Drawing.Size(44, 17);
+            this.labelVM.TabIndex = 0;
+            this.labelVM.Text = "检测中";
             // 
             // label2
             // 
@@ -270,17 +281,6 @@ namespace WSATools
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "APK文件|*.apk";
-            // 
-            // button9
-            // 
-            this.button9.Enabled = false;
-            this.button9.Location = new System.Drawing.Point(369, 71);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(109, 30);
-            this.button9.TabIndex = 1;
-            this.button9.Text = "卸载WSA环境";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // MainForm
             // 
@@ -310,23 +310,23 @@ namespace WSATools
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label labelWSA;
+        private System.Windows.Forms.Label labelVM;
+        private System.Windows.Forms.Button buttonWSA;
+        private System.Windows.Forms.Button buttonVM;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonApkInstall;
+        private System.Windows.Forms.Button buttonDowngrade;
+        private System.Windows.Forms.Button buttonUninstall;
+        private System.Windows.Forms.Button buttonInstall;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.TextBox textBoxCondition;
+        private System.Windows.Forms.Button buttonQuery;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label labelProgress;
+        private System.Windows.Forms.Button buttonRemove;
     }
 }
 
