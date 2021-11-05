@@ -12,6 +12,7 @@ namespace WSATools.Libs
     {
         private string AdbRoot { get; }
         private string AdbLocation { get; }
+        private List<string> IgnorePackages { get; }
         private string deviceCode;
         public string DeviceCode
         {
@@ -19,14 +20,30 @@ namespace WSATools.Libs
             {
                 if (string.IsNullOrEmpty(deviceCode))
                 {
-                    ExcuteCommand("adb connect 127.0.0.1:58526", out _);
-                    Thread.Sleep(100);
-                    if (ExcuteCommand("adb devices", out string message))
+                    var find = "arp -a|findstr 00-15-5d";
+                    Command.Instance.Excute(find, out string address);
+                    address = address.Substring(find + "&exit").Replace("\r\n", "");
+                    if (!string.IsNullOrEmpty(address))
                     {
-                        var lines = message.Substring("List of devices attached");
-                        var device = lines.Split("\r\n").FirstOrDefault(x => x.Contains("172.")||x.Contains(":5555"));
-                        if (device != null)
-                            deviceCode = device.Split('\t').FirstOrDefault();
+                        var wsaIp = address.Splits(new[] { ' ' }).FirstOrDefault();
+                        ExcuteCommand("adb connect " + wsaIp, out _);
+                        Thread.Sleep(8);
+                        if (ExcuteCommand("adb devices", out string message))
+                        {
+                            var lines = message.Substring("List of devices attached");
+                            foreach (var device in lines.Splits("\r\n"))
+                            {
+                                var code = device.Splits('\t').FirstOrDefault();
+                                var cmd = $"adb -s {code} shell getprop ro.product.model";
+                                ExcuteCommand(cmd, out string name);
+                                name = name.Substring(cmd+"&exit");
+                                if (name.Contains("Subsystem for Android(TM)", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    deviceCode = code;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 return deviceCode;
@@ -38,6 +55,18 @@ namespace WSATools.Libs
         {
             AdbRoot = Path.Combine(Environment.CurrentDirectory, "platform-tools");
             AdbLocation = Path.Combine(AdbRoot, "adb.exe");
+            IgnorePackages=new List<string>
+            {
+                "android","com.microsoft.windows.systemapp","com.android.permissioncontroller","com.android.shell","com.android.webview",
+                "com.android.packageinstaller","com.android.settings","com.android.systemui","com.microsoft.windows.userapp","com.android.se",
+                "android.ext.services","com.android.dynsystem","com.android.providers.calendar","com.android.providers.media","android.ext.shared",
+                "com.android.inputdevices","com.android.providers.settings","com.android.keychain","com.android.systemui.auto_generated_rro_vendor__",
+                "com.android.settings.auto_generated_rro_vendor__","com.android.certinstaller","com.android.modulemetadata","com.android.providers.downloads",
+                "com.android.providers.media.module","com.android.providers.downloads.ui","com.android.companiondevicemanager","com.android.location.fused",
+                "com.android.networkstack","com.android.statementservice","com.android.providers.settings.auto_generated_rro_vendor__","com.android.providers.contacts",
+                "com.amazon.device.messaging","com.android.networkstack.tethering","com.android.networkstack.permissionconfig","com.android.traceur",
+                "android.auto_generated_rro_vendor__","com.android.localtransport","com.android.hotspot2.osulogin"
+            };
         }
         public async Task<bool> Pepair()
         {
@@ -80,10 +109,14 @@ namespace WSATools.Libs
                 if (ExcuteCommand(command, out string message))
                 {
                     var lines = message.Substring($"{command}&exit");
-                    foreach (var item in lines.Split("\r\n"))
+                    foreach (var item in lines.Splits("\r\n"))
                     {
                         if (!string.IsNullOrEmpty(item))
-                            packages.Add(item.Split(':').LastOrDefault());
+                        {
+                            var name = item.Splits(':').LastOrDefault();
+                            if (!IgnorePackages.Contains(name))
+                                packages.Add(name);
+                        }
                     }
                 }
             }

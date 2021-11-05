@@ -26,7 +26,7 @@ namespace WSATools
         private void MainForm_Load(object sender, EventArgs e)
         {
             Downloader.ProcessChange += Downloader_ProcessChange;
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
                 var result = WSA.State();
@@ -35,7 +35,11 @@ namespace WSATools
                 buttonWSA.Enabled = !result.WSA;
                 labelWSA.Text = result.WSA ? "已安装" : "未安装";
                 if (result.VM && result.WSA)
+                {
+                    Adb.Instance.Reload();
+                    await LinkWSA();
                     buttonRemove.Enabled = true;
+                }
                 HideLoading();
             });
         }
@@ -57,6 +61,7 @@ namespace WSATools
                     {
                         labelWSA.Text = "已安装";
                         buttonWSA.Enabled = false;
+                        Adb.Instance.Reload();
                         await LinkWSA();
                         MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -77,6 +82,7 @@ namespace WSATools
             {
                 labelWSA.Text = "已安装";
                 buttonWSA.Enabled = false;
+                Adb.Instance.Reload();
                 await LinkWSA();
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -142,7 +148,6 @@ namespace WSATools
         {
             if (await Adb.Instance.Pepair())
             {
-                Adb.Instance.Reload();
                 var list = Adb.Instance.GetAll(condition);
                 listView1.BeginUpdate();
                 listView1.Items.Clear();
@@ -180,19 +185,23 @@ namespace WSATools
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                var packageName = listView1.SelectedItems[0].ToString();
-                if (Adb.Instance.Remove(packageName))
+                var packageName = listView1.SelectedItems[0].Text;
+                if (MessageBox.Show($"确定卸载{packageName}？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                      == DialogResult.Yes)
                 {
-                    MessageBox.Show("卸载成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Task.Factory.StartNew(async () =>
+                    if (Adb.Instance.Remove(packageName))
                     {
-                        ShowLoading();
-                        await LinkWSA();
-                        HideLoading();
-                    });
+                        MessageBox.Show("卸载成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Task.Factory.StartNew(async () =>
+                        {
+                            ShowLoading();
+                            await LinkWSA();
+                            HideLoading();
+                        });
+                    }
+                    else
+                        MessageBox.Show("卸载失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else
-                    MessageBox.Show("卸载失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void buttonDowngrade_Click(object sender, EventArgs e)

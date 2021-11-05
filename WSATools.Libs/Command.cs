@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace WSATools.Libs
 {
@@ -51,8 +52,7 @@ namespace WSATools.Libs
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
-                process.StandardInput.WriteLine(cmd);
-                process.StandardInput.WriteLine("exit");
+                process.StandardInput.WriteLine($"{cmd}&exit");
                 process.StandardInput.AutoFlush = true;
                 message = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
@@ -70,6 +70,7 @@ namespace WSATools.Libs
         {
             try
             {
+                var total = cmds.Count();
                 Process process = new Process();
                 process.StartInfo.FileName = "cmd.exe";
                 process.StartInfo.RedirectStandardInput = true;
@@ -78,9 +79,14 @@ namespace WSATools.Libs
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
-                foreach (var cmd in cmds)
-                    process.StandardInput.WriteLine(cmd);
-                process.StandardInput.WriteLine("exit");
+                for (var idx = 0; idx <total; idx++)
+                {
+                    var cmd = cmds.ElementAt(idx);
+                    if (idx == total - 1)
+                        process.StandardInput.WriteLine(cmd + "&exit");
+                    else
+                        process.StandardInput.WriteLine(cmd);
+                }
                 process.StandardInput.AutoFlush = true;
                 message = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();

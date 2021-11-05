@@ -205,6 +205,7 @@ namespace WSATools
             this.listView1.Size = new System.Drawing.Size(395, 337);
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Tile;
             // 
             // buttonRemove
             // 
