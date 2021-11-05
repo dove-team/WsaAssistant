@@ -5,10 +5,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Win32Resource />
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Authors>michael-eddy</Authors>
+    <PackageIcon>icon.ico</PackageIcon>
+    <PackageIconUrl />
+    <NeutralLanguage>zh-CN</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -19,6 +23,10 @@
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
     <None Remove="LICENSE" />
+    <None Include="images\icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

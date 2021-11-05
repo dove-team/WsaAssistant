@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -66,7 +65,7 @@ namespace WSATools.Libs
             LogManager.Instance.LogInfo("Clear WSA:" + packageMessage);
             foreach (var package in PackageList)
             {
-                Command.Instance.Excute($"DISM /Online /Disable-Feature /All /FeatureName:{packageName} /NoRestart", out string resultMessage);
+                Command.Instance.Excute($"DISM /Online /Disable-Feature /All /FeatureName:{package} /NoRestart", out string resultMessage);
                 LogManager.Instance.LogInfo("Clear VM WSA:" + resultMessage);
             }
         }

@@ -94,8 +94,6 @@ namespace WSATools
                     buttonRemove.Enabled = true;
                     await InitWSA();
                 }
-                else if (idx == -1)
-                    Application.Exit();
                 else
                 {
                     labelVM.Text = "未安装";
@@ -122,7 +120,7 @@ namespace WSATools
                 string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
                 targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
                 labelProgress.Visible = true;
-                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.2/APKInstaller.zip", path, 60)
+                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.3/APKInstaller.zip", path, 60)
                 && Zipper.UnZip(path, targetDirectory))
                 {
                     labelProgress.Visible = false;
@@ -237,6 +235,9 @@ namespace WSATools
             {
                 ShowLoading();
                 WSA.Clear();
+                if (MessageBox.Show("需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                    Command.Instance.Excute("shutdown -r -t 10", out _);
                 HideLoading();
             });
         }
