@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WSATools.Libs
@@ -45,6 +46,12 @@ namespace WSATools.Libs
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
             LogManager.Instance.LogInfo("Pepair WSA:" + message);
             return !string.IsNullOrEmpty(message);
+        }
+        public static void Clear()
+        {
+            Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+            var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault();
+            Command.Instance.Shell($"Remove-AppxPackage {packageName}", out _);
         }
     }
 }

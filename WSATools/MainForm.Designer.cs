@@ -33,6 +33,7 @@ namespace WSATools
             this.panelLoading = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button7 = new System.Windows.Forms.Button();
@@ -50,7 +51,7 @@ namespace WSATools
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.label8 = new System.Windows.Forms.Label();
+            this.button9 = new System.Windows.Forms.Button();
             this.panelLoading.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -86,6 +87,7 @@ namespace WSATools
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.listView1);
+            this.panel1.Controls.Add(this.button9);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label3);
@@ -97,6 +99,16 @@ namespace WSATools
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(704, 468);
             this.panel1.TabIndex = 6;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(490, 56);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(86, 17);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "下载进度：0%";
+            this.label8.Visible = false;
             // 
             // label7
             // 
@@ -259,15 +271,16 @@ namespace WSATools
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "APK文件|*.apk";
             // 
-            // label8
+            // button9
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(490, 56);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(86, 17);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "下载进度：0%";
-            this.label8.Visible = false;
+            this.button9.Enabled = false;
+            this.button9.Location = new System.Drawing.Point(369, 71);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(109, 30);
+            this.button9.TabIndex = 1;
+            this.button9.Text = "卸载WSA环境";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // MainForm
             // 
@@ -313,6 +326,7 @@ namespace WSATools
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button9;
     }
 }
 

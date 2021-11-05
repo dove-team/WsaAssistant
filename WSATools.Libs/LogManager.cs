@@ -20,7 +20,7 @@ namespace WSATools.Libs
         private Logger Logger { get; }
         private LogManager()
         {
-            var LogFile = Path.Combine(Environment.CurrentDirectory, "wsa_tools", "log-.txt");
+            var LogFile = Path.Combine(Environment.CurrentDirectory, "wsa_tools_log", "log-.txt");
             Logger = new LoggerConfiguration().MinimumLevel.Debug()
                 .WriteTo.Async(a => a.File(LogFile, rollingInterval: RollingInterval.Day))
                 .CreateLogger();

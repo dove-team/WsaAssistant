@@ -26,10 +26,10 @@ namespace WSATools
         private void MainForm_Load(object sender, EventArgs e)
         {
             Downloader.ProcessChange += Downloader_ProcessChange;
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
-                InitVM();
+                await InitVM();
                 HideLoading();
             });
         }
@@ -37,14 +37,14 @@ namespace WSATools
         {
             label8.Text = $"下载进度：{receiveSize / totalSize * 100}%";
         }
-        private void InitVM()
+        private async Task InitVM()
         {
             var idx = WSA.Init();
             if (idx == 1)
             {
                 label4.Text = "已安装";
                 button1.Enabled = false;
-                InitWSA();
+                await InitWSA();
             }
             else if (idx == -1)
                 Application.Exit();
@@ -54,7 +54,7 @@ namespace WSATools
                 button1.Enabled = true;
             }
         }
-        private void InitWSA()
+        private async Task InitWSA()
         {
             if (!WSA.Pepair())
             {
@@ -68,7 +68,7 @@ namespace WSATools
                     {
                         label5.Text = "已安装";
                         button2.Enabled = false;
-                        LinkWSA();
+                        await LinkWSA();
                         MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
@@ -88,24 +88,25 @@ namespace WSATools
             {
                 label5.Text = "已安装";
                 button2.Enabled = false;
+                await LinkWSA();
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
-                InitVM();
+                await InitVM();
                 HideLoading();
             });
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 ShowLoading();
-                InitWSA();
+                await InitWSA();
                 HideLoading();
             });
         }
@@ -117,7 +118,7 @@ namespace WSATools
                 string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
                 targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
                 label8.Visible = true;
-                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.0/APKInstaller.zip", path, 60)
+                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.2/APKInstaller.zip", path, 60)
                 && Zipper.UnZip(path, targetDirectory))
                 {
                     label8.Visible = false;
@@ -135,28 +136,25 @@ namespace WSATools
                 button3.Enabled = true;
             });
         }
-        private void LinkWSA(string condition = "")
+        private async Task LinkWSA(string condition = "")
         {
-            Task.Factory.StartNew(async () =>
+            if (await Adb.Instance.Pepair())
             {
-                ShowLoading();
-                if (await Adb.Instance.Pepair())
-                {
-                    Adb.Instance.Reload();
-                    var list = Adb.Instance.GetAll(condition);
-                    listView1.BeginUpdate();
-                    listView1.Items.Clear();
-                    foreach (var item in list)
-                        listView1.Items.Add(item);
-                    listView1.EndUpdate();
-                }
-                else
-                {
-                    MessageBox.Show("初始化ADB环境失败，请稍后重试！或者直接使用APKInstall进行管理！", "提示",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Adb.Instance.Reload();
+                var list = Adb.Instance.GetAll(condition);
+                listView1.BeginUpdate();
+                listView1.Items.Clear();
+                foreach (var item in list)
+                    listView1.Items.Add(item);
+                listView1.EndUpdate();
                 HideLoading();
-            });
+            }
+            else
+            {
+                MessageBox.Show("初始化ADB环境失败，请稍后重试！或者直接使用APKInstall进行管理！", "提示",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                HideLoading();
+            }
         }
         private void button4_Click(object sender, EventArgs e)
         {
@@ -165,7 +163,12 @@ namespace WSATools
                 if (Adb.Instance.Install(openFileDialog1.FileName))
                 {
                     MessageBox.Show("安装成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LinkWSA();
+                    Task.Factory.StartNew(async () =>
+                    {
+                        ShowLoading();
+                        await LinkWSA();
+                        HideLoading();
+                    });
                 }
                 else
                     MessageBox.Show("安装失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -179,7 +182,12 @@ namespace WSATools
                 if (Adb.Instance.Remove(packageName))
                 {
                     MessageBox.Show("卸载成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LinkWSA();
+                    Task.Factory.StartNew(async () =>
+                    {
+                        ShowLoading();
+                        await LinkWSA();
+                        HideLoading();
+                    });
                 }
                 else
                     MessageBox.Show("卸载失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -197,17 +205,36 @@ namespace WSATools
         }
         private void button7_Click(object sender, EventArgs e)
         {
-            LinkWSA();
+            Task.Factory.StartNew(async () =>
+            {
+                ShowLoading();
+                await LinkWSA();
+                HideLoading();
+            });
         }
         private void button8_Click(object sender, EventArgs e)
         {
-            LinkWSA(textBox1.Text);
+            Task.Factory.StartNew(async () =>
+            {
+                ShowLoading();
+                await LinkWSA(textBox1.Text);
+                HideLoading();
+            });
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Downloader.ProcessChange -= Downloader_ProcessChange;
             if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Downloader.Clear();
+        }
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                ShowLoading();
+                WSA.Clear();
+                HideLoading();
+            });
         }
     }
 }

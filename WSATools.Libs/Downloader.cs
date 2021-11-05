@@ -36,7 +36,7 @@ namespace WSATools.Libs
                         return false;
                     bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
                     sumSchedule += 20480;
-                    ProcessChange?.Invoke(sumSchedule, responseStream.Length);
+                    ProcessChange?.Invoke(sumSchedule, response.ContentLength);
                     Thread.Sleep(2);
                 }
                 array.Add(path);
@@ -44,7 +44,7 @@ namespace WSATools.Libs
             }
             catch (Exception ex)
             {
-                LogManager.Instance.LogError("Create", ex);
+                LogManager.Instance.LogError($"Create {url} download", ex);
                 return false;
             }
         }
