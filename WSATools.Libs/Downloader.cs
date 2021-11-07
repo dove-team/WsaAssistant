@@ -19,27 +19,29 @@ namespace WSATools.Libs
             {
                 DateTime startTime = DateTime.UtcNow;
                 WebRequest request = WebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-                if (File.Exists(path) && DialogResult.Yes == MessageBox.Show($"已存在文件{Path.GetFileName(path)},是否重新下载？",
-                    "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
-                    File.Delete(path);
-                using Stream responseStream = response.GetResponseStream();
-                using Stream fileStream = new FileStream(path, FileMode.CreateNew);
-                byte[] buffer = new byte[20480];
-                int sumSchedule = 0;
-                int bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
-                while (bytesRead > 0)
+                using (WebResponse response = request.GetResponse())
                 {
-                    fileStream.Write(buffer, 0, bytesRead);
-                    DateTime nowTime = DateTime.UtcNow;
-                    if ((nowTime - startTime).TotalMinutes > timeout)
-                        return false;
-                    bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
-                    sumSchedule += 20480;
-                    ProcessChange?.Invoke(sumSchedule, response.ContentLength);
-                    Thread.Sleep(2);
+                    if (File.Exists(path) && DialogResult.Yes == MessageBox.Show($"已存在文件{Path.GetFileName(path)},是否重新下载？",
+                        "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                        File.Delete(path);
+                    using Stream responseStream = response.GetResponseStream();
+                    using Stream fileStream = new FileStream(path, FileMode.CreateNew);
+                    byte[] buffer = new byte[20480];
+                    int sumSchedule = 0;
+                    int bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
+                    while (bytesRead > 0)
+                    {
+                        fileStream.Write(buffer, 0, bytesRead);
+                        DateTime nowTime = DateTime.UtcNow;
+                        if ((nowTime - startTime).TotalMinutes > timeout)
+                            return false;
+                        bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
+                        sumSchedule += 20480;
+                        ProcessChange?.Invoke(sumSchedule, response.ContentLength);
+                        Thread.Sleep(2);
+                    }
+                    array.Add(path);
                 }
-                array.Add(path);
                 return true;
             }
             catch (Exception ex)

@@ -3,34 +3,24 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Version>1.0.3</Version>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Win32Resource />
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Authors>michael-eddy</Authors>
-    <PackageIcon>icon.ico</PackageIcon>
-    <PackageIconUrl />
+    <ApplicationIcon>images\icon.ico</ApplicationIcon>
+    <Version>1.0.4</Version>
+    <Authors>michael_eddy</Authors>
     <NeutralLanguage>zh-CN</NeutralLanguage>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Remove=".gitattributes" />
-    <None Remove=".gitignore" />
-    <None Remove="LICENSE" />
-    <None Include="images\icon.ico">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Remove="images\icon.ico" />
+    <None Remove="images\Icon.png" />
+    <None Remove="images\loading.gif" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CXuesong.Shims.VisualBasic.Devices" Version="0.3.0" />
+    <PackageReference Include="DynamicData" Version="7.4.3" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
@@ -39,18 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Resource Include="images\icon.ico" />
+    <Resource Include="images\Icon.png" />
+    <Resource Include="images\loading.gif" />
   </ItemGroup>
 
 </Project>

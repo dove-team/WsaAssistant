@@ -1,14 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <_LastSelectedProfileId>D:\Micha\Documents\GitHub\WSATools\WSATools\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
-    <Compile Update="MainForm.cs">
-      <SubType>Form</SubType>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Loading.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Update="WSAList.cs">
-      <SubType>Form</SubType>
+    <Compile Update="WSAList.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="CommonDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Loading.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="WSAList.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>
