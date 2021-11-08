@@ -1,20 +1,17 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using WSATools.Libs;
 
 namespace WSATools.ViewModels
 {
-    public sealed class MainWindowViewModel : ObservableObject, IDisposable
+    public sealed class MainWindowViewModel : ViewModelBase
     {
         public event EventHandler Close;
-        public event LoadingHandler Loading;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
@@ -32,7 +29,7 @@ namespace WSATools.ViewModels
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             UninstallCommand = new AsyncRelayCommand(UninstallAsync);
-            StartWSACommand =new AsyncRelayCommand(StartWSAAsync);
+            StartWSACommand = new AsyncRelayCommand(StartWSAAsync);
             InstallVmCommand = new AsyncRelayCommand(InstallVmAsync);
             InstallToolCommand = new AsyncRelayCommand(InstallToolAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
@@ -40,9 +37,9 @@ namespace WSATools.ViewModels
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
         }
-        private async Task StartWSAAsync()
+        private Task StartWSAAsync()
         {
-            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 WSA.Start();
@@ -63,59 +60,59 @@ namespace WSATools.ViewModels
                 }
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
         private Task CloseAsync()
         {
             Application.Current.Shutdown();
             return Task.CompletedTask;
         }
-        private Dispatcher Dispatcher { get; set; }
-        public async void LoadAsync(object sender, EventArgs e)
+        public void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as MainWindow).Dispatcher;
             Downloader.ProcessChange += Downloader_ProcessChange;
-            await Application.Current.Dispatcher.InvokeAsync(async () =>
-             {
-                 LoadVisable = Visibility.Visible;
-                 var result = WSA.State();
-                 if (result.VM)
-                 {
-                     VMState = "已安装";
-                     VMEnable = false;
-                 }
-                 else
-                 {
-                     VMState = "未安装";
-                     VMEnable = true;
-                 }
-                 if (result.WSA)
-                 {
-                     WSAState = "已安装";
-                     WSAEnable = false;
-                     WSARemoveable = true;
-                 }
-                 else
-                 {
-                     WSAState = "未安装";
-                     WSAEnable = true;
-                     WSARemoveable = false;
-                 }
-                 if (result.Run)
-                 {
-                     WSARun = true;
-                     WSARunState = "运行中";
-                     WSAStart = Visibility.Collapsed;
-                     Adb.Instance.Reload();
-                     await LinkWSA();
-                 }
-                 else
-                 {
-                     WSARun = false;
-                     WSARunState = "未运行";
-                     WSAStart = Visibility.Visible;
-                 }
-                 LoadVisable = Visibility.Collapsed;
-             });
+            RunOnUIThread(async() =>
+            {
+                LoadVisable = Visibility.Visible;
+                var result = WSA.State();
+                if (result.VM)
+                {
+                    VMState = "已安装";
+                    VMEnable = false;
+                }
+                else
+                {
+                    VMState = "未安装";
+                    VMEnable = true;
+                }
+                if (result.WSA)
+                {
+                    WSAState = "已安装";
+                    WSAEnable = false;
+                    WSARemoveable = true;
+                }
+                else
+                {
+                    WSAState = "未安装";
+                    WSAEnable = true;
+                    WSARemoveable = false;
+                }
+                if (result.Run)
+                {
+                    WSARun = true;
+                    WSARunState = "运行中";
+                    WSAStart = Visibility.Collapsed;
+                    Adb.Instance.Reload();
+                    await LinkWSA();
+                }
+                else
+                {
+                    WSARun = false;
+                    WSARunState = "未运行";
+                    WSAStart = Visibility.Visible;
+                }
+                LoadVisable = Visibility.Collapsed;
+            });
         }
         private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
         public ObservableCollection<ListItem> Packages
@@ -165,16 +162,6 @@ namespace WSATools.ViewModels
             get => wsaRun;
             set => SetProperty(ref wsaRun, value);
         }
-        private Visibility loadVisable = Visibility.Collapsed;
-        public Visibility LoadVisable
-        {
-            get => loadVisable;
-            set
-            {
-                SetProperty(ref loadVisable, value);
-                Loading?.Invoke(this, value);
-            }
-        }
         private bool toolEnable = true;
         public bool ToolEnable
         {
@@ -205,18 +192,19 @@ namespace WSATools.ViewModels
             get => searchKeywords;
             set => SetProperty(ref searchKeywords, value);
         }
-        private async Task RefreshAsync()
+        private Task RefreshAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 await LinkWSA();
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
-        private async Task DowngradeAsync()
+        private Task DowngradeAsync()
         {
-            await Dispatcher.InvokeAsync(() =>
+            RunOnUIThread(() =>
            {
                LoadVisable = Visibility.Visible;
                OpenFileDialog openFileDialog = new OpenFileDialog
@@ -233,10 +221,11 @@ namespace WSATools.ViewModels
                }
                LoadVisable = Visibility.Collapsed;
            });
+            return Task.CompletedTask;
         }
-        private async Task UninstallApkAsync()
+        private Task UninstallApkAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 if (!string.IsNullOrEmpty(SelectPackage))
@@ -255,10 +244,11 @@ namespace WSATools.ViewModels
                 }
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
-        private async Task InstallApkAsync()
+        private Task InstallApkAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 OpenFileDialog openFileDialog = new OpenFileDialog
@@ -278,19 +268,21 @@ namespace WSATools.ViewModels
                 }
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
-        private async Task SearchAsync()
+        private Task SearchAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 await LinkWSA(SearchKeywords);
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
-        private async Task InstallToolAsync()
+        private Task InstallToolAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 ToolEnable = false;
@@ -312,10 +304,11 @@ namespace WSATools.ViewModels
                 ToolEnable = true;
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
-        private async Task UninstallAsync()
+        private  Task UninstallAsync()
         {
-            await Dispatcher.InvokeAsync(() =>
+            RunOnUIThread(() =>
              {
                  LoadVisable = Visibility.Visible;
                  WSA.Clear();
@@ -324,6 +317,7 @@ namespace WSATools.ViewModels
                      Command.Instance.Excute("shutdown -r -t 10", out _);
                  LoadVisable = Visibility.Collapsed;
              });
+            return Task.CompletedTask;
         }
         private async Task InstallWSAAsync()
         {
@@ -331,9 +325,9 @@ namespace WSATools.ViewModels
             await InitWSA();
             LoadVisable = Visibility.Collapsed;
         }
-        private async Task InstallVmAsync()
+        private Task InstallVmAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
              {
                  LoadVisable = Visibility.Visible;
                  var idx = WSA.Init();
@@ -352,18 +346,25 @@ namespace WSATools.ViewModels
                  }
                  LoadVisable = Visibility.Collapsed;
              });
+            return Task.CompletedTask;
         }
         private async Task LinkWSA(string condition = "")
         {
             LoadVisable = Visibility.Visible;
-            Packages.Clear();
+            Dispatcher.Invoke(() =>
+            {
+                Packages.Clear();
+            });
             if (await Adb.Instance.Pepair())
             {
                 var list = Adb.Instance.GetAll(condition);
                 foreach (var name in list)
                 {
                     var item = new ListItem(name);
-                    Packages.Add(item);
+                    Dispatcher.Invoke(() =>
+                    {
+                        Packages.Add(item);
+                    });
                 }
             }
             else
@@ -419,7 +420,7 @@ namespace WSATools.ViewModels
         {
             ProcessVal = receiveSize / totalSize * 100;
         }
-        public void Dispose()
+        public override void Dispose()
         {
             Downloader.ProcessChange -= Downloader_ProcessChange;
         }

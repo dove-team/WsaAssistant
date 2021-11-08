@@ -122,7 +122,7 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Popup x:Name="loading" Width="780" Height="450" Placement="Center">
+        <Popup x:Name="loading" Width="100" Height="100" Placement="Center">
             <local:Loading Visibility="{Binding LoadVisable}" Width="100" Height="100" />
         </Popup>
     </Grid>

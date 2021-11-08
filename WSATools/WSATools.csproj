@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
-    <Version>1.0.4</Version>
+    <Version>1.1.0</Version>
     <Authors>michael_eddy</Authors>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <ApplicationManifest>app.manifest</ApplicationManifest>

@@ -54,7 +54,7 @@
                 <Button Command="{Binding CloseCommand}" Content="退出" Width="100" Margin="0,24,0,0" />
             </StackPanel>
         </Grid>
-        <Popup x:Name="loading" Width="560" Height="450" Placement="Center">
+        <Popup x:Name="loading" Width="100" Height="100" Placement="Center">
             <local:Loading Visibility="{Binding LoadVisable}" Width="100" Height="100" />
         </Popup>
     </Grid>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,15 +6,13 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using WSATools.Libs;
 
 namespace WSATools.ViewModels
 {
-    public sealed class WSAListViewModel : ObservableObject, IDisposable
+    public sealed class WSAListViewModel : ViewModelBase
     {
         public event CloseHandler Close;
-        public event LoadingHandler Loading;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
@@ -37,16 +34,6 @@ namespace WSATools.ViewModels
             get => timeoutEnable;
             set => SetProperty(ref timeoutEnable, value);
         }
-        private Visibility loadVisable = Visibility.Collapsed;
-        public Visibility LoadVisable
-        {
-            get => loadVisable;
-            set
-            {
-                SetProperty(ref loadVisable, value);
-                Loading?.Invoke(this, value);
-            }
-        }
         private double processVal = 0;
         public double ProcessVal
         {
@@ -59,23 +46,24 @@ namespace WSATools.ViewModels
             get => timeout;
             set => SetProperty(ref timeout, value);
         }
-        private async Task RreshAsync()
+        private Task RreshAsync()
         {
-            await Dispatcher.InvokeAsync(async () =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 await GetList();
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
         private Task CloseAsync()
         {
             Close?.Invoke(this, false);
             return Task.CompletedTask;
         }
-        private async Task InstallAsync()
+        private Task InstallAsync()
         {
-            await Dispatcher.InvokeAsync(async() =>
+            RunOnUIThread(async() =>
             {
                 LoadVisable = Visibility.Visible;
                 try
@@ -110,6 +98,7 @@ namespace WSATools.ViewModels
                 }
                 LoadVisable = Visibility.Collapsed;
             });
+            return Task.CompletedTask;
         }
         private void ExcuteCommand(StringBuilder shellBuilder)
         {
@@ -123,7 +112,6 @@ namespace WSATools.ViewModels
             Command.Instance.Shell(shellFile, out _);
             File.Delete(shellFile);
         }
-        private Dispatcher Dispatcher { get; set; }
         public async void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as WSAList).Dispatcher;
@@ -147,7 +135,10 @@ namespace WSATools.ViewModels
                         foreach (var pair in pairs)
                         {
                             var item = new ListItem(pair.Key, pair.Value);
-                            Packages.Add(item);
+                            Dispatcher.Invoke(() =>
+                            {
+                                Packages.Add(item);
+                            });
                         }
                     }
                     else
@@ -163,7 +154,7 @@ namespace WSATools.ViewModels
             }
             LoadVisable = Visibility.Collapsed;
         }
-        public void Dispose()
+        public override void Dispose()
         {
             Downloader.ProcessChange -= Downloader_ProcessChange;
         }
