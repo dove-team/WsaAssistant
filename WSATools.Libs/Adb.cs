@@ -36,7 +36,7 @@ namespace WSATools.Libs
                                 var code = device.Splits('\t').FirstOrDefault();
                                 var cmd = $"adb -s {code} shell getprop ro.product.model";
                                 ExcuteCommand(cmd, out string name);
-                                name = name.Substring(cmd+"&exit");
+                                name = name.Substring(cmd + "&exit");
                                 if (name.Contains("Subsystem for Android(TM)", StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     deviceCode = code;
@@ -55,7 +55,7 @@ namespace WSATools.Libs
         {
             AdbRoot = Path.Combine(Environment.CurrentDirectory, "platform-tools");
             AdbLocation = Path.Combine(AdbRoot, "adb.exe");
-            IgnorePackages=new List<string>
+            IgnorePackages = new List<string>
             {
                 "android","com.microsoft.windows.systemapp","com.android.permissioncontroller","com.android.shell","com.android.webview",
                 "com.android.packageinstaller","com.android.settings","com.android.systemui","com.microsoft.windows.userapp","com.android.se",

@@ -79,7 +79,7 @@ namespace WSATools.Libs
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
-                for (var idx = 0; idx <total; idx++)
+                for (var idx = 0; idx < total; idx++)
                 {
                     var cmd = cmds.ElementAt(idx);
                     if (idx == total - 1)

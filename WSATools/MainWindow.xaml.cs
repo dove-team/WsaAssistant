@@ -20,7 +20,7 @@ namespace WSATools
             {
                 ViewModel = viewModel;
                 ViewModel.Close += ViewModel_Close;
-                ViewModel.Loading+=ViewModel_Loading;
+                ViewModel.Loading += ViewModel_Loading;
             }
         }
         private void ViewModel_Loading(object sender, Visibility result)

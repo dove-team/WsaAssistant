@@ -71,7 +71,7 @@ namespace WSATools.ViewModels
         {
             Dispatcher = (sender as MainWindow).Dispatcher;
             Downloader.ProcessChange += Downloader_ProcessChange;
-            RunOnUIThread(async() =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 var result = WSA.State();
@@ -306,7 +306,7 @@ namespace WSATools.ViewModels
             });
             return Task.CompletedTask;
         }
-        private  Task UninstallAsync()
+        private Task UninstallAsync()
         {
             RunOnUIThread(() =>
              {
@@ -321,9 +321,7 @@ namespace WSATools.ViewModels
         }
         private async Task InstallWSAAsync()
         {
-            LoadVisable = Visibility.Visible;
             await InitWSA();
-            LoadVisable = Visibility.Collapsed;
         }
         private Task InstallVmAsync()
         {
@@ -336,6 +334,7 @@ namespace WSATools.ViewModels
                      VMState = "已安装";
                      VMEnable = false;
                      WSARemoveable = true;
+                     LoadVisable = Visibility.Collapsed;
                      await InitWSA();
                  }
                  else
@@ -343,8 +342,8 @@ namespace WSATools.ViewModels
                      VMState = "未安装";
                      VMEnable = true;
                      WSARemoveable = false;
+                     LoadVisable = Visibility.Collapsed;
                  }
-                 LoadVisable = Visibility.Collapsed;
              });
             return Task.CompletedTask;
         }
@@ -376,7 +375,6 @@ namespace WSATools.ViewModels
         }
         private async Task InitWSA()
         {
-            LoadVisable = Visibility.Visible;
             if (!WSA.Pepair())
             {
                 WSAState = "未安装";
@@ -397,7 +395,7 @@ namespace WSATools.ViewModels
                     {
                         WSAState = "未安装";
                         WSAEnable = true;
-                        MessageBox.Show("很无语，看起来WSA环境安装失败了，请稍后试试！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("看起来WSA环境安装失败，请安装后再使用！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 else
@@ -414,7 +412,6 @@ namespace WSATools.ViewModels
                 await LinkWSA();
                 MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            LoadVisable = Visibility.Collapsed;
         }
         private void Downloader_ProcessChange(int receiveSize, long totalSize)
         {
