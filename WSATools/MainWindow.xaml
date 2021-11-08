@@ -118,7 +118,7 @@
                         <Button Content="卸载" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding UninstallApkCommand}" />
                     </Grid>
                     <Button Content="关闭" Command="{Binding CloseCommand}" Grid.Row="5"
-                        VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+                        VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="80" Height="32" />
                 </Grid>
             </Grid>
         </Grid>

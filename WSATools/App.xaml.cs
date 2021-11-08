@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Reflection;
+using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -10,9 +13,28 @@ namespace WSATools
     {
         public App() : base()
         {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                MessageBox.Show("本程序需要管理员权限运行！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown();
+            }
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var applicationName = Assembly.GetExecutingAssembly().GetName().Name ?? string.Empty;
+            new Mutex(true, applicationName, out bool createNew);
+            if (createNew)
+                base.OnStartup(e);
+            else
+            {
+                MessageBox.Show("程序已经启动了！");
+                Current.Shutdown();
+            }
         }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

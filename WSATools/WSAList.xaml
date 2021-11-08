@@ -33,10 +33,10 @@
                     <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="WSA助手" Margin="24,0,0,0" />
                 </StackPanel>
             </Border>
-            <ListView Grid.Row="2" Grid.Column="0">
+            <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding Packages}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="" />
+                        <TextBlock Text="{Binding Content}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -46,8 +46,8 @@
                      Width="100" Margin="0,24,0,0" Height="28" VerticalContentAlignment="Center" />
                 <TextBlock Text="下载进度：" Margin="0,24,0,0" />
                 <TextBlock Margin="0,24,0,0" HorizontalAlignment="Right">
-                <Run Text="{Binding ProcessVal,UpdateSourceTrigger=PropertyChanged}" />
-                <Run Text="%" />
+                    <Run Text="{Binding ProcessVal,UpdateSourceTrigger=PropertyChanged}" />
+                    <Run Text="%" />
                 </TextBlock>
                 <Button Command="{Binding InstallCommand}" Content="安装" Width="100" Margin="0,24,0,0" />
                 <Button Command="{Binding RreshCommand}" Content="刷新" Width="100" Margin="0,24,0,0" />
