@@ -71,7 +71,7 @@ namespace WSATools.ViewModels
         {
             Dispatcher = (sender as MainWindow).Dispatcher;
             Downloader.ProcessChange += Downloader_ProcessChange;
-            RunOnUIThread(async() =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 var result = WSA.State();
@@ -306,7 +306,7 @@ namespace WSATools.ViewModels
             });
             return Task.CompletedTask;
         }
-        private  Task UninstallAsync()
+        private Task UninstallAsync()
         {
             RunOnUIThread(() =>
              {

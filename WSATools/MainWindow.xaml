@@ -1,35 +1,33 @@
-﻿<Window xmlns:local="clr-namespace:WSATools"  x:Class="WSATools.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        ResizeMode="NoResize" xmlns:vm="clr-namespace:WSATools.ViewModels"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowStyle="None"
-        Title="WSATools" Height="450" Width="780">
+﻿<Window
+    x:Class="WSATools.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WSATools"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:viewmodels="clr-namespace:WSATools.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+    mc:Ignorable="d"
+    Loaded="Window_Loaded"
+    Title="WSATools" Height="450" Width="780"
+    ui:WindowHelper.UseModernWindowStyle="True">
     <Window.DataContext>
-        <vm:MainWindowViewModel x:Name="viewModel" />
+        <viewmodels:MainWindowViewModel x:Name="viewModel"/>
     </Window.DataContext>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:CallMethodAction MethodName="LoadAsync" TargetObject="{Binding}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:CallMethodAction MethodName="LoadAsync" TargetObject="{Binding}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Grid>
         <Grid Margin="12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
                 <RowDefinition Height="8" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border Grid.Row="0">
-                <StackPanel Orientation="Horizontal">
-                    <Image Width="48" Source="images/Icon.png" />
-                    <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="WSA助手" Margin="24,0,0,0" />
-                </StackPanel>
-            </Border>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="8" />
@@ -68,7 +66,7 @@
                     </TextBlock>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="8" />
@@ -122,8 +120,9 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Popup x:Name="loading" Width="100" Height="100" Placement="Center">
-            <local:Loading Visibility="{Binding LoadVisable}" Width="100" Height="100" />
-        </Popup>
+        <ui:ProgressBar
+            IsIndeterminate="{Binding IsLoading}"
+            VerticalAlignment="Top"
+            Background="Transparent"/>
     </Grid>
 </Window>

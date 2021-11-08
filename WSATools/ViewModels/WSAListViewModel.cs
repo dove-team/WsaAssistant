@@ -63,7 +63,7 @@ namespace WSATools.ViewModels
         }
         private Task InstallAsync()
         {
-            RunOnUIThread(async() =>
+            RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 try

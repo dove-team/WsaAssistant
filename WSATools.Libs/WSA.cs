@@ -51,7 +51,7 @@ namespace WSATools.Libs
             get
             {
                 var ps = Process.GetProcessesByName("vmmemWSA");
-                return ps!=null&&ps.Length>0;
+                return ps != null && ps.Length > 0;
             }
         }
         private static void Install(string packageName)

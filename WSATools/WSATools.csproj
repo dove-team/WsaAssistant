@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
@@ -10,6 +10,8 @@
     <Authors>michael_eddy</Authors>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <UseWindowsForms>True</UseWindowsForms>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +24,7 @@
     <PackageReference Include="DynamicData" Version="7.4.3" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 

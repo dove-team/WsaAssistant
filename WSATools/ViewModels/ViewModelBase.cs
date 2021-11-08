@@ -18,10 +18,20 @@ namespace WSATools.ViewModels
             set
             {
                 SetProperty(ref loadVisable, value);
+                IsLoading = value == Visibility.Visible;
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Loading?.Invoke(this, value);
                 });
+            }
+        }
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set
+            {
+                SetProperty(ref isLoading, value);
             }
         }
         protected void RunOnUIThread(Action action)

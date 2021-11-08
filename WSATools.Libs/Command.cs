@@ -23,6 +23,7 @@ namespace WSATools.Libs
             try
             {
                 var process = new Process();
+                process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
@@ -79,7 +80,7 @@ namespace WSATools.Libs
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
-                for (var idx = 0; idx <total; idx++)
+                for (var idx = 0; idx < total; idx++)
                 {
                     var cmd = cmds.ElementAt(idx);
                     if (idx == total - 1)
