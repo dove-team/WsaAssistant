@@ -12,6 +12,11 @@ namespace WSATools.Libs
         {
             PackageList = new[] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
         }
+        public static void Start()
+        {
+            var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
+            Command.Instance.Excute(cmd, out _);
+        }
         public static (bool VM, bool WSA, bool Run) State()
         {
             var count = 0;

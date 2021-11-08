@@ -21,6 +21,7 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand UninstallCommand { get; }
         public IAsyncRelayCommand InstallVmCommand { get; }
         public IAsyncRelayCommand InstallApkCommand { get; }
+        public IAsyncRelayCommand StartWSACommand { get; }
         public IAsyncRelayCommand InstallToolCommand { get; }
         public IAsyncRelayCommand InstallWSACommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
@@ -31,12 +32,37 @@ namespace WSATools.ViewModels
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             UninstallCommand = new AsyncRelayCommand(UninstallAsync);
+            StartWSACommand =new AsyncRelayCommand(StartWSAAsync);
             InstallVmCommand = new AsyncRelayCommand(InstallVmAsync);
             InstallToolCommand = new AsyncRelayCommand(InstallToolAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             InstallWSACommand = new AsyncRelayCommand(InstallWSAAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
+        }
+        private async Task StartWSAAsync()
+        {
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                WSA.Start();
+                await Task.Delay(5000);
+                if (WSA.Running)
+                {
+                    WSARun = true;
+                    WSARunState = "运行中";
+                    WSAStart = Visibility.Collapsed;
+                    Adb.Instance.Reload();
+                    await LinkWSA();
+                }
+                else
+                {
+                    WSARun = false;
+                    WSARunState = "未运行";
+                    WSAStart = Visibility.Visible;
+                }
+                LoadVisable = Visibility.Collapsed;
+            });
         }
         private Task CloseAsync()
         {
@@ -78,6 +104,7 @@ namespace WSATools.ViewModels
                  {
                      WSARun = true;
                      WSARunState = "运行中";
+                     WSAStart = Visibility.Collapsed;
                      Adb.Instance.Reload();
                      await LinkWSA();
                  }
@@ -85,6 +112,7 @@ namespace WSATools.ViewModels
                  {
                      WSARun = false;
                      WSARunState = "未运行";
+                     WSAStart = Visibility.Visible;
                  }
                  LoadVisable = Visibility.Collapsed;
              });
@@ -124,6 +152,12 @@ namespace WSATools.ViewModels
         {
             get => wsaRunState;
             set => SetProperty(ref wsaRunState, value);
+        }
+        private Visibility wsaStart = Visibility.Collapsed;
+        public Visibility WSAStart
+        {
+            get => wsaStart;
+            set => SetProperty(ref wsaStart, value);
         }
         private bool wsaRun = false;
         public bool WSARun
