@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace WSATools.Libs
 {
@@ -11,7 +12,7 @@ namespace WSATools.Libs
         {
             PackageList = new[] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
         }
-        public static (bool VM, bool WSA) State()
+        public static (bool VM, bool WSA, bool Run) State()
         {
             var count = 0;
             foreach (var package in PackageList)
@@ -19,7 +20,7 @@ namespace WSATools.Libs
                 if (Check(package))
                     count++;
             }
-            return (count == 3, Pepair());
+            return (count == 3, Pepair(), Running);
         }
         public static int Init()
         {
@@ -34,11 +35,19 @@ namespace WSATools.Libs
             if (count < 3)
             {
                 if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
-                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                    MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                     Command.Instance.Excute("shutdown -r -t 5", out _);
                 return 0;
             }
             return 1;
+        }
+        public static bool Running
+        {
+            get
+            {
+                var ps = Process.GetProcessesByName("vmmemWSA");
+                return ps!=null&&ps.Length>0;
+            }
         }
         private static void Install(string packageName)
         {

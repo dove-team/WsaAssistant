@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using WSATools.Libs;
 
 namespace WSATools.ViewModels
@@ -13,6 +14,7 @@ namespace WSATools.ViewModels
     public sealed class MainWindowViewModel : ObservableObject, IDisposable
     {
         public event EventHandler Close;
+        public event LoadingHandler Loading;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
@@ -41,45 +43,51 @@ namespace WSATools.ViewModels
             Application.Current.Shutdown();
             return Task.CompletedTask;
         }
-        public void LoadAsync(object sender, EventArgs e)
+        private Dispatcher Dispatcher { get; set; }
+        public async void LoadAsync(object sender, EventArgs e)
         {
+            Dispatcher = (sender as MainWindow).Dispatcher;
             Downloader.ProcessChange += Downloader_ProcessChange;
-            Application.Current.Dispatcher.Invoke(async () =>
-            {
-                LoadVisable = Visibility.Visible;
-                var result = WSA.State();
-                if (result.VM)
-                {
-                    VMState = "已安装";
-                    VMEnable = false;
-                }
-                else
-                {
-                    VMState = "未安装";
-                    VMEnable = true;
-                }
-                if (result.WSA)
-                {
-                    WSAState = "已安装";
-                    WSAEnable = false;
-                }
-                else
-                {
-                    WSAState = "未安装";
-                    WSAEnable = true;
-                }
-                if (result.VM && result.WSA)
-                {
-                    Adb.Instance.Reload();
-                    await LinkWSA();
-                    WSARemoveable = true;
-                }
-                else
-                {
-                    WSARemoveable = false;
-                }
-                LoadVisable = Visibility.Collapsed;
-            });
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+             {
+                 LoadVisable = Visibility.Visible;
+                 var result = WSA.State();
+                 if (result.VM)
+                 {
+                     VMState = "已安装";
+                     VMEnable = false;
+                 }
+                 else
+                 {
+                     VMState = "未安装";
+                     VMEnable = true;
+                 }
+                 if (result.WSA)
+                 {
+                     WSAState = "已安装";
+                     WSAEnable = false;
+                     WSARemoveable = true;
+                 }
+                 else
+                 {
+                     WSAState = "未安装";
+                     WSAEnable = true;
+                     WSARemoveable = false;
+                 }
+                 if (result.Run)
+                 {
+                     WSARun = true;
+                     WSARunState = "运行中";
+                     Adb.Instance.Reload();
+                     await LinkWSA();
+                 }
+                 else
+                 {
+                     WSARun = false;
+                     WSARunState = "未运行";
+                 }
+                 LoadVisable = Visibility.Collapsed;
+             });
         }
         private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
         public ObservableCollection<ListItem> Packages
@@ -111,11 +119,27 @@ namespace WSATools.ViewModels
             get => vmEnable;
             private set => SetProperty(ref vmEnable, value);
         }
+        private string wsaRunState = "检测中";
+        public string WSARunState
+        {
+            get => wsaRunState;
+            set => SetProperty(ref wsaRunState, value);
+        }
+        private bool wsaRun = false;
+        public bool WSARun
+        {
+            get => wsaRun;
+            set => SetProperty(ref wsaRun, value);
+        }
         private Visibility loadVisable = Visibility.Collapsed;
         public Visibility LoadVisable
         {
             get => loadVisable;
-            set => SetProperty(ref loadVisable, value);
+            set
+            {
+                SetProperty(ref loadVisable, value);
+                Loading?.Invoke(this, value);
+            }
         }
         private bool toolEnable = true;
         public bool ToolEnable
@@ -149,13 +173,58 @@ namespace WSATools.ViewModels
         }
         private async Task RefreshAsync()
         {
-            LoadVisable = Visibility.Visible;
-            await LinkWSA();
-            LoadVisable = Visibility.Collapsed;
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                await LinkWSA();
+                LoadVisable = Visibility.Collapsed;
+            });
         }
-        private Task DowngradeAsync()
+        private async Task DowngradeAsync()
         {
-            return Task.Factory.StartNew(() =>
+            await Dispatcher.InvokeAsync(() =>
+           {
+               LoadVisable = Visibility.Visible;
+               OpenFileDialog openFileDialog = new OpenFileDialog
+               {
+                   FileName = string.Empty,
+                   Filter = "APK文件|*.apk"
+               };
+               if (!string.IsNullOrEmpty(SelectPackage) && openFileDialog.ShowDialog() == true)
+               {
+                   if (Adb.Instance.Downgrade(openFileDialog.FileName))
+                       MessageBox.Show("降级安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                   else
+                       MessageBox.Show("降级安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+               }
+               LoadVisable = Visibility.Collapsed;
+           });
+        }
+        private async Task UninstallApkAsync()
+        {
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                if (!string.IsNullOrEmpty(SelectPackage))
+                {
+                    if (MessageBox.Show($"确定卸载{SelectPackage}？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                          == MessageBoxResult.Yes)
+                    {
+                        if (Adb.Instance.Remove(SelectPackage))
+                        {
+                            MessageBox.Show("卸载成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                            await LinkWSA();
+                        }
+                        else
+                            MessageBox.Show("卸载失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                LoadVisable = Visibility.Collapsed;
+            });
+        }
+        private async Task InstallApkAsync()
+        {
+            await Dispatcher.InvokeAsync(async () =>
             {
                 LoadVisable = Visibility.Visible;
                 OpenFileDialog openFileDialog = new OpenFileDialog
@@ -163,89 +232,56 @@ namespace WSATools.ViewModels
                     FileName = string.Empty,
                     Filter = "APK文件|*.apk"
                 };
-                if (!string.IsNullOrEmpty(SelectPackage) && openFileDialog.ShowDialog() == true)
+                if (openFileDialog.ShowDialog() == true)
                 {
-                    if (Adb.Instance.Downgrade(openFileDialog.FileName))
-                        MessageBox.Show("降级安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (Adb.Instance.Install(openFileDialog.FileName))
+                    {
+                        MessageBox.Show("安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        await LinkWSA();
+                    }
                     else
-                        MessageBox.Show("降级安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 LoadVisable = Visibility.Collapsed;
             });
         }
-        private async Task UninstallApkAsync()
-        {
-            LoadVisable = Visibility.Visible;
-            if (!string.IsNullOrEmpty(SelectPackage))
-            {
-                if (MessageBox.Show($"确定卸载{SelectPackage}？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                      == MessageBoxResult.Yes)
-                {
-                    if (Adb.Instance.Remove(SelectPackage))
-                    {
-                        MessageBox.Show("卸载成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                        await LinkWSA();
-                    }
-                    else
-                        MessageBox.Show("卸载失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            LoadVisable = Visibility.Collapsed;
-        }
-        private async Task InstallApkAsync()
-        {
-            LoadVisable = Visibility.Visible;
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                FileName = string.Empty,
-                Filter = "APK文件|*.apk"
-            };
-            if (openFileDialog.ShowDialog() == true)
-            {
-                if (Adb.Instance.Install(openFileDialog.FileName))
-                {
-                    MessageBox.Show("安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                    await LinkWSA();
-                }
-                else
-                    MessageBox.Show("安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            LoadVisable = Visibility.Collapsed;
-        }
         private async Task SearchAsync()
         {
-            LoadVisable = Visibility.Visible;
-            await LinkWSA(SearchKeywords);
-            LoadVisable = Visibility.Collapsed;
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                await LinkWSA(SearchKeywords);
+                LoadVisable = Visibility.Collapsed;
+            });
         }
-        private Task InstallToolAsync()
+        private async Task InstallToolAsync()
         {
-            return Task.Factory.StartNew(async () =>
-             {
-                 LoadVisable = Visibility.Visible;
-                 ToolEnable = false;
-                 string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
-                 targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
-                 if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.3/APKInstaller.zip", path, 60)
-                 && Zipper.UnZip(path, targetDirectory))
-                 {
-                     Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
-                     Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
-                     var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
-                     Directory.Delete(targetDirectory, true);
-                     MessageBox.Show(msg, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                 }
-                 else
-                 {
-                     MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-                 }
-                 ToolEnable = true;
-                 LoadVisable = Visibility.Collapsed;
-             });
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                ToolEnable = false;
+                string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
+                targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
+                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.3/APKInstaller.zip", path, 60)
+                && Zipper.UnZip(path, targetDirectory))
+                {
+                    Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
+                    Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
+                    var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
+                    Directory.Delete(targetDirectory, true);
+                    MessageBox.Show(msg, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                ToolEnable = true;
+                LoadVisable = Visibility.Collapsed;
+            });
         }
-        private Task UninstallAsync()
+        private async Task UninstallAsync()
         {
-            return Task.Factory.StartNew(() =>
+            await Dispatcher.InvokeAsync(() =>
              {
                  LoadVisable = Visibility.Visible;
                  WSA.Clear();
@@ -261,9 +297,9 @@ namespace WSATools.ViewModels
             await InitWSA();
             LoadVisable = Visibility.Collapsed;
         }
-        private Task InstallVmAsync()
+        private async Task InstallVmAsync()
         {
-            return Application.Current.Dispatcher.Invoke(async () =>
+            await Dispatcher.InvokeAsync(async () =>
              {
                  LoadVisable = Visibility.Visible;
                  var idx = WSA.Init();

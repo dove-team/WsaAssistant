@@ -7,14 +7,15 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using WSATools.Libs;
 
 namespace WSATools.ViewModels
 {
     public sealed class WSAListViewModel : ObservableObject, IDisposable
     {
-        public delegate void CloseHandler(object sender, bool? result);
         public event CloseHandler Close;
+        public event LoadingHandler Loading;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
@@ -40,7 +41,11 @@ namespace WSATools.ViewModels
         public Visibility LoadVisable
         {
             get => loadVisable;
-            set => SetProperty(ref loadVisable, value);
+            set
+            {
+                SetProperty(ref loadVisable, value);
+                Loading?.Invoke(this, value);
+            }
         }
         private double processVal = 0;
         public double ProcessVal
@@ -56,7 +61,12 @@ namespace WSATools.ViewModels
         }
         private async Task RreshAsync()
         {
-            await GetList();
+            await Dispatcher.InvokeAsync(async () =>
+            {
+                LoadVisable = Visibility.Visible;
+                await GetList();
+                LoadVisable = Visibility.Collapsed;
+            });
         }
         private Task CloseAsync()
         {
@@ -65,38 +75,41 @@ namespace WSATools.ViewModels
         }
         private async Task InstallAsync()
         {
-            LoadVisable = Visibility.Visible;
-            try
+            await Dispatcher.InvokeAsync(async() =>
             {
-                TimeoutEnable = false;
-                Dictionary<string, string> urls = new Dictionary<string, string>();
-                foreach (var package in Packages)
-                    urls.Add(package.Content, package.Tag.ToString());
-                var timeout = int.Parse(Timeout);
-                if (await AppX.PepairAsync(urls, timeout))
+                LoadVisable = Visibility.Visible;
+                try
                 {
-                    StringBuilder shellBuilder = new StringBuilder();
-                    foreach (var url in urls)
+                    TimeoutEnable = false;
+                    Dictionary<string, string> urls = new Dictionary<string, string>();
+                    foreach (var package in Packages)
+                        urls.Add(package.Content, package.Tag.ToString());
+                    var timeout = int.Parse(Timeout);
+                    if (await AppX.PepairAsync(urls, timeout))
                     {
-                        var path = Path.Combine(Environment.CurrentDirectory, url.Key);
-                        shellBuilder.AppendLine($"Add-AppxPackage {path} -ForceApplicationShutdown");
+                        StringBuilder shellBuilder = new StringBuilder();
+                        foreach (var url in urls)
+                        {
+                            var path = Path.Combine(Environment.CurrentDirectory, url.Key);
+                            shellBuilder.AppendLine($"Add-AppxPackage {path} -ForceApplicationShutdown");
+                        }
+                        ExcuteCommand(shellBuilder);
+                        Close?.Invoke(this, true);
                     }
-                    ExcuteCommand(shellBuilder);
-                    Close?.Invoke(this, true);
+                    else
+                    {
+                        Close?.Invoke(this, false);
+                        MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    TimeoutEnable = true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    Close?.Invoke(this, false);
-                    MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                    LogManager.Instance.LogError("InstallAsync", ex);
+                    MessageBox.Show("出现异常，安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                TimeoutEnable = true;
-            }
-            catch (Exception ex)
-            {
-                LogManager.Instance.LogError("InstallAsync", ex);
-                MessageBox.Show("出现异常，安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            LoadVisable = Visibility.Collapsed;
+                LoadVisable = Visibility.Collapsed;
+            });
         }
         private void ExcuteCommand(StringBuilder shellBuilder)
         {
@@ -110,8 +123,10 @@ namespace WSATools.ViewModels
             Command.Instance.Shell(shellFile, out _);
             File.Delete(shellFile);
         }
+        private Dispatcher Dispatcher { get; set; }
         public async void LoadAsync(object sender, EventArgs e)
         {
+            Dispatcher = (sender as WSAList).Dispatcher;
             Downloader.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }

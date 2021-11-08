@@ -19,6 +19,19 @@ namespace WSATools
             {
                 ViewModel = viewModel;
                 ViewModel.Close += ViewModel_Close;
+                ViewModel.Loading+=ViewModel_Loading;
+            }
+        }
+        private void ViewModel_Loading(object sender, Visibility result)
+        {
+            switch (result)
+            {
+                case Visibility.Collapsed:
+                    loading.IsOpen = false;
+                    break;
+                case Visibility.Visible:
+                    loading.IsOpen = true;
+                    break;
             }
         }
         private void ViewModel_Close(object sender, bool? result)

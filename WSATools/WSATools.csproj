@@ -9,6 +9,7 @@
     <Version>1.0.4</Version>
     <Authors>michael_eddy</Authors>
     <NeutralLanguage>zh-CN</NeutralLanguage>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
