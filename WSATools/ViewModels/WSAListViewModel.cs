@@ -34,8 +34,8 @@ namespace WSATools.ViewModels
             get => timeoutEnable;
             set => SetProperty(ref timeoutEnable, value);
         }
-        private double processVal = 0;
-        public double ProcessVal
+        private decimal processVal = 0;
+        public decimal ProcessVal
         {
             get => processVal;
             set => SetProperty(ref processVal, value);
@@ -45,6 +45,12 @@ namespace WSATools.ViewModels
         {
             get => timeout;
             set => SetProperty(ref timeout, value);
+        }
+        private bool installEnable = true;
+        public bool InstallEnable
+        {
+            get => installEnable;
+            set => SetProperty(ref installEnable, value);
         }
         private Task RreshAsync()
         {
@@ -65,6 +71,7 @@ namespace WSATools.ViewModels
         {
             RunOnUIThread(async () =>
             {
+                InstallEnable = false;
                 LoadVisable = Visibility.Visible;
                 try
                 {
@@ -89,6 +96,7 @@ namespace WSATools.ViewModels
                         Close?.Invoke(this, false);
                         MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
+                    InstallEnable = true;
                     TimeoutEnable = true;
                 }
                 catch (Exception ex)
@@ -120,7 +128,7 @@ namespace WSATools.ViewModels
         }
         private void Downloader_ProcessChange(int receiveSize, long totalSize)
         {
-            ProcessVal = receiveSize / totalSize * 100;
+            ProcessVal = Math.Round((decimal)receiveSize / totalSize * 100, 2);
         }
         private async Task GetList()
         {

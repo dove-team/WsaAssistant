@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools.Libs
 {
@@ -38,7 +39,6 @@ namespace WSATools.Libs
                         bytesRead = await responseStream.ReadAsync(buffer, 0, 20480);
                         sumSchedule += 20480;
                         ProcessChange?.Invoke(sumSchedule, response.ContentLength);
-                        Thread.Sleep(2);
                     }
                     array.Add(path);
                 }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using HandyControl.Controls;
+using System;
 using System.Windows;
 using WSATools.Libs;
 using WSATools.ViewModels;
 
 namespace WSATools
 {
-    public partial class WSAList : Window
+    public partial class WSAList : BlurWindow
     {
         private WSAListViewModel ViewModel;
         public WSAList()

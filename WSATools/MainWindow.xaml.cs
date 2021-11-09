@@ -1,12 +1,14 @@
-﻿using System;
+﻿using HandyControl.Controls;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using WSATools.Libs;
 using WSATools.ViewModels;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : BlurWindow
     {
         private MainWindowViewModel ViewModel;
         public MainWindow()
@@ -20,8 +22,18 @@ namespace WSATools
             {
                 ViewModel = viewModel;
                 ViewModel.Close += ViewModel_Close;
+                ViewModel.Enable += ViewModel_Enable;
                 ViewModel.Loading += ViewModel_Loading;
             }
+        }
+        private void ViewModel_Enable(object sender, bool state)
+        {
+            IsEnabled = state;
+        }
+        private void ViewModel_Close(object sender, bool? result)
+        {
+            Close();
+            Application.Current.Shutdown();
         }
         private void ViewModel_Loading(object sender, Visibility result)
         {
@@ -34,11 +46,6 @@ namespace WSATools
                     loading.IsOpen = true;
                     break;
             }
-        }
-        private void ViewModel_Close(object sender, EventArgs e)
-        {
-            Close();
-            Application.Current.Shutdown();
         }
         protected override void OnClosing(CancelEventArgs e)
         {

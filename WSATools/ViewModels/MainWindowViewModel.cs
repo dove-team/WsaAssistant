@@ -11,7 +11,8 @@ namespace WSATools.ViewModels
 {
     public sealed class MainWindowViewModel : ViewModelBase
     {
-        public event EventHandler Close;
+        public event CloseHandler Close;
+        public event EnableHandler Enable;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
@@ -315,6 +316,7 @@ namespace WSATools.ViewModels
                  if (MessageBox.Show("需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
                      MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                      Command.Instance.Excute("shutdown -r -t 10", out _);
+                 Application.Current.Shutdown();
                  LoadVisable = Visibility.Collapsed;
              });
             return Task.CompletedTask;
@@ -380,8 +382,10 @@ namespace WSATools.ViewModels
                 WSAState = "未安装";
                 WSAEnable = true;
                 WSAList list = new WSAList();
+                Enable?.Invoke(this, false);
                 if (list.ShowDialog() != null)
                 {
+                    Enable?.Invoke(this, true);
                     var result = WSA.Pepair();
                     if (result)
                     {
@@ -400,6 +404,7 @@ namespace WSATools.ViewModels
                 }
                 else
                 {
+                    Enable?.Invoke(this, true);
                     MessageBox.Show("未安装WSA无法进行操作，程序即将退出！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                     Close?.Invoke(this, null);
                 }
