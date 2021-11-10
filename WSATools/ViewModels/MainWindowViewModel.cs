@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using WSATools.Libs;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools.ViewModels
 {
@@ -358,14 +359,23 @@ namespace WSATools.ViewModels
             });
             if (await Adb.Instance.Pepair())
             {
-                var list = Adb.Instance.GetAll(condition);
-                foreach (var name in list)
+                if (string.IsNullOrEmpty(Adb.Instance.DeviceCode))
                 {
-                    var item = new ListItem(name);
-                    Dispatcher.Invoke(() =>
+                    WSARun = false;
+                    MessageBox.Show("请检查是否开启开发人员模式！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
+                else
+                {
+                    var list = Adb.Instance.GetAll(condition);
+                    foreach (var name in list)
                     {
-                        Packages.Add(item);
-                    });
+                        var item = new ListItem(name);
+                        Dispatcher.Invoke(() =>
+                        {
+                            Packages.Add(item);
+                        });
+                    }
                 }
             }
             else

@@ -110,15 +110,23 @@ namespace WSATools.ViewModels
         }
         private void ExcuteCommand(StringBuilder shellBuilder)
         {
-            Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
-            Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
-            var file = "install.ps1";
-            if (File.Exists(file))
-                File.Delete(file);
-            File.WriteAllText(file, shellBuilder.ToString());
-            var shellFile = Path.Combine(Environment.CurrentDirectory, file);
-            Command.Instance.Shell(shellFile, out _);
-            File.Delete(shellFile);
+            try
+            {
+                Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
+                Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
+                var file = "install.ps1";
+                if (File.Exists(file))
+                    File.Delete(file);
+                File.WriteAllText(file, shellBuilder.ToString());
+                var shellFile = Path.Combine(Environment.CurrentDirectory, file);
+                Command.Instance.Shell(shellFile, out string message);
+                LogManager.Instance.LogInfo("Install WSA Script:" + message);
+                File.Delete(shellFile);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("ExcuteCommand", ex);
+            }
         }
         public async void LoadAsync(object sender, EventArgs e)
         {
