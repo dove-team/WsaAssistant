@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;ARM64</Platforms>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <Version>1.1.0</Version>
     <Authors>michael_eddy</Authors>
