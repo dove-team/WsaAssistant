@@ -3,3 +3,5 @@ bin
 obj
 Publish
 Setup.exe
+AppPackages
+BundleArtifacts
