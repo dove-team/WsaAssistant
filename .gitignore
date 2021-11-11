@@ -3,3 +3,4 @@ bin
 obj
 Setup.exe
 Publish/x64
+Publish/arm

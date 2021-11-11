@@ -3,7 +3,7 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <Version>1.1.2</Version>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;ARM32</Platforms>
     <OutputType>WinExe</OutputType>
     <Authors>michael_eddy</Authors>
     <NeutralLanguage>zh-CN</NeutralLanguage>

@@ -14,16 +14,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM32 = Debug|ARM32
 		Debug|x64 = Debug|x64
+		Release|ARM32 = Release|ARM32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Debug|ARM32.Build.0 = Debug|ARM32
 		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Debug|x64.ActiveCfg = Debug|x64
 		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Debug|x64.Build.0 = Debug|x64
+		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Release|ARM32.ActiveCfg = Release|ARM32
+		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Release|ARM32.Build.0 = Release|ARM32
 		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Release|x64.ActiveCfg = Release|x64
 		{64AD1014-BCAD-47E7-8F08-85CF22870E9D}.Release|x64.Build.0 = Release|x64
+		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Debug|ARM32.Build.0 = Debug|ARM32
 		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Debug|x64.ActiveCfg = Debug|x64
 		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Debug|x64.Build.0 = Debug|x64
+		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Release|ARM32.ActiveCfg = Release|ARM32
+		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Release|ARM32.Build.0 = Release|ARM32
 		{24A238C7-7C8B-4D13-A4BA-9BB8F0CBED92}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
