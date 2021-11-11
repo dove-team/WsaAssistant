@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using WSATools.Libs;
+using WSATools.Libs.Lang;
+using WSATools.ViewModels;
 
 namespace WSATools
 {
@@ -29,7 +31,10 @@ namespace WSATools
             var applicationName = Assembly.GetExecutingAssembly().GetName().Name ?? string.Empty;
             new Mutex(true, applicationName, out bool createNew);
             if (createNew)
+            {
                 base.OnStartup(e);
+                LangManager.Instance.Init();
+            }
             else
             {
                 MessageBox.Show("程序已经启动了！");

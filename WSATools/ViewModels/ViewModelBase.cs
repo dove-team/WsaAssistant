@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using WSATools.Libs;
+using WSATools.Libs.Lang;
 
 namespace WSATools.ViewModels
 {
@@ -43,6 +44,11 @@ namespace WSATools.ViewModels
                     await func?.Invoke();
                 });
             });
+        }
+        protected string FindChar(string key)
+        {
+            var obj = LangManager.Instance.Resource[key];
+            return obj == null ? string.Empty : obj.ToString();
         }
         public abstract void Dispose();
     }
