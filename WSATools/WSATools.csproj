@@ -3,14 +3,13 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <Version>1.1.2</Version>
+    <Platforms>x64</Platforms>
     <OutputType>WinExe</OutputType>
     <Authors>michael_eddy</Authors>
-    <Platforms>x64;ARM64</Platforms>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
