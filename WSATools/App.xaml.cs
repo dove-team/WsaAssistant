@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
@@ -6,8 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using WSATools.Libs;
-using WSATools.Libs.Lang;
-using WSATools.ViewModels;
 
 namespace WSATools
 {
@@ -26,20 +26,31 @@ namespace WSATools
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            MessageHelper.SendMessage("Upgrade");
+            base.OnExit(e);
+        }
         protected override void OnStartup(StartupEventArgs e)
         {
             var applicationName = Assembly.GetExecutingAssembly().GetName().Name ?? string.Empty;
-            new Mutex(true, applicationName, out bool createNew);
+            using var mutex = new Mutex(true, applicationName, out bool createNew);
             if (createNew)
             {
                 base.OnStartup(e);
                 LangManager.Instance.Init();
+                try
+                {
+                    Process.Start(Path.Combine(Environment.CurrentDirectory, "WSATools.Update.exe"));
+                }
+                catch { }
             }
             else
             {
                 MessageBox.Show("程序已经启动了！");
                 Current.Shutdown();
             }
+            mutex.ReleaseMutex();
         }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

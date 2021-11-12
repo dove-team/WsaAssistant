@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         ResizeMode="NoResize" xmlns:vm="clr-namespace:WSATools.ViewModels"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowStyle="None"
-        Title="WSATools" Height="450" Width="780" Loaded="BlurWindow_Loaded">
+        Title="WSATools" Height="450" Width="780">
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="viewModel" />
     </Window.DataContext>

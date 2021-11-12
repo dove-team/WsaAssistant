@@ -1,6 +1,5 @@
 ﻿using HandyControl.Controls;
 using System;
-using System.Windows;
 using WSATools.Libs;
 using WSATools.ViewModels;
 
@@ -23,14 +22,14 @@ namespace WSATools
                 ViewModel.Loading += ViewModel_Loading;
             }
         }
-        private void ViewModel_Loading(object sender, Visibility result)
+        private void ViewModel_Loading(object sender, bool result)
         {
             switch (result)
             {
-                case Visibility.Collapsed:
+                case false:
                     loading.IsOpen = false;
                     break;
-                case Visibility.Visible:
+                case true:
                     loading.IsOpen = true;
                     break;
             }

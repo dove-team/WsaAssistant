@@ -2,8 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using WSATools.Libs;
 
-namespace WSATools.Libs.Lang
+namespace WSATools
 {
     public sealed class LangManager
     {
@@ -40,12 +41,13 @@ namespace WSATools.Libs.Lang
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    LogManager.Instance.LogError("Switch", ex);
+                    throw;
                 }
                 if (Resource != null)
                 {
                     var resourceDictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x =>
-                    x.Source.ToString().Contains("Chinese", StringComparison.CurrentCultureIgnoreCase)||
+                    x.Source.ToString().Contains("Chinese", StringComparison.CurrentCultureIgnoreCase) ||
                    x.Source.ToString().Contains("English", StringComparison.CurrentCultureIgnoreCase));
                     if (resourceDictionary != null)
                         Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);

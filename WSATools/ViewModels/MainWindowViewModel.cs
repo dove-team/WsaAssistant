@@ -13,7 +13,7 @@ namespace WSATools.ViewModels
     public sealed class MainWindowViewModel : ViewModelBase
     {
         public event CloseHandler Close;
-        public event EnableHandler Enable;
+        public event BooleanHandler Enable;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
@@ -331,8 +331,7 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
              {
                  LoadVisable = Visibility.Visible;
-                 var idx = WSA.Init();
-                 if (idx == 1)
+                 if (WSA.Init())
                  {
                      VMState = "已安装";
                      VMEnable = false;
@@ -346,6 +345,9 @@ namespace WSATools.ViewModels
                      VMEnable = true;
                      WSARemoveable = false;
                      LoadVisable = Visibility.Collapsed;
+                     if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
+                         MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                         Command.Instance.Excute("shutdown -r -t 5", out _);
                  }
              });
             return Task.CompletedTask;

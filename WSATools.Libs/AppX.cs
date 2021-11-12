@@ -32,12 +32,10 @@ namespace WSATools.Libs
         public static async Task<Dictionary<string, string>> GetFilePath()
         {
             Dictionary<string, string> list = new Dictionary<string, string>();
-            var url = "https://store.rg-adguard.net/api/GetFiles";
-            var content = "type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN";
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             HttpClient httpClient = new HttpClient(handler);
-            var stringContent = new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var respone = await httpClient.PostAsync(url, stringContent);
+            var stringContent = new StringContent("type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN", Encoding.UTF8, "application/x-www-form-urlencoded");
+            var respone = await httpClient.PostAsync("https://store.rg-adguard.net/api/GetFiles", stringContent);
             if (respone.StatusCode == HttpStatusCode.OK)
             {
                 var html = await respone.Content.ReadAsStringAsync();

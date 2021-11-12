@@ -28,7 +28,7 @@ namespace WSATools.Libs
             }
             return (count == 3, Pepair(), Running);
         }
-        public static int Init()
+        public static bool Init()
         {
             int count = 0;
             foreach (var package in PackageList)
@@ -38,14 +38,7 @@ namespace WSATools.Libs
                 else
                     count++;
             }
-            if (count < 3)
-            {
-                if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
-                    MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-                    Command.Instance.Excute("shutdown -r -t 5", out _);
-                return 0;
-            }
-            return 1;
+            return count < 3;
         }
         public static bool Running
         {

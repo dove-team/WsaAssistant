@@ -35,14 +35,14 @@ namespace WSATools
             Close();
             Application.Current.Shutdown();
         }
-        private void ViewModel_Loading(object sender, Visibility result)
+        private void ViewModel_Loading(object sender, bool result)
         {
             switch (result)
             {
-                case Visibility.Collapsed:
+                case false:
                     loading.IsOpen = false;
                     break;
-                case Visibility.Visible:
+                case true:
                     loading.IsOpen = true;
                     break;
             }
@@ -53,13 +53,6 @@ namespace WSATools
             if (MessageBox.Show("是否清除下载的文件？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 Downloader.Clear();
             base.OnClosing(e);
-        }
-        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            Dispatcher.Invoke(async () =>
-            {
-                await Downloader.HasUpdate();
-            });
         }
     }
 }

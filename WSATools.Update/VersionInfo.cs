@@ -11,6 +11,7 @@ namespace WSATools.Update
     }
     public sealed class Uri
     {
+        public string Ext { get; set; }
         public string Platform { get; set; }
         public string Url { get; set; }
     }

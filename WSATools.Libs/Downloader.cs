@@ -21,9 +21,7 @@ namespace WSATools.Libs
                 WebRequest request = WebRequest.Create(url);
                 using (WebResponse response = request.GetResponse())
                 {
-                    if (File.Exists(path) && MessageBoxResult.Yes == MessageBox.Show($"已存在文件{Path.GetFileName(path)},是否重新下载？",
-                        "提示", MessageBoxButton.YesNo, MessageBoxImage.Question))
-                        File.Delete(path);
+                    File.Delete(path);
                     using Stream responseStream = response.GetResponseStream();
                     using Stream fileStream = new FileStream(path, FileMode.CreateNew);
                     byte[] buffer = new byte[20480];

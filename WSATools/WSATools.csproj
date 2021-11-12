@@ -35,4 +35,13 @@
     <Resource Include="images\loading.gif" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Lang\Chinese.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Update="Lang\English.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
 </Project>
