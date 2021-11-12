@@ -27,10 +27,6 @@ namespace WSATools.Libs
                     array[0] = "arm";
                     array[1] = "x86";
                     break;
-                case Architecture.X86:
-                    array[0] = "arm";
-                    array[1] = "x64";
-                    break;
             }
         }
         public static async Task<Dictionary<string, string>> GetFilePath()

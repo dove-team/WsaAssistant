@@ -54,5 +54,12 @@ namespace WSATools
                 Downloader.Clear();
             base.OnClosing(e);
         }
+        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.Invoke(async () =>
+            {
+                await Downloader.HasUpdate();
+            });
+        }
     }
 }
