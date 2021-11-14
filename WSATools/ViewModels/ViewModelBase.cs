@@ -45,7 +45,7 @@ namespace WSATools.ViewModels
                 });
             });
         }
-        protected string FindChar(string key)
+        public string FindChar(string key)
         {
             var obj = LangManager.Instance.Resource[key];
             return obj == null ? string.Empty : obj.ToString();

@@ -1,24 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools.Libs
 {
     public sealed class WSA
     {
-        public static IEnumerable<string> PackageList { get; }
-        static WSA()
+        private static WSA instance;
+        public static WSA Instance
         {
-            PackageList = new[] { "Microsoft-Hyper-V", "HypervisorPlatform", "VirtualMachinePlatform" };
+            get
+            {
+                if (instance == null)
+                    instance = new WSA();
+                return instance;
+            }
         }
-        public static void Start()
+        public IEnumerable<string> PackageList { get; }
+        private WSA()
+        {
+            PackageList = new[] { "HypervisorPlatform", "VirtualMachinePlatform" };
+        }
+        public void Start()
         {
             var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
             Command.Instance.Excute(cmd, out _);
         }
-        public static (bool VM, bool WSA, bool Run) State()
+        public (bool VM, bool WSA, bool Run) State()
         {
             var count = 0;
             foreach (var package in PackageList)
@@ -26,9 +34,9 @@ namespace WSATools.Libs
                 if (Check(package))
                     count++;
             }
-            return (count == 3, Pepair(), Running);
+            return (count == PackageList.Count(), Pepair(), Running);
         }
-        public static bool Init()
+        public bool Init()
         {
             int count = 0;
             foreach (var package in PackageList)
@@ -40,7 +48,7 @@ namespace WSATools.Libs
             }
             return count < 3;
         }
-        public static bool Running
+        public bool Running
         {
             get
             {
@@ -48,24 +56,24 @@ namespace WSATools.Libs
                 return ps != null && ps.Length > 0;
             }
         }
-        private static void Install(string packageName)
+        private void Install(string packageName)
         {
             Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out string message);
             LogManager.Instance.LogInfo("Install WSA:" + message);
         }
-        private static bool Check(string packageName)
+        private bool Check(string packageName)
         {
             Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
             LogManager.Instance.LogInfo("Check VM:" + message);
             return message.Before("状态", "已启用");
         }
-        public static bool Pepair()
+        public bool Pepair()
         {
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
             LogManager.Instance.LogInfo("Pepair WSA:" + message);
             return !string.IsNullOrEmpty(message);
         }
-        public static void Clear()
+        public void Clear()
         {
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
             var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault().Trim();

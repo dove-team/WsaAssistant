@@ -36,7 +36,7 @@ namespace WSATools
                 Current = langName;
                 try
                 {
-                    Uri uri = new Uri(string.Format("/WSATools.Libs;Component/Lang/{0}.xaml", Current), UriKind.Relative);
+                    Uri uri = new Uri(string.Format("Lang/{0}.xaml", Current), UriKind.Relative);
                     Resource = Application.LoadComponent(uri) as ResourceDictionary;
                 }
                 catch (Exception ex)

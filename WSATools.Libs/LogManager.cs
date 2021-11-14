@@ -25,12 +25,6 @@ namespace WSATools.Libs
                 .WriteTo.Async(a => a.File(LogFile, rollingInterval: RollingInterval.Day))
                 .CreateLogger();
         }
-        /// <summary>
-        /// 记录错误信息
-        /// </summary>
-        /// <param name="messageTemplate">错误方法或者备注</param>
-        /// <param name="exception">错误信息</param>
-        /// <param name="Serious">是否严重错误</param>
         public void LogError(string messageTemplate, Exception exception)
         {
             try

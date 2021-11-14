@@ -27,7 +27,7 @@
             <Border Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <Image Width="48" Source="images/Icon.png" />
-                    <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="WSA助手" Margin="24,0,0,0" />
+                    <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="{DynamicResource AppName}" Margin="24,0,0,0" />
                 </StackPanel>
             </Border>
             <Grid Grid.Row="1">
@@ -42,28 +42,24 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="windows依赖状态：" />
+                    <TextBlock Text="{DynamicResource VMDependency}" />
                     <TextBlock Text="{Binding VMState}" Foreground="DarkRed" />
-                    <Button Style="{StaticResource ButtonPrimary}" Content="安装" IsEnabled="{Binding VMEnable}" Width="100"
+                    <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Install}" IsEnabled="{Binding VMEnable}" Width="100"
                         Command="{Binding InstallVmCommand}" Margin="24,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
                     <TextBlock>
-                    <Run Text="安装状态：" />
-                    <Run xml:space="preserve" Text="             " />
+                    <Run Text="{DynamicResource InstallState}" />
+                    <Run xml:space="preserve" Text="              " />
                     </TextBlock>
                     <TextBlock Text="{Binding WSAState}" Foreground="DarkRed" />
-                    <Button Content="安装" Style="{StaticResource ButtonPrimary}" IsEnabled="{Binding WSAEnable}" Command="{Binding InstallWSACommand}"
+                    <Button Content="{DynamicResource Install}" Style="{StaticResource ButtonPrimary}" IsEnabled="{Binding WSAEnable}" Command="{Binding InstallWSACommand}"
                         Margin="24,0,0,0" Width="100" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
-                    <Button IsEnabled="{Binding ToolEnable}" Command="{Binding InstallToolCommand}" Content="安装ApkInstall" Width="140" />
-                    <TextBlock Margin="8,0,0,0" Foreground="DarkRed" Text="可能由于Github源的原因初始化失败" />
-                </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
-                    <Button IsEnabled="{Binding WSARemoveable}" Command="{Binding UninstallCommand}" Content="卸载WSA环境" Width="140" />
+                    <Button IsEnabled="{Binding WSARemoveable}" Command="{Binding UninstallCommand}" Content="{DynamicResource RemoveWsa}" Width="140" />
                     <TextBlock Margin="8,0,0,0">
-                    <Run>下载进度：</Run>
+                    <Run Text="{DynamicResource DownloadProcess}" />
                     <Run Text="{Binding ProcessVal}" />
                     <Run>%</Run>
                     </TextBlock>
@@ -78,7 +74,7 @@
                 <ListView Grid.Column="0" ItemsSource="{Binding Packages}" SelectedItem="{Binding SelectPackage}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="已安装应用" DisplayMemberBinding="{Binding Content}"/>
+                            <GridViewColumn Header="{DynamicResource PackageList}" DisplayMemberBinding="{Binding Content}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -93,12 +89,12 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding WSARunState}" />
-                        <Button Margin="24,0,0,0" Content="启动WSA" Visibility="{Binding WSAStart}" Command="{Binding StartWSACommand}" />
+                        <Button Margin="24,0,0,0" Content="{DynamicResource StartWsa}" Visibility="{Binding WSAStart}" Command="{Binding StartWSACommand}" />
                     </StackPanel>
-                    <TextBlock Text="搜索包：" Grid.Row="1" />
+                    <TextBlock Text="{DynamicResource SearchPackage}" Grid.Row="1" />
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,12,0,0">
                         <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" />
-                        <Button Content="搜索" Margin="12,0,0,0" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchCommand}" />
+                        <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchCommand}" />
                     </StackPanel>
                     <Grid Grid.Row="3" Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
@@ -106,8 +102,8 @@
                             <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource ButtonPrimary}" Content="安装" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding InstallApkCommand}" />
-                        <Button Style="{StaticResource ButtonPrimary}" Content="降级" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding DowngradeCommand}" />
+                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Install}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding InstallApkCommand}" />
+                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Downgrade}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding DowngradeCommand}" />
                     </Grid>
                     <Grid Grid.Row="4" Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
@@ -115,10 +111,10 @@
                             <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource ButtonPrimary}" Content="刷新" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding RefreshCommand}" />
-                        <Button Style="{StaticResource ButtonPrimary}" Content="卸载" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding UninstallApkCommand}" />
+                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Refresh}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding RefreshCommand}" />
+                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Remove}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding UninstallApkCommand}" />
                     </Grid>
-                    <Button Content="关闭" Command="{Binding CloseCommand}" Grid.Row="5"
+                    <Button Content="{DynamicResource Close}" Command="{Binding CloseCommand}" Grid.Row="5"
                         VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="80" Height="32" />
                 </Grid>
             </Grid>

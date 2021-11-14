@@ -12,8 +12,18 @@ namespace WSATools.Libs
 {
     public sealed class AppX
     {
-        private static readonly string[] array;
-        static AppX()
+        private static AppX instance;
+        public static AppX Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new AppX();
+                return instance;
+            }
+        }
+        private readonly string[] array;
+        private AppX()
         {
             array = new string[2];
             switch (RuntimeInformation.ProcessArchitecture)
@@ -29,7 +39,7 @@ namespace WSATools.Libs
                     break;
             }
         }
-        public static async Task<Dictionary<string, string>> GetFilePath()
+        public async Task<Dictionary<string, string>> GetFilePath()
         {
             Dictionary<string, string> list = new Dictionary<string, string>();
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
@@ -61,7 +71,7 @@ namespace WSATools.Libs
             }
             return list;
         }
-        private static bool IsSupport(string key)
+        private bool IsSupport(string key)
         {
             if (key.EndsWith("appx") || key.EndsWith("msixbundle"))
             {
@@ -75,7 +85,7 @@ namespace WSATools.Libs
             }
             return false;
         }
-        public static async Task<bool> PepairAsync(Dictionary<string, string> urls, int timeout)
+        public async Task<bool> PepairAsync(Dictionary<string, string> urls)
         {
             try
             {
@@ -85,8 +95,12 @@ namespace WSATools.Libs
                     var path = Path.Combine(Environment.CurrentDirectory, url.Key);
                     if (File.Exists(path))
                         count++;
-                    else if (await Downloader.Create(url.Value, path, timeout))
-                        count++;
+                    else
+                    {
+                        var data = await DownloadManager.Instance.Create(url.Value, Environment.CurrentDirectory);
+                        if (data.CreateStatus)
+                            count++;
+                    }
                 }
                 return count == total;
             }

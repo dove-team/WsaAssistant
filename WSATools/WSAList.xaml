@@ -31,28 +31,25 @@
             <Border Grid.Row="0" Grid.ColumnSpan="3">
                 <StackPanel Orientation="Horizontal">
                     <Image Width="48" Source="images/Icon.png" />
-                    <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="WSA助手" Margin="24,0,0,0" />
+                    <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="{DynamicResource AppName}" Margin="24,0,0,0" />
                 </StackPanel>
             </Border>
             <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding Packages}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="安装包列表" DisplayMemberBinding="{Binding Content}"/>
+                        <GridViewColumn Header="{DynamicResource DependencyList}" DisplayMemberBinding="{Binding Content}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
             <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="2" Margin="12" VerticalAlignment="Bottom">
-                <TextBlock Text="超时时间(分钟)：" />
-                <TextBox Text="{Binding Timeout,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TimeoutEnable,UpdateSourceTrigger=PropertyChanged}"
-                     Width="100" Margin="0,24,0,0" Height="28" VerticalContentAlignment="Center" />
-                <TextBlock Text="下载进度：" Margin="0,24,0,0" />
+                <TextBlock Text="{DynamicResource DownloadProcess}" Margin="0,24,0,0" />
                 <TextBlock Margin="0,24,0,0" HorizontalAlignment="Right">
                     <Run Text="{Binding ProcessVal,UpdateSourceTrigger=PropertyChanged}" />
                     <Run Text="%" />
                 </TextBlock>
-                <Button IsEnabled="{Binding InstallEnable}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallCommand}" Content="安装" Width="100" Margin="0,24,0,0" />
-                <Button Style="{StaticResource ButtonPrimary}" Command="{Binding RreshCommand}" Content="刷新" Width="100" Margin="0,24,0,0" />
-                <Button Command="{Binding CloseCommand}" Content="退出" Width="100" Margin="0,24,0,0" />
+                <Button IsEnabled="{Binding InstallEnable}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallCommand}" Content="{DynamicResource Install}" Width="100" Margin="0,24,0,0" />
+                <Button Style="{StaticResource ButtonPrimary}" Command="{Binding RreshCommand}" Content="{DynamicResource Refresh}" Width="100" Margin="0,24,0,0" />
+                <Button Command="{Binding CloseCommand}" Content="{DynamicResource Close}" Width="100" Margin="0,24,0,0" />
             </StackPanel>
         </Grid>
         <Popup x:Name="loading" Width="100" Height="100" Placement="Center">

@@ -1,5 +1,4 @@
-﻿using HandyControl.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -75,10 +74,12 @@ namespace WSATools.Libs
             {
                 if (!HasBrige)
                 {
-                    var url = "https://dl.google.com/android/repository/platform-tools-latest-windows.zip";
-                    var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
-                    if (await Downloader.Create(url, path))
-                        return Zipper.UnZip(path, Environment.CurrentDirectory);
+                    var data = await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip", Environment.CurrentDirectory);
+                    if (data.CreateStatus)
+                    {
+                        var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
+                        return path.UnZip(Environment.CurrentDirectory);
+                    }
                     else
                         return false;
                 }

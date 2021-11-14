@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using WSATools.Libs;
@@ -21,7 +20,6 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand InstallVmCommand { get; }
         public IAsyncRelayCommand InstallApkCommand { get; }
         public IAsyncRelayCommand StartWSACommand { get; }
-        public IAsyncRelayCommand InstallToolCommand { get; }
         public IAsyncRelayCommand InstallWSACommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
         public IAsyncRelayCommand UninstallApkCommand { get; }
@@ -33,7 +31,6 @@ namespace WSATools.ViewModels
             UninstallCommand = new AsyncRelayCommand(UninstallAsync);
             StartWSACommand = new AsyncRelayCommand(StartWSAAsync);
             InstallVmCommand = new AsyncRelayCommand(InstallVmAsync);
-            InstallToolCommand = new AsyncRelayCommand(InstallToolAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             InstallWSACommand = new AsyncRelayCommand(InstallWSAAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
@@ -44,12 +41,12 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
-                WSA.Start();
+                WSA.Instance.Start();
                 await Task.Delay(5000);
-                if (WSA.Running)
+                if (WSA.Instance.Running)
                 {
                     WSARun = true;
-                    WSARunState = "运行中";
+                    WSARunState = FindChar("Running");
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -57,7 +54,7 @@ namespace WSATools.ViewModels
                 else
                 {
                     WSARun = false;
-                    WSARunState = "未运行";
+                    WSARunState = FindChar("NotRunning");
                     WSAStart = Visibility.Visible;
                 }
                 LoadVisable = Visibility.Collapsed;
@@ -72,37 +69,40 @@ namespace WSATools.ViewModels
         public void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as MainWindow).Dispatcher;
-            Downloader.ProcessChange += Downloader_ProcessChange;
+            VMState = FindChar("Checking");
+            WSAState = FindChar("Checking");
+            WSARunState = FindChar("Checking");
+            DownloadManager.ProcessChange += Downloader_ProcessChange;
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
-                var result = WSA.State();
+                var result = WSA.Instance.State();
                 if (result.VM)
                 {
-                    VMState = "已安装";
+                    VMState = FindChar("Installed");
                     VMEnable = false;
                 }
                 else
                 {
-                    VMState = "未安装";
+                    VMState = FindChar("NotInstall");
                     VMEnable = true;
                 }
                 if (result.WSA)
                 {
-                    WSAState = "已安装";
+                    WSAState = FindChar("Installed");
                     WSAEnable = false;
                     WSARemoveable = true;
                 }
                 else
                 {
-                    WSAState = "未安装";
+                    WSAState = FindChar("NotInstall");
                     WSAEnable = true;
                     WSARemoveable = false;
                 }
                 if (result.Run)
                 {
                     WSARun = true;
-                    WSARunState = "运行中";
+                    WSARunState = FindChar("Running");
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -110,7 +110,7 @@ namespace WSATools.ViewModels
                 else
                 {
                     WSARun = false;
-                    WSARunState = "未运行";
+                    WSARunState = FindChar("NotRunning");
                     WSAStart = Visibility.Visible;
                 }
                 LoadVisable = Visibility.Collapsed;
@@ -134,7 +134,7 @@ namespace WSATools.ViewModels
             get => processVal;
             set => SetProperty(ref processVal, value);
         }
-        private string vmState = "检测中...";
+        private string vmState;
         public string VMState
         {
             get => vmState;
@@ -146,7 +146,7 @@ namespace WSATools.ViewModels
             get => vmEnable;
             private set => SetProperty(ref vmEnable, value);
         }
-        private string wsaRunState = "检测中";
+        private string wsaRunState;
         public string WSARunState
         {
             get => wsaRunState;
@@ -164,13 +164,7 @@ namespace WSATools.ViewModels
             get => wsaRun;
             set => SetProperty(ref wsaRun, value);
         }
-        private bool toolEnable = true;
-        public bool ToolEnable
-        {
-            get => toolEnable;
-            set => SetProperty(ref toolEnable, value);
-        }
-        private string wsaState = "检测中...";
+        private string wsaState;
         public string WSAState
         {
             get => wsaState;
@@ -212,14 +206,14 @@ namespace WSATools.ViewModels
                OpenFileDialog openFileDialog = new OpenFileDialog
                {
                    FileName = string.Empty,
-                   Filter = "APK文件|*.apk"
+                   Filter = FindChar("ApkFile")
                };
                if (!string.IsNullOrEmpty(SelectPackage) && openFileDialog.ShowDialog() == true)
                {
                    if (Adb.Instance.Downgrade(openFileDialog.FileName))
-                       MessageBox.Show("降级安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                       MessageBox.Show(FindChar("DowngradeSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                    else
-                       MessageBox.Show("降级安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                       MessageBox.Show(FindChar("DowngradeFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                }
                LoadVisable = Visibility.Collapsed;
            });
@@ -232,16 +226,16 @@ namespace WSATools.ViewModels
                 LoadVisable = Visibility.Visible;
                 if (!string.IsNullOrEmpty(SelectPackage))
                 {
-                    if (MessageBox.Show($"确定卸载{SelectPackage}？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                    if (MessageBox.Show($"{FindChar("UninstallTips")}{SelectPackage}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
                           == MessageBoxResult.Yes)
                     {
                         if (Adb.Instance.Remove(SelectPackage))
                         {
-                            MessageBox.Show("卸载成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show(FindChar("UninstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                             await LinkWSA();
                         }
                         else
-                            MessageBox.Show("卸载失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(FindChar("UninstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 LoadVisable = Visibility.Collapsed;
@@ -256,17 +250,17 @@ namespace WSATools.ViewModels
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     FileName = string.Empty,
-                    Filter = "APK文件|*.apk"
+                    Filter = FindChar("ApkFile")
                 };
                 if (openFileDialog.ShowDialog() == true)
                 {
                     if (Adb.Instance.Install(openFileDialog.FileName))
                     {
-                        MessageBox.Show("安装成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(FindChar("InstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                         await LinkWSA();
                     }
                     else
-                        MessageBox.Show("安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(FindChar("InstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 LoadVisable = Visibility.Collapsed;
             });
@@ -282,40 +276,13 @@ namespace WSATools.ViewModels
             });
             return Task.CompletedTask;
         }
-        private Task InstallToolAsync()
-        {
-            RunOnUIThread(async () =>
-            {
-                LoadVisable = Visibility.Visible;
-                ToolEnable = false;
-                string path = Path.Combine(Environment.CurrentDirectory, "APKInstaller.zip"),
-                targetDirectory = Path.Combine(Environment.CurrentDirectory, "APKInstaller");
-                if (await Downloader.Create("https://github.com/michael-eddy/WSATools/releases/download/v1.0.3/APKInstaller.zip", path, 60)
-                && Zipper.UnZip(path, targetDirectory))
-                {
-                    Command.Instance.Shell(Path.Combine(targetDirectory, "Install.ps1"), out _);
-                    Command.Instance.Shell("Get-AppxPackage|findstr AndroidAppInstaller", out string message);
-                    var msg = !string.IsNullOrEmpty(message) ? "安装成功！" : "安装失败，请稍后重试！";
-                    Directory.Delete(targetDirectory, true);
-                    MessageBox.Show(msg, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("初始化APKInstaller安装包失败，请稍后重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                ToolEnable = true;
-                LoadVisable = Visibility.Collapsed;
-            });
-            return Task.CompletedTask;
-        }
         private Task UninstallAsync()
         {
             RunOnUIThread(() =>
              {
                  LoadVisable = Visibility.Visible;
-                 WSA.Clear();
-                 if (MessageBox.Show("需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
-                     MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                 WSA.Instance.Clear();
+                 if (MessageBox.Show(FindChar("RebootTips"), FindChar("Tips"), MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                      Command.Instance.Excute("shutdown -r -t 10", out _);
                  Application.Current.Shutdown();
                  LoadVisable = Visibility.Collapsed;
@@ -331,9 +298,9 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
              {
                  LoadVisable = Visibility.Visible;
-                 if (WSA.Init())
+                 if (WSA.Instance.Init())
                  {
-                     VMState = "已安装";
+                     VMState = FindChar("Installed");
                      VMEnable = false;
                      WSARemoveable = true;
                      LoadVisable = Visibility.Collapsed;
@@ -341,13 +308,12 @@ namespace WSATools.ViewModels
                  }
                  else
                  {
-                     VMState = "未安装";
+                     VMState = FindChar("NotInstall");
                      VMEnable = true;
                      WSARemoveable = false;
                      LoadVisable = Visibility.Collapsed;
-                     if (MessageBox.Show("需要重启系统安装对应组件后进行安装！(确定后5s内重启系统，请保存好你的数据后进行重启！！！)", "提示",
-                         MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-                         Command.Instance.Excute("shutdown -r -t 5", out _);
+                     if (MessageBox.Show(FindChar("RebootTips"), FindChar("Tips"), MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                         Command.Instance.Excute("shutdown -r -t 10", out _);
                  }
              });
             return Task.CompletedTask;
@@ -364,8 +330,7 @@ namespace WSATools.ViewModels
                 if (string.IsNullOrEmpty(Adb.Instance.DeviceCode))
                 {
                     WSARun = false;
-                    MessageBox.Show("请检查是否开启开发人员模式！", "提示", MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
+                    MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else
                 {
@@ -382,61 +347,59 @@ namespace WSATools.ViewModels
             }
             else
             {
-                MessageBox.Show("初始化ADB环境失败，请稍后重试！或者直接使用APKInstall进行管理！", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(FindChar("AdbFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             LoadVisable = Visibility.Collapsed;
         }
         private async Task InitWSA()
         {
-            if (!WSA.Pepair())
+            if (!WSA.Instance.Pepair())
             {
-                WSAState = "未安装";
+                WSAState = FindChar("NotInstall");
                 WSAEnable = true;
                 WSAList list = new WSAList();
                 Enable?.Invoke(this, false);
                 if (list.ShowDialog() != null)
                 {
                     Enable?.Invoke(this, true);
-                    var result = WSA.Pepair();
-                    if (result)
+                    if (WSA.Instance.Pepair())
                     {
-                        WSAState = "已安装";
+                        WSAState = FindChar("Installed");
                         WSAEnable = false;
                         Adb.Instance.Reload();
                         await LinkWSA();
-                        MessageBox.Show("恭喜你，看起来WSA环境已经准备好了！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        WSAState = "未安装";
+                        WSAState = FindChar("NotInstall");
                         WSAEnable = true;
-                        MessageBox.Show("看起来WSA环境安装失败，请安装后再使用！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 else
                 {
                     Enable?.Invoke(this, true);
-                    MessageBox.Show("未安装WSA无法进行操作，程序即将退出！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     Close?.Invoke(this, null);
                 }
             }
             else
             {
-                WSAState = "已安装";
+                WSAState = FindChar("Installed");
                 WSAEnable = false;
                 Adb.Instance.Reload();
                 await LinkWSA();
-                MessageBox.Show("恭喜你，看起来现在的WSA环境很好！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        private void Downloader_ProcessChange(int receiveSize, long totalSize)
+        private void Downloader_ProcessChange(long receiveSize, long totalSize)
         {
             ProcessVal = receiveSize / totalSize * 100;
         }
         public override void Dispose()
         {
-            Downloader.ProcessChange -= Downloader_ProcessChange;
+            DownloadManager.ProcessChange -= Downloader_ProcessChange;
         }
     }
 }

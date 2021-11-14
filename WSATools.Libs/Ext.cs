@@ -1,10 +1,27 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static bool UnZip(this string zipFileName, string targetDirectory)
+        {
+            try
+            {
+                var zip = new FastZip();
+                zip.ExtractZip(zipFileName, targetDirectory, "");
+                File.Delete(zipFileName);
+                return Adb.Instance.HasBrige;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("UnZip", ex);
+            }
+            return false;
+        }
         public static bool Before(this string str, string start, string end)
         {
             var startIndex = str.IndexOf(start);

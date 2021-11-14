@@ -15,6 +15,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <hc:GifImage Grid.Row="1" x:Name="GifImageMain" Stretch="None" Margin="32" Uri="/WSATools;component//images/loading.gif"/>
-        <TextBlock x:Name="txtValue" Text="处理中..." Grid.Row="3" HorizontalAlignment="Center" />
+        <TextBlock x:Name="txtValue" Text="{DynamicResource Loading}" Grid.Row="3" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

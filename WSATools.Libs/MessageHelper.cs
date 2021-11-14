@@ -21,7 +21,7 @@ namespace WSATools.Libs
                 cds.dwData = (IntPtr)100;
                 cds.lpData = strMsg;
                 cds.cbData = sarr.Length + 1;
-                SendMessage(FindWindow(null, "MyDesktopToolHost"), WM_COPYDATA, 0, ref cds);
+                SendMessage(FindWindow(null, "HostForm"), WM_COPYDATA, 0, ref cds);
             }
             catch (Exception ex)
             {

@@ -5,8 +5,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="CommonDictionary.xaml" />
                 <ResourceDictionary Source="Lang/Chinese.xaml"/>
+                <ResourceDictionary Source="CommonDictionary.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;Component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;Component/Themes/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>

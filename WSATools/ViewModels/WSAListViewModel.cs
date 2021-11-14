@@ -40,12 +40,6 @@ namespace WSATools.ViewModels
             get => processVal;
             set => SetProperty(ref processVal, value);
         }
-        private string timeout = "30";
-        public string Timeout
-        {
-            get => timeout;
-            set => SetProperty(ref timeout, value);
-        }
         private bool installEnable = true;
         public bool InstallEnable
         {
@@ -79,8 +73,7 @@ namespace WSATools.ViewModels
                     Dictionary<string, string> urls = new Dictionary<string, string>();
                     foreach (var package in Packages)
                         urls.Add(package.Content, package.Tag.ToString());
-                    var timeout = int.Parse(Timeout);
-                    if (await AppX.PepairAsync(urls, timeout))
+                    if (await AppX.Instance.PepairAsync(urls))
                     {
                         StringBuilder shellBuilder = new StringBuilder();
                         foreach (var url in urls)
@@ -94,7 +87,7 @@ namespace WSATools.ViewModels
                     else
                     {
                         Close?.Invoke(this, false);
-                        MessageBox.Show("获取WSA环境包到本地失败，请重试！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     InstallEnable = true;
                     TimeoutEnable = true;
@@ -102,7 +95,7 @@ namespace WSATools.ViewModels
                 catch (Exception ex)
                 {
                     LogManager.Instance.LogError("InstallAsync", ex);
-                    MessageBox.Show("出现异常，安装失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 LoadVisable = Visibility.Collapsed;
             });
@@ -131,10 +124,10 @@ namespace WSATools.ViewModels
         public async void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as WSAList).Dispatcher;
-            Downloader.ProcessChange += Downloader_ProcessChange;
+            DownloadManager.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }
-        private void Downloader_ProcessChange(int receiveSize, long totalSize)
+        private void Downloader_ProcessChange(long receiveSize, long totalSize)
         {
             ProcessVal = Math.Round((decimal)receiveSize / totalSize * 100, 2);
         }
@@ -145,7 +138,7 @@ namespace WSATools.ViewModels
             {
                 if (Packages == null || Packages.Count == 0)
                 {
-                    var pairs = await AppX.GetFilePath();
+                    var pairs = await AppX.Instance.GetFilePath();
                     if (pairs != null && pairs.Count > 0)
                     {
                         foreach (var pair in pairs)
@@ -159,20 +152,20 @@ namespace WSATools.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("获取WSA环境包失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("GetList", ex);
-                MessageBox.Show("出现异常，获取依赖包失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             LoadVisable = Visibility.Collapsed;
         }
         public override void Dispose()
         {
-            Downloader.ProcessChange -= Downloader_ProcessChange;
+            DownloadManager.ProcessChange -= Downloader_ProcessChange;
         }
     }
 }
