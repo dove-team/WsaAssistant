@@ -47,7 +47,9 @@ namespace WSATools.Update
                         {
                             UpgradeFile = Path.Combine(Environment.CurrentDirectory, $"update.{uri.Ext}");
                             if (!string.IsNullOrEmpty(UpgradeFile))
-                                Downloader.Create(url, UpgradeFile).GetAwaiter().GetResult();
+                            {
+                                var result = DownloadManager.Instance.Create(url).GetAwaiter().GetResult();
+                            }
                         }
                     }
                 }

@@ -23,6 +23,7 @@ namespace WSATools.Libs
             }
         }
         private readonly string[] array;
+        private Node<string, string, bool> PackageList { get; }
         private AppX()
         {
             array = new string[2];
@@ -38,10 +39,18 @@ namespace WSATools.Libs
                     array[1] = "x86";
                     break;
             }
+            PackageList = new Node<string, string, bool>();
+            DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
-        public async Task<Dictionary<string, string>> GetFilePath()
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, string filePath)
         {
-            Dictionary<string, string> list = new Dictionary<string, string>();
+            if (!hasError)
+            {
+
+            }
+        }
+        public async Task<Node<string, string, bool>> GetFilePath()
+        {
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             HttpClient httpClient = new HttpClient(handler);
             var stringContent = new StringContent("type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN", Encoding.UTF8, "application/x-www-form-urlencoded");
@@ -63,17 +72,18 @@ namespace WSATools.Libs
                             if (IsSupport(key))
                             {
                                 var value = a.Attributes["href"].Value;
-                                list.Add(key, value);
+                                PackageList.AddOrUpdate(key, value);
                             }
                         }
                     }
                 }
             }
-            return list;
+            return PackageList;
         }
         private bool IsSupport(string key)
         {
-            if (key.EndsWith("appx") || key.EndsWith("msixbundle"))
+            if (key.EndsWith("appx", StringComparison.CurrentCultureIgnoreCase) ||
+                key.EndsWith("msixbundle", StringComparison.CurrentCultureIgnoreCase))
             {
                 var count = 0;
                 foreach (var type in array)
@@ -85,30 +95,29 @@ namespace WSATools.Libs
             }
             return false;
         }
-        public async Task<bool> PepairAsync(Dictionary<string, string> urls)
+        public async Task<List<string>> PepairAsync()
         {
+            List<string> fileNames = new List<string>();
             try
             {
-                int count = 0, total = urls.Count;
-                foreach (var url in urls)
+                foreach (Tuple<string, string, bool> url in PackageList)
                 {
-                    var path = Path.Combine(Environment.CurrentDirectory, url.Key);
+                    var path = Path.Combine(Environment.CurrentDirectory, url.Item1);
                     if (File.Exists(path))
-                        count++;
+                        fileNames.Add(path);
                     else
                     {
-                        var data = await DownloadManager.Instance.Create(url.Value);
+                        var data = await DownloadManager.Instance.Create(url.Item2);
                         if (data.CreateStatus)
-                            count++;
+                            fileNames.Add(data.Package.FileName);
                     }
                 }
-                return count == total;
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("PepairAsync", ex);
-                return false;
             }
+            return fileNames;
         }
     }
 }

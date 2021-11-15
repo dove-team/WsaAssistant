@@ -25,8 +25,8 @@ namespace WSATools.Libs
         private readonly List<string> array;
         private DownloadService Service { get; }
         private DirectoryInfo SaveDirectory { get; set; }
-        public static event ProgressHandler ProcessChange;
-        public static event ProgressCompleteHandler ProgressComplete;
+        public event ProgressHandler ProcessChange;
+        public event ProgressCompleteHandler ProgressComplete;
         private DownloadManager()
         {
             var downloadOpt = new DownloadConfiguration()

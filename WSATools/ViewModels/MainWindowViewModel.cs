@@ -72,7 +72,7 @@ namespace WSATools.ViewModels
             VMState = FindChar("Checking");
             WSAState = FindChar("Checking");
             WSARunState = FindChar("Checking");
-            DownloadManager.ProcessChange += Downloader_ProcessChange;
+            DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
@@ -399,7 +399,7 @@ namespace WSATools.ViewModels
         }
         public override void Dispose()
         {
-            DownloadManager.ProcessChange -= Downloader_ProcessChange;
+            DownloadManager.Instance.ProcessChange -= Downloader_ProcessChange;
         }
     }
 }

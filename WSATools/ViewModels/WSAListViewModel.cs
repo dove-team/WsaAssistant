@@ -70,17 +70,12 @@ namespace WSATools.ViewModels
                 try
                 {
                     TimeoutEnable = false;
-                    Dictionary<string, string> urls = new Dictionary<string, string>();
-                    foreach (var package in Packages)
-                        urls.Add(package.Content, package.Tag.ToString());
-                    if (await AppX.Instance.PepairAsync(urls))
+                    var files = await AppX.Instance.PepairAsync();
+                    if (files.Count != 0)
                     {
                         StringBuilder shellBuilder = new StringBuilder();
-                        foreach (var url in urls)
-                        {
-                            var path = Path.Combine(Environment.CurrentDirectory, url.Key);
-                            shellBuilder.AppendLine($"Add-AppxPackage {path} -ForceApplicationShutdown");
-                        }
+                        foreach (var file in files)
+                            shellBuilder.AppendLine($"Add-AppxPackage {file} -ForceApplicationShutdown");
                         ExcuteCommand(shellBuilder);
                         Close?.Invoke(this, true);
                     }
@@ -124,7 +119,7 @@ namespace WSATools.ViewModels
         public async void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as WSAList).Dispatcher;
-            DownloadManager.ProcessChange += Downloader_ProcessChange;
+            DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }
         private void Downloader_ProcessChange(long receiveSize, long totalSize)
@@ -141,9 +136,9 @@ namespace WSATools.ViewModels
                     var pairs = await AppX.Instance.GetFilePath();
                     if (pairs != null && pairs.Count > 0)
                     {
-                        foreach (var pair in pairs)
+                        foreach (Tuple<string, string, bool> pair in pairs)
                         {
-                            var item = new ListItem(pair.Key, pair.Value);
+                            var item = new ListItem(pair.Item1, pair.Item2);
                             Dispatcher.Invoke(() =>
                             {
                                 Packages.Add(item);
@@ -165,7 +160,7 @@ namespace WSATools.ViewModels
         }
         public override void Dispose()
         {
-            DownloadManager.ProcessChange -= Downloader_ProcessChange;
+            DownloadManager.Instance.ProcessChange -= Downloader_ProcessChange;
         }
     }
 }
