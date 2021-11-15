@@ -24,6 +24,7 @@ namespace WSATools.Libs
         }
         private readonly List<string> array;
         private DownloadService Service { get; }
+        private DirectoryInfo SaveDirectory { get; set; }
         public static event ProgressHandler ProcessChange;
         public static event ProgressCompleteHandler ProgressComplete;
         private DownloadManager()
@@ -67,16 +68,27 @@ namespace WSATools.Libs
         {
             ProcessChange?.Invoke(e.ProgressedByteSize, e.TotalBytesToReceive);
         }
-        public async Task<DownloadResult> Create(string url, string path)
+        public void Init(string root)
+        {
+            SaveDirectory = new DirectoryInfo(root);
+        }
+        public async Task<DownloadResult> Create(string url)
         {
             try
             {
-                DirectoryInfo directory = new DirectoryInfo(path);
-                await Service.DownloadFileTaskAsync(url, directory).ConfigureAwait(false);
+                await Service.DownloadFileTaskAsync(url, SaveDirectory).ConfigureAwait(false);
                 return new DownloadResult(true, Service.Package);
             }
             catch { }
             return new DownloadResult();
+        }
+        public void Cancel()
+        {
+            Service.CancelAsync();
+        }
+        public async Task Resume(DownloadPackage package)
+        {
+            await Service.DownloadFileTaskAsync(package);
         }
         public void Clear()
         {

@@ -74,7 +74,7 @@ namespace WSATools.Libs
             {
                 if (!HasBrige)
                 {
-                    var data = await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip", Environment.CurrentDirectory);
+                    var data = await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip");
                     if (data.CreateStatus)
                     {
                         var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");

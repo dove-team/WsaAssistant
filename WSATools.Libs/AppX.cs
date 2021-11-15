@@ -97,7 +97,7 @@ namespace WSATools.Libs
                         count++;
                     else
                     {
-                        var data = await DownloadManager.Instance.Create(url.Value, Environment.CurrentDirectory);
+                        var data = await DownloadManager.Instance.Create(url.Value);
                         if (data.CreateStatus)
                             count++;
                     }
