@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using WSATools.Libs;
+using WSATools.Libs.Model;
 
 namespace WSATools
 {
@@ -19,21 +20,21 @@ namespace WSATools
             }
         }
         private LangManager() { }
-        private string Current = "Chinese";
         public ResourceDictionary Resource { get; private set; }
+        public LangType Current { get; private set; } = LangType.Chinese;
         public void Init()
         {
             if (!CultureInfo.CurrentCulture.Name.Contains("zh", StringComparison.CurrentCultureIgnoreCase))
-                Switch("English");
+                Switch(LangType.English);
             else
                 Resource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x =>
-                x.Source.ToString().Contains(Current, StringComparison.CurrentCultureIgnoreCase));
+                x.Source.ToString().Contains(Current.ToString(), StringComparison.CurrentCultureIgnoreCase));
         }
-        public void Switch(string langName)
+        public void Switch(LangType langType)
         {
-            if (langName != Current)
+            if (langType != Current)
             {
-                Current = langName;
+                Current = langType;
                 try
                 {
                     Uri uri = new Uri(string.Format("Lang/{0}.xaml", Current), UriKind.Relative);

@@ -56,6 +56,9 @@
                     <Button Content="{DynamicResource Install}" Style="{StaticResource ButtonPrimary}" IsEnabled="{Binding WSAEnable}" Command="{Binding InstallWSACommand}"
                         Margin="24,0,0,0" Width="100" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
+                    <Button Command="{Binding RegisterCommand}" Content="{DynamicResource Register}" Width="140" />
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
                     <Button IsEnabled="{Binding WSARemoveable}" Command="{Binding UninstallCommand}" Content="{DynamicResource RemoveWsa}" Width="140" />
                     <TextBlock Margin="8,0,0,0">
@@ -88,8 +91,9 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding WSARunState}" />
-                        <Button Margin="24,0,0,0" Content="{DynamicResource StartWsa}" Visibility="{Binding WSAStart}" Command="{Binding StartWSACommand}" />
+                        <TextBlock Text="{Binding WSARunState}" VerticalAlignment="Center" />
+                        <Ellipse Margin="12,0,0,0" Canvas.Left="60" Canvas.Top="80" Width="20" Height="20" Fill="{Binding StateBrush}" VerticalAlignment="Center" />
+                        <Button Margin="12,0,0,0" Content="{DynamicResource StartWsa}" Visibility="{Binding WSAStart}" Command="{Binding StartWSACommand}" />
                     </StackPanel>
                     <TextBlock Text="{DynamicResource SearchPackage}" Grid.Row="1" />
                     <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,12,0,0">

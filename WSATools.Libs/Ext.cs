@@ -1,12 +1,34 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using WSATools.Libs.Model;
 
 namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static bool AddMenu(this string path, LangType langType)
+        {
+            try
+            {
+                var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WSATools Install";
+                Interaction.Shell($"cmd /c echo yes | REG ADD HKEY_CLASSES_ROOT\\.apk\\shell\\wsa /d \"{title}\"", AppWinStyle.Hide);
+                Thread.Sleep(100);
+                Interaction.Shell(Conversions.ToString(Operators.AddObject(Operators.AddObject("cmd /c echo yes | REG ADD HKEY_CLASSES_ROOT\\.apk\\shell\\wsa\\command /d ", path), "\" %1\""))
+                    , AppWinStyle.Hide);
+                ProjectData.EndApp();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("AddMenu", ex);
+                return false;
+            }
+        }
         public static bool UnZip(this string zipFileName, string targetDirectory)
         {
             try

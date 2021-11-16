@@ -15,12 +15,15 @@
     <sys:String x:Key="NotInstall">未安装</sys:String>    
     <sys:String x:Key="NotRunning">未运行</sys:String>
     <sys:String x:Key="Loading">处理中...</sys:String>
-    <sys:String x:Key="SearchContent">搜索</sys:String>   
+    <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>
     <sys:String x:Key="RemoveWsa">卸载WSA环境</sys:String>
+    <sys:String x:Key="Register">注册快捷安装</sys:String>
     <sys:String x:Key="PackageList">已安装应用</sys:String>
     <sys:String x:Key="SearchPackage">搜索包：</sys:String>
     <sys:String x:Key="UninstallTips">确定卸载</sys:String>
+    <sys:String x:Key="OperaFailed">操作失败！</sys:String>
+    <sys:String x:Key="OperaSuccess">操作成功！</sys:String>
     <sys:String x:Key="InstallState">安装状态：</sys:String>
     <sys:String x:Key="InstallFailed">安装失败！</sys:String>
     <sys:String x:Key="InstallSuccess">安装成功！</sys:String>

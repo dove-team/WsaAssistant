@@ -19,12 +19,15 @@
     <sys:String x:Key="NotRunning">Not Running</sys:String>
     <sys:String x:Key="ApkFile">APK File|*.apk</sys:String>
     <sys:String x:Key="PackageList">Package List</sys:String>
+    <sys:String x:Key="Register">Regist Right Menu</sys:String>
     <sys:String x:Key="InstallState">Install State:</sys:String>
     <sys:String x:Key="SearchPackage">Search Package:</sys:String>
+    <sys:String x:Key="OperaFailed">Operation Failed！</sys:String>
     <sys:String x:Key="InstallFailed">Install Failed！</sys:String>
     <sys:String x:Key="DependencyList">Dependency List</sys:String>
     <sys:String x:Key="DownloadProcess">Download Process:</sys:String>
     <sys:String x:Key="UninstallFailed">Uninstall Failed！</sys:String>
+    <sys:String x:Key="OperaSuccess">Operation Successful！</sys:String>
     <sys:String x:Key="InstallSuccess">Install Successful！</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
     <sys:String x:Key="VMDependency">Windows Dependency State：</sys:String>

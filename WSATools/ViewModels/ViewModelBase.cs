@@ -18,7 +18,7 @@ namespace WSATools.ViewModels
             set
             {
                 SetProperty(ref loadVisable, value);
-                Application.Current.Dispatcher.Invoke(() =>
+                Dispatcher.Invoke(() =>
                 {
                     var boolean = value == Visibility.Visible;
                     Loading?.Invoke(this, boolean);

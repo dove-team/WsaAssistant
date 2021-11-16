@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using WSATools.Libs;
 using MessageBox = HandyControl.Controls.MessageBox;
 
@@ -22,19 +23,29 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand StartWSACommand { get; }
         public IAsyncRelayCommand InstallWSACommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
+        public IAsyncRelayCommand RegisterCommand { get; }        
         public IAsyncRelayCommand UninstallApkCommand { get; }
         public MainWindowViewModel()
         {
             CloseCommand = new AsyncRelayCommand(CloseAsync);
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
-            UninstallCommand = new AsyncRelayCommand(UninstallAsync);
+            RegisterCommand = new AsyncRelayCommand(RegisterAsync);
             StartWSACommand = new AsyncRelayCommand(StartWSAAsync);
+            UninstallCommand = new AsyncRelayCommand(UninstallAsync);
+            DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             InstallVmCommand = new AsyncRelayCommand(InstallVmAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             InstallWSACommand = new AsyncRelayCommand(InstallWSAAsync);
-            DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
+        }
+        private Task RegisterAsync()
+        {
+            if (Environment.ProcessPath.AddMenu(LangManager.Instance.Current))
+                MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+            else
+                MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+            return Task.CompletedTask;
         }
         private Task StartWSAAsync()
         {
@@ -47,6 +58,7 @@ namespace WSATools.ViewModels
                 {
                     WSARun = true;
                     WSARunState = FindChar("Running");
+                    StateBrush = new SolidColorBrush(Colors.Green);
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -55,6 +67,7 @@ namespace WSATools.ViewModels
                 {
                     WSARun = false;
                     WSARunState = FindChar("NotRunning");
+                    StateBrush = new SolidColorBrush(Colors.Red);
                     WSAStart = Visibility.Visible;
                 }
                 LoadVisable = Visibility.Collapsed;
@@ -72,6 +85,7 @@ namespace WSATools.ViewModels
             VMState = FindChar("Checking");
             WSAState = FindChar("Checking");
             WSARunState = FindChar("Checking");
+            StateBrush = new SolidColorBrush(Colors.Yellow);
             DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             RunOnUIThread(async () =>
             {
@@ -103,6 +117,7 @@ namespace WSATools.ViewModels
                 {
                     WSARun = true;
                     WSARunState = FindChar("Running");
+                    StateBrush = new SolidColorBrush(Colors.Green);
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -110,6 +125,7 @@ namespace WSATools.ViewModels
                 else
                 {
                     WSARun = false;
+                    StateBrush = new SolidColorBrush(Colors.Red);
                     WSARunState = FindChar("NotRunning");
                     WSAStart = Visibility.Visible;
                 }
@@ -151,6 +167,12 @@ namespace WSATools.ViewModels
         {
             get => wsaRunState;
             set => SetProperty(ref wsaRunState, value);
+        }
+        private SolidColorBrush stateBrush;
+        public SolidColorBrush StateBrush
+        {
+            get => stateBrush;
+            set => SetProperty(ref stateBrush, value);
         }
         private Visibility wsaStart = Visibility.Collapsed;
         public Visibility WSAStart
