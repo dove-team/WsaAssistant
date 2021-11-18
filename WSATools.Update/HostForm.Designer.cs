@@ -37,8 +37,11 @@
             this.ClientSize = new System.Drawing.Size(0, 0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "HostForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "HostForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
+            this.Load += new System.EventHandler(this.HostForm_Load);
             this.ResumeLayout(false);
 
         }

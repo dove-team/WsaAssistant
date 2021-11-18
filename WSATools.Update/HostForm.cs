@@ -6,14 +6,28 @@ using System.Threading;
 using System.Windows.Forms;
 using WSATools.Libs;
 using WSATools.Libs.Model;
+using Timer = System.Windows.Forms.Timer;
 
 namespace WSATools.Update
 {
     public partial class HostForm : Form
     {
+        private Timer Timer { get; }
         public HostForm()
         {
             InitializeComponent();
+            Timer = new Timer();
+            Timer.Interval = 2000;
+            Timer.Tick += Timer_Tick;
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            var ps = Process.GetProcessesByName("WSATools");
+            if (ps == null || ps.Length == 0)
+            {
+                Timer.Stop();
+                Application.Exit();
+            }
         }
         protected override void WndProc(ref Message m)
         {
@@ -42,6 +56,10 @@ namespace WSATools.Update
                     base.WndProc(ref m);
                     break;
             }
+        }
+        private void HostForm_Load(object sender, EventArgs e)
+        {
+            Timer.Start();
         }
     }
 }

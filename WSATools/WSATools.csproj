@@ -3,14 +3,14 @@
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <Version>1.2.0</Version>
-    <Platforms>x64;ARM64</Platforms>
     <OutputType>WinExe</OutputType>
     <Authors>michael_eddy</Authors>
+    <Platforms>x64;ARM64</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
