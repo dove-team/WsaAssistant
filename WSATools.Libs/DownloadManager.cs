@@ -56,7 +56,12 @@ namespace WSATools.Libs
         }
         private void Build()
         {
-            Service?.Clear();
+            if (Service != null)
+            {
+                Service.Clear();
+                Service.DownloadFileCompleted -= OnDownloadFileCompleted;
+                Service.DownloadProgressChanged -= DownloadProgressChanged;
+            }
             Service = new DownloadService(configuration);
             Service.DownloadFileCompleted += OnDownloadFileCompleted;
             Service.DownloadProgressChanged += DownloadProgressChanged;
