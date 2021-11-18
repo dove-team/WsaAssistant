@@ -1,6 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using Downloader;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -21,6 +21,26 @@ namespace WSATools.ViewModels
             CloseCommand = new AsyncRelayCommand(CloseAsync);
             RreshCommand = new AsyncRelayCommand(RreshAsync);
             InstallCommand = new AsyncRelayCommand(InstallAsync);
+            AppX.Instance.DownloadComplete += Instance_DownloadComplete;
+        }
+        private async void Instance_DownloadComplete(object sender, bool state)
+        {
+            if (!state)
+            {
+                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"),
+                    MessageBoxButton.YesNo, MessageBoxImage.Error))
+                    await AppX.Instance.Retry(false);
+                else
+                    Close?.Invoke(this, false);
+            }
+            else
+            {
+                ExcuteCommand();
+                Close?.Invoke(this, true);
+            }
+            InstallEnable = true;
+            TimeoutEnable = true;
+            LoadVisable = Visibility.Collapsed;
         }
         private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
         public ObservableCollection<ListItem> Packages
@@ -70,36 +90,30 @@ namespace WSATools.ViewModels
                 try
                 {
                     TimeoutEnable = false;
-                    var files = await AppX.Instance.PepairAsync();
-                    if (files.Count != 0)
+                    if (await AppX.Instance.PepairAsync())
                     {
-                        StringBuilder shellBuilder = new StringBuilder();
-                        foreach (var file in files)
-                            shellBuilder.AppendLine($"Add-AppxPackage {file} -ForceApplicationShutdown");
-                        ExcuteCommand(shellBuilder);
-                        Close?.Invoke(this, true);
+                        ExcuteCommand();
+                        LoadVisable = Visibility.Collapsed;
                     }
-                    else
-                    {
-                        Close?.Invoke(this, false);
-                        MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    InstallEnable = true;
-                    TimeoutEnable = true;
                 }
                 catch (Exception ex)
                 {
+                    InstallEnable = true;
+                    TimeoutEnable = true;
+                    LoadVisable = Visibility.Collapsed;
                     LogManager.Instance.LogError("InstallAsync", ex);
                     MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                LoadVisable = Visibility.Collapsed;
             });
             return Task.CompletedTask;
         }
-        private void ExcuteCommand(StringBuilder shellBuilder)
+        private void ExcuteCommand()
         {
             try
             {
+                StringBuilder shellBuilder = new StringBuilder();
+                foreach (Tuple<string, string, bool> package in AppX.Instance.PackageList)
+                    shellBuilder.AppendLine($"Add-AppxPackage {package.Item2} -ForceApplicationShutdown");
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                 var file = "install.ps1";
@@ -136,7 +150,7 @@ namespace WSATools.ViewModels
                     var pairs = await AppX.Instance.GetFilePath();
                     if (pairs != null && pairs.Count > 0)
                     {
-                        foreach (Tuple<string, string, bool> pair in pairs)
+                        foreach (Tuple<string, string, bool?, DownloadPackage> pair in pairs)
                         {
                             var item = new ListItem(pair.Item1, pair.Item2);
                             Dispatcher.Invoke(() =>

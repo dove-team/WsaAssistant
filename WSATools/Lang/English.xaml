@@ -36,9 +36,11 @@
     <sys:String x:Key="DowngradeSuccess">Downgrade installation successful！</sys:String>
     <sys:String x:Key="RemvoeDownload">Do you want to clear the downloaded file?</sys:String>
     <sys:String x:Key="DevlopTips">Please check whether the developer mode is turned on!</sys:String>
+    <sys:String x:Key="DownloadFailed">Download failed, please check the network and try again!</sys:String>
     <sys:String x:Key="WsaSuccess">Congratulations, it looks like the current WSA environment is very good!</sys:String>
-    <sys:String x:Key="WsaDownloadFailed">An exception occurred and failed to obtain the WSA environment package!</sys:String>
     <sys:String x:Key="WsaFailed">It seems that the WSA environment installation failed, please install it before use!</sys:String>
+    <sys:String x:Key="WsaCreateDownloadFailed">Failed to create a WSA environment download task, do you want to try again?</sys:String>
     <sys:String x:Key="AdbFailed">Failed to initialize ADB environment, please try again later! Or directly use APKInstall for management!</sys:String>
+    <sys:String x:Key="WsaDownloadFailed">An exception occurred and failed to obtain the WSA environment package! do you want to try again?</sys:String>
     <sys:String x:Key="RebootTips">The system needs restarted to complete the operation! (Restart the system within 10s after confirming, please save your data and restart!!!)</sys:String>
 </ResourceDictionary>

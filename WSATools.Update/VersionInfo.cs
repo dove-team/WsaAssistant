@@ -4,10 +4,12 @@ namespace WSATools.Update
 {
     public sealed class VersionInfo
     {
-        public int Main { get; set; }
-        public int Second { get; set; }
-        public int Fix { get; set; }
+        public int Major { get; set; }
+        public int Minor { get; set; }
+        public int Build { get; set; }
         public List<Uri> Urls { get; set; }
+        public string ChMessage { get; set; }
+        public string EnMessage { get; set; }
     }
     public sealed class Uri
     {

@@ -50,7 +50,8 @@ namespace WSATools
         protected override void OnClosing(CancelEventArgs e)
         {
             ViewModel.Dispose();
-            if (MessageBox.Show(ViewModel.FindChar("RemvoeDownload"), ViewModel.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (DownloadManager.Instance.HasClear && MessageBox.Show(ViewModel.FindChar("RemvoeDownload"),
+                ViewModel.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 DownloadManager.Instance.Clear();
             base.OnClosing(e);
         }

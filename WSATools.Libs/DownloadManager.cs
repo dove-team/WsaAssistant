@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Downloader;
 using System.Net;
 using System.ComponentModel;
-using WSATools.Libs.Model;
 using DownloadProgressChangedEventArgs = Downloader.DownloadProgressChangedEventArgs;
 
 namespace WSATools.Libs
@@ -23,13 +22,14 @@ namespace WSATools.Libs
             }
         }
         private readonly List<string> array;
-        private DownloadService Service { get; }
+        private DownloadService Service { get; set; }
         private DirectoryInfo SaveDirectory { get; set; }
+        private readonly DownloadConfiguration configuration;
         public event ProgressHandler ProcessChange;
         public event ProgressCompleteHandler ProgressComplete;
         private DownloadManager()
         {
-            var downloadOpt = new DownloadConfiguration()
+            configuration = new DownloadConfiguration()
             {
                 ChunkCount = 8,
                 Timeout = int.MaxValue,
@@ -52,17 +52,25 @@ namespace WSATools.Libs
                 }
             };
             array = new List<string>();
-            Service = new DownloadService(downloadOpt);
+            Build();
+        }
+        private void Build()
+        {
+            Service?.Clear();
+            Service = new DownloadService(configuration);
             Service.DownloadFileCompleted += OnDownloadFileCompleted;
             Service.DownloadProgressChanged += DownloadProgressChanged;
         }
         private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             var hasError = e.Cancelled || e.Error != null;
-            string fileName = string.Empty;
+            string address = string.Empty;
             if (e.UserState is DownloadPackage package)
-                fileName = package.FileName;
-            ProgressComplete?.Invoke(sender, hasError, fileName);
+            {
+                address = package.Address;
+                array.Add(package.FileName);
+            }
+            ProgressComplete?.Invoke(sender, hasError, address);
         }
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
@@ -72,26 +80,25 @@ namespace WSATools.Libs
         {
             SaveDirectory = new DirectoryInfo(root);
         }
-        public async Task<DownloadResult> Create(string url)
+        public async Task Create(string url)
         {
             try
             {
+                Build();
                 await Service.DownloadFileTaskAsync(url, SaveDirectory).ConfigureAwait(false);
-                return new DownloadResult(true, Service.Package);
             }
             catch { }
-            return new DownloadResult();
         }
-        public void Cancel()
+        public async Task Create(params string[] urls)
         {
-            Service.CancelAsync();
+            foreach (var url in urls)
+                await Create(url);
         }
-        public async Task Resume(DownloadPackage package)
-        {
-            await Service.DownloadFileTaskAsync(package);
-        }
+        public bool HasClear => array.Count > 0;
         public void Clear()
         {
+            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "temp"));
+            Service.Clear();
             foreach (var path in array)
             {
                 if (File.Exists(path))

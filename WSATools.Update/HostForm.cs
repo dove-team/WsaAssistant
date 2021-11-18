@@ -28,18 +28,9 @@ namespace WSATools.Update
                                 Thread.Sleep(2000);
                                 if (!string.IsNullOrEmpty(Program.UpgradeFile))
                                 {
-                                    string title, message;
-                                    if (CultureInfo.CurrentCulture.Name.Contains("zh", StringComparison.CurrentCultureIgnoreCase))
-                                    {
-                                        title = "提示";
-                                        message = "WSATools有新版本，是否进行更新？";
-                                    }
-                                    else
-                                    {
-                                        title = "info";
-                                        message = "WSATools Has new-version，upgrade now？";
-                                    }
-                                    if (MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                    string title = CultureInfo.CurrentCulture.Name.Contains("zh", StringComparison.CurrentCultureIgnoreCase)
+                                        ? "WSATools有新版本，是否进行更新？" : "WSATools Has new-version，upgrade now？";
+                                    if (MessageBox.Show(Program.UpdateMessage, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                         Process.Start(Program.UpgradeFile);
                                 }
                                 Application.Exit();

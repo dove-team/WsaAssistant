@@ -67,6 +67,17 @@ namespace WSATools.Libs
                 "com.amazon.device.messaging","com.android.networkstack.tethering","com.android.networkstack.permissionconfig","com.android.traceur",
                 "android.auto_generated_rro_vendor__","com.android.localtransport","com.android.hotspot2.osulogin"
             };
+            DownloadManager.Instance.ProgressComplete += Instance_ProgressComplete;
+        }
+        public bool hasComplete = false;
+        private void Instance_ProgressComplete(object sender, bool hasError, string filePath)
+        {
+            if (!hasError)
+            {
+                var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
+                path.UnZip(Environment.CurrentDirectory);
+            }
+            hasComplete = true;
         }
         public async Task<bool> Pepair()
         {
@@ -74,14 +85,10 @@ namespace WSATools.Libs
             {
                 if (!HasBrige)
                 {
-                    var data = await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip");
-                    if (data.CreateStatus)
-                    {
-                        var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
-                        return path.UnZip(Environment.CurrentDirectory);
-                    }
-                    else
-                        return false;
+                    await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip")
+                        .ConfigureAwait(false);
+                    while (hasComplete)
+                        return HasBrige;
                 }
                 return true;
             }

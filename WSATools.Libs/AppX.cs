@@ -1,7 +1,8 @@
-﻿using HtmlAgilityPack;
+﻿using Downloader;
+using HtmlAgilityPack;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -23,7 +24,8 @@ namespace WSATools.Libs
             }
         }
         private readonly string[] array;
-        private Node<string, string, bool> PackageList { get; }
+        public event BooleanHandler DownloadComplete;
+        public Node<string, string, bool?, DownloadPackage> PackageList { get; }
         private AppX()
         {
             array = new string[2];
@@ -39,17 +41,49 @@ namespace WSATools.Libs
                     array[1] = "x86";
                     break;
             }
-            PackageList = new Node<string, string, bool>();
+            PackageList = new Node<string, string, bool?, DownloadPackage>();
             DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
-        private void DownloadManager_ProgressComplete(object sender, bool hasError, string filePath)
+        public async Task<bool> Retry(bool reconstruction)
         {
-            if (!hasError)
+            GC.Collect();
+            switch (reconstruction)
             {
-
+                case true:
+                    {
+                        return await PepairAsync();
+                    }
+                default:
+                    {
+                        try
+                        {
+                            var failedList = PackageList.Where(x => x.Item3 == null || x.Item3 == false);
+                            if (failedList != null && failedList.Any())
+                            {
+                                var list = failedList.Select(x => x.Item2).ToArray();
+                                await DownloadManager.Instance.Create(list);
+                            }
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            LogManager.Instance.LogError("Retry", ex);
+                            return false;
+                        }
+                    }
             }
         }
-        public async Task<Node<string, string, bool>> GetFilePath()
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, string address)
+        {
+            var item = PackageList.FindItem(address);
+            PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
+            if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+            {
+                var count = PackageList.GetCount(x => x.Item3 == true);
+                DownloadComplete?.Invoke(this, count == PackageList.Count);
+            }
+        }
+        public async Task<Node<string, string, bool?, DownloadPackage>> GetFilePath()
         {
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             HttpClient httpClient = new HttpClient(handler);
@@ -95,29 +129,29 @@ namespace WSATools.Libs
             }
             return false;
         }
-        public async Task<List<string>> PepairAsync()
+        public async Task<bool> PepairAsync()
         {
-            List<string> fileNames = new List<string>();
+            int count = 0;
             try
             {
-                foreach (Tuple<string, string, bool> url in PackageList)
+                for (var idx = 0; idx < PackageList.Count; idx++)
                 {
+                    var url = PackageList.GetIndex(idx);
                     var path = Path.Combine(Environment.CurrentDirectory, url.Item1);
                     if (File.Exists(path))
-                        fileNames.Add(path);
-                    else
                     {
-                        var data = await DownloadManager.Instance.Create(url.Item2);
-                        if (data.CreateStatus)
-                            fileNames.Add(data.Package.FileName);
+                        count++;
+                        PackageList.AddOrUpdate(url.Item1, url.Item2, true, new DownloadPackage { FileName = path });
                     }
+                    else
+                        await DownloadManager.Instance.Create(url.Item2).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("PepairAsync", ex);
             }
-            return fileNames;
+            return count == PackageList.Count;
         }
     }
 }
