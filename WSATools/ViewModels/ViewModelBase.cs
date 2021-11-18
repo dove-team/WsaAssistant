@@ -31,7 +31,11 @@ namespace WSATools.ViewModels
             {
                 Task.Factory.StartNew(() =>
                 {
-                    action?.Invoke();
+                    try
+                    {
+                        action?.Invoke();
+                    }
+                    catch { }
                 });
             });
         }
@@ -41,7 +45,11 @@ namespace WSATools.ViewModels
             {
                 Task.Factory.StartNew(async () =>
                 {
-                    await func?.Invoke();
+                    try
+                    {
+                        await func?.Invoke();
+                    }
+                    catch { }
                 });
             });
         }

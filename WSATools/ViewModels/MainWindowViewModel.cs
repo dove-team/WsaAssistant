@@ -14,6 +14,7 @@ namespace WSATools.ViewModels
     {
         public event CloseHandler Close;
         public event BooleanHandler Enable;
+        public event BooleanHandler WSAStateHandler;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
@@ -27,7 +28,8 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand UninstallApkCommand { get; }
         public MainWindowViewModel()
         {
-            CloseCommand = new AsyncRelayCommand(CloseAsync);
+            WSAStateHandler += MainWindowViewModel_WSAStateHandler;
+               CloseCommand = new AsyncRelayCommand(CloseAsync);
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             RegisterCommand = new AsyncRelayCommand(RegisterAsync);
@@ -38,6 +40,16 @@ namespace WSATools.ViewModels
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             InstallWSACommand = new AsyncRelayCommand(InstallWSAAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
+        }
+        private void MainWindowViewModel_WSAStateHandler(object sender, bool state)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (state)
+                    StateBrush = new SolidColorBrush(Colors.Green);
+                else
+                    StateBrush = new SolidColorBrush(Colors.Red);
+            });
         }
         private Task RegisterAsync()
         {
@@ -58,7 +70,7 @@ namespace WSATools.ViewModels
                 {
                     WSARun = true;
                     WSARunState = FindChar("Running");
-                    StateBrush = new SolidColorBrush(Colors.Green);
+                    WSAStateHandler?.Invoke(this, true);
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -67,7 +79,7 @@ namespace WSATools.ViewModels
                 {
                     WSARun = false;
                     WSARunState = FindChar("NotRunning");
-                    StateBrush = new SolidColorBrush(Colors.Red);
+                    WSAStateHandler?.Invoke(this, false);
                     WSAStart = Visibility.Visible;
                 }
                 LoadVisable = Visibility.Collapsed;
@@ -116,8 +128,8 @@ namespace WSATools.ViewModels
                 if (result.Run)
                 {
                     WSARun = true;
+                    WSAStateHandler?.Invoke(this, true);
                     WSARunState = FindChar("Running");
-                    StateBrush = new SolidColorBrush(Colors.Green);
                     WSAStart = Visibility.Collapsed;
                     Adb.Instance.Reload();
                     await LinkWSA();
@@ -125,7 +137,7 @@ namespace WSATools.ViewModels
                 else
                 {
                     WSARun = false;
-                    StateBrush = new SolidColorBrush(Colors.Red);
+                    WSAStateHandler?.Invoke(this, false);
                     WSARunState = FindChar("NotRunning");
                     WSAStart = Visibility.Visible;
                 }
