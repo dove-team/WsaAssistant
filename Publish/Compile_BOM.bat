@@ -1,4 +1,5 @@
 @echo off
+cd "..\"
 set Buildx64="..\Publish\x64"
 set BuildArm="..\Publish\arm64"
 if exist %Buildx64%\ (del /q/a/f/s %Buildx64%\*.*) 
