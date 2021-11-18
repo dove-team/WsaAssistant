@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -133,36 +131,42 @@ namespace WSATools.Libs
             }
             return packages.OrderBy(x => x).ToList();
         }
+        public bool Connect
+        {
+            get
+            {
+                var find = "arp -a|findstr 00-15-5d";
+                Command.Instance.Excute(find, out string address);
+                address = address.Substring(find + "&exit").Replace("\r\n", "");
+                if (string.IsNullOrEmpty(address))
+                {
+                    WSA.Instance.Start();
+                    int count = 0;
+                    while (count < 4)
+                    {
+                        if (WSA.Instance.Running)
+                            return true;
+                        Thread.Sleep(5000);
+                    }
+                    return false;
+                }
+                return true;
+            }
+        }
         public bool Install(string packagePath)
         {
+            LogManager.Instance.LogInfo("DeviceCode:" + DeviceCode);
             if (string.IsNullOrEmpty(DeviceCode))
                 return false;
             else
             {
                 string command = $"adb -s{DeviceCode} install {packagePath}";
                 if (ExcuteCommand(command, out string message))
-                    return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
-                return false;
-            }
-        }
-        public void Install()
-        {
-            var cmd = Interaction.Command();
-            if (Operators.CompareString(cmd, string.Empty, TextCompare: false) != 0)
-            {
-                LogManager.Instance.LogInfo(cmd);
-                var startPath = Environment.CurrentDirectory;
-                if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb connect 127.0.0.1:58526")), out string message)
-                    && message.StartsWith("already"))
                 {
-                    if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb install "), cmd)),
-                        out message) && message[29..].StartsWith("success", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        Interaction.MsgBox("安装完成！", MsgBoxStyle.OkOnly, "Success");
-                    }
+                    LogManager.Instance.LogInfo(message);
+                    return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
                 }
-                else
-                    Interaction.MsgBox("未连接设备！请检查子系统相关设置", MsgBoxStyle.Critical, "ERROR");
+                return false;
             }
         }
         public bool Downgrade(string packagePath)

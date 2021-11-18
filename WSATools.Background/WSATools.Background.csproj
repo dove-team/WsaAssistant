@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <Version>1.2.0</Version>
+	  <Authors>michael_eddy</Authors>
+	  <Platforms>x64;ARM64</Platforms>
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <BaseOutputPath>..\OutputDebug</BaseOutputPath>
+	  <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+	  <OutputType>WinExe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WSATools.Libs\WSATools.Libs.csproj" />
+  </ItemGroup>
+</Project>

@@ -28,7 +28,7 @@ namespace WSATools
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            MessageHelper.SendMessage("Upgrade");
+            UpdateBackgroundThread.Instance.ShowUpdate();
             base.OnExit(e);
         }
         protected override void OnStartup(StartupEventArgs e)

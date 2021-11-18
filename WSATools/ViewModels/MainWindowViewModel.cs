@@ -30,7 +30,7 @@ namespace WSATools.ViewModels
         public MainWindowViewModel()
         {
             WSAStateHandler += MainWindowViewModel_WSAStateHandler;
-               CloseCommand = new AsyncRelayCommand(CloseAsync);
+            CloseCommand = new AsyncRelayCommand(CloseAsync);
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             RegisterCommand = new AsyncRelayCommand(RegisterAsync);
@@ -55,7 +55,7 @@ namespace WSATools.ViewModels
         private Task RegisterAsync()
         {
             this.RemoveMenu();
-            var path = Path.Combine(Environment.CurrentDirectory, "WSATools.Update.exe");
+            var path = Path.Combine(Environment.CurrentDirectory, "WSATools.Background.exe");
             if (path.AddMenu(LangManager.Instance.Current))
                 MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             else

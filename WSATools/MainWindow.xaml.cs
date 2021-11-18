@@ -1,5 +1,4 @@
 ﻿using HandyControl.Controls;
-using Microsoft.VisualBasic;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -55,6 +54,10 @@ namespace WSATools
                 ViewModel.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 DownloadManager.Instance.Clear();
             base.OnClosing(e);
+        }
+        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateBackgroundThread.Instance.CheckUpdate();
         }
     }
 }

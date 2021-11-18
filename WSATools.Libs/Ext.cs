@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using WSATools.Libs.Model;
 
 namespace WSATools.Libs
@@ -41,6 +42,18 @@ namespace WSATools.Libs
                 LogManager.Instance.LogError("RemoveMenu", ex);
                 return false;
             }
+        }
+        public static async Task TimeoutAfter(this Task task, TimeSpan timeout)
+        {
+            using var timeoutCancellationTokenSource = new CancellationTokenSource();
+            var completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
+            if (completedTask == task)
+            {
+                timeoutCancellationTokenSource.Cancel();
+                await task;
+            }
+            else
+                throw new TimeoutException("The operation has timed out.");
         }
         public static bool UnZip(this string zipFileName, string targetDirectory)
         {
