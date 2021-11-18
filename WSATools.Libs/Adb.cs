@@ -147,23 +147,22 @@ namespace WSATools.Libs
         }
         public void Install()
         {
-            if (Operators.CompareString(Interaction.Command(), string.Empty, TextCompare: false) != 0)
+            var cmd = Interaction.Command();
+            if (Operators.CompareString(cmd, string.Empty, TextCompare: false) != 0)
             {
+                LogManager.Instance.LogInfo(cmd);
                 var startPath = Environment.CurrentDirectory;
                 if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb connect 127.0.0.1:58526")), out string message)
                     && message.StartsWith("already"))
                 {
-                    if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb install "), Interaction.Command())),
+                    if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb install "), cmd)),
                         out message) && message[29..].StartsWith("success", StringComparison.CurrentCultureIgnoreCase))
                     {
                         Interaction.MsgBox("安装完成！", MsgBoxStyle.OkOnly, "Success");
-                        ProjectData.EndApp();
                     }
                 }
                 else
-                {
                     Interaction.MsgBox("未连接设备！请检查子系统相关设置", MsgBoxStyle.Critical, "ERROR");
-                }
             }
         }
         public bool Downgrade(string packagePath)

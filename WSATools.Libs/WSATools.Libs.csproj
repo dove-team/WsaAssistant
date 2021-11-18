@@ -14,6 +14,11 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="AppX.cs~RF4597b25.TMP" />
   </ItemGroup>
   <ItemGroup>

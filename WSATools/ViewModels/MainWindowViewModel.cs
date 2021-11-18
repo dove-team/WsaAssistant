@@ -54,6 +54,7 @@ namespace WSATools.ViewModels
         }
         private Task RegisterAsync()
         {
+            this.RemoveMenu();
             var path = Path.Combine(Environment.CurrentDirectory, "WSATools.Update.exe");
             if (path.AddMenu(LangManager.Instance.Current))
                 MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);

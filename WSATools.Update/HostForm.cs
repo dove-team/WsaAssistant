@@ -22,7 +22,9 @@ namespace WSATools.Update
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
+            Timer.Stop();
             Adb.Instance.Install();
+            Process.GetCurrentProcess().Kill();
         }
         protected override void WndProc(ref Message m)
         {

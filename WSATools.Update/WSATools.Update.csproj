@@ -11,6 +11,11 @@
     <BaseOutputPath>..\OutputDebug</BaseOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WSATools.Libs\WSATools.Libs.csproj" />
   </ItemGroup>
 </Project>
