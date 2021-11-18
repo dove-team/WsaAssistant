@@ -22,12 +22,7 @@ namespace WSATools.Update
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var ps = Process.GetProcessesByName("WSATools");
-            if (ps == null || ps.Length == 0)
-            {
-                Timer.Stop();
-                Application.Exit();
-            }
+            Adb.Instance.Install();
         }
         protected override void WndProc(ref Message m)
         {

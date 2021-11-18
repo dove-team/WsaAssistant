@@ -4,4 +4,5 @@ obj
 Setup.exe
 Publish/x64
 Publish/arm64
+OutputDebug
 *Setup*.exe

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -141,6 +143,27 @@ namespace WSATools.Libs
                 if (ExcuteCommand(command, out string message))
                     return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
                 return false;
+            }
+        }
+        public void Install()
+        {
+            if (Operators.CompareString(Interaction.Command(), string.Empty, TextCompare: false) != 0)
+            {
+                var startPath = Environment.CurrentDirectory;
+                if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb connect 127.0.0.1:58526")), out string message)
+                    && message.StartsWith("already"))
+                {
+                    if (Command.Instance.Excute(Conversions.ToString(Operators.AddObject(Operators.AddObject(Operators.AddObject("cd ", startPath), "&& adb install "), Interaction.Command())),
+                        out message) && message[29..].StartsWith("success", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Interaction.MsgBox("安装完成！", MsgBoxStyle.OkOnly, "Success");
+                        ProjectData.EndApp();
+                    }
+                }
+                else
+                {
+                    Interaction.MsgBox("未连接设备！请检查子系统相关设置", MsgBoxStyle.Critical, "ERROR");
+                }
             }
         }
         public bool Downgrade(string packagePath)

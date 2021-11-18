@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -53,7 +54,8 @@ namespace WSATools.ViewModels
         }
         private Task RegisterAsync()
         {
-            if (Environment.ProcessPath.AddMenu(LangManager.Instance.Current))
+            var path = Path.Combine(Environment.CurrentDirectory, "WSATools.Update.exe");
+            if (path.AddMenu(LangManager.Instance.Current))
                 MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             else
                 MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);

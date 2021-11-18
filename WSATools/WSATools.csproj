@@ -11,6 +11,7 @@
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <BaseOutputPath>..\OutputDebug</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
