@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿using AdvancedSharpAdbClient;
+using AdvancedSharpAdbClient.DeviceCommands;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -11,198 +10,115 @@ namespace WSATools.Libs
 {
     public sealed class Adb
     {
-        private string AdbLocation { get; }
-        private List<string> IgnorePackages { get; }
-        private string deviceCode;
-        public string DeviceCode
+        private static Adb instance;
+        public static Adb Instance
         {
             get
             {
-                if (string.IsNullOrEmpty(deviceCode))
-                {
-                    var address = WsaIp;
-                    if (!string.IsNullOrEmpty(address))
-                    {
-                        var wsaIp = address.Splits(new[] { ' ' }).FirstOrDefault();
-                        ExcuteCommand("adb connect " + wsaIp, out string connect);
-                        LogManager.Instance.LogInfo("adb connect:" + connect);
-                        Thread.Sleep(8);
-                        if (ExcuteCommand("adb devices", out string message))
-                        {
-                            LogManager.Instance.LogInfo("adb devices:" + message);
-                            var lines = message.Substring("List of devices attached");
-                            foreach (var device in lines.Splits("\r\n"))
-                            {
-                                var code = device.Splits('\t').FirstOrDefault();
-                                var cmd = $"adb -s {code} shell getprop ro.product.model";
-                                ExcuteCommand(cmd, out string name);
-                                LogManager.Instance.LogInfo("adb name:" + name);
-                                name = name.Substring(cmd + "&exit");
-                                if (name.Contains("Subsystem for Android", StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    deviceCode = code;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                LogManager.Instance.LogInfo("DeviceCode:" + deviceCode);
-                return deviceCode;
+                if (instance == null)
+                    instance = new Adb();
+                return instance;
             }
         }
-        public bool HasBrige => File.Exists(AdbLocation);
-        public static Adb Instance { get; } = new Adb();
+        private DeviceData Device { get; set; }
+        private AdvancedAdbClient AdbClient { get; set; }
         private Adb()
         {
-            AdbLocation = Path.Combine(this.ProcessPath(), "adb.exe");
-            IgnorePackages = new List<string>
+            if (!AdbServer.Instance.GetStatus().IsRunning)
             {
-                "android","com.microsoft.windows.systemapp","com.android.permissioncontroller","com.android.shell","com.android.webview",
-                "com.android.packageinstaller","com.android.settings","com.android.systemui","com.microsoft.windows.userapp","com.android.se",
-                "android.ext.services","com.android.dynsystem","com.android.providers.calendar","com.android.providers.media","android.ext.shared",
-                "com.android.inputdevices","com.android.providers.settings","com.android.keychain","com.android.systemui.auto_generated_rro_vendor__",
-                "com.android.settings.auto_generated_rro_vendor__","com.android.certinstaller","com.android.modulemetadata","com.android.providers.downloads",
-                "com.android.providers.media.module","com.android.providers.downloads.ui","com.android.companiondevicemanager","com.android.location.fused",
-                "com.android.networkstack","com.android.statementservice","com.android.providers.settings.auto_generated_rro_vendor__","com.android.providers.contacts",
-                "com.amazon.device.messaging","com.android.networkstack.tethering","com.android.networkstack.permissionconfig","com.android.traceur",
-                "android.auto_generated_rro_vendor__","com.android.localtransport","com.android.hotspot2.osulogin"
-            };
-        }
-        public string Reload()
-        {
-            var processes = Process.GetProcessesByName("ADB.EXE");
-            if (processes != null && processes.Length > 0)
-            {
-                foreach (var process in processes)
-                    process.Kill();
+                AdbServer server = new AdbServer();
+                var path = Path.Combine(this.ProcessPath(), "adb.exe");
+                StartServerResult result = server.StartServer(path, false);
+                if (result != StartServerResult.Started)
+                    throw new ApplicationException("Can't start adb server");
             }
-            ExcuteCommand("adb devices", out string message);
-            return message;
         }
-        public List<string> GetAll(string condition = "")
+        public bool TryConnect()
         {
-            List<string> packages = new List<string>();
-            if (!string.IsNullOrEmpty(DeviceCode))
+            if (Device == null)
             {
-                string command = string.IsNullOrEmpty(condition) ? $"adb -s {DeviceCode} shell pm list packages" :
-                $"adb -s {DeviceCode} shell pm list packages|grep {condition}";
-                if (ExcuteCommand(command, out string message))
-                {
-                    var lines = message.Substring($"{command}&exit");
-                    foreach (var item in lines.Splits("\r\n"))
-                    {
-                        if (!string.IsNullOrEmpty(item))
-                        {
-                            var name = item.Splits(':').LastOrDefault();
-                            if (!IgnorePackages.Contains(name))
-                                packages.Add(name);
-                        }
-                    }
-                }
-            }
-            return packages.OrderBy(x => x).ToList();
-        }
-        public bool Connect
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(WsaIp))
-                {
+                if (!WSA.Instance.Running)
                     WSA.Instance.Start();
-                    int count = 0;
-                    while (count < 10)
+                var count = 0;
+                while (count < 10)
+                {
+                    if (!string.IsNullOrEmpty(WsaIp))
                     {
-                        if (WSA.Instance.Running)
-                        {
-                            count = 0;
-                            Thread.Sleep(3000);
-                            while (count < 10)
-                            {
-                                if (!string.IsNullOrEmpty(WsaIp))
-                                    return true;
-                                else
-                                {
-                                    count++;
-                                    Thread.Sleep(3000);
-                                }
-                            }
-                            return false;
-                        }
-                        count++;
-                        Thread.Sleep(3000);
+                        AdbClient = new AdvancedAdbClient();
+                        AdbClient.Connect(WsaIp);
+                        Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                        break;
                     }
-                    return false;
+                    else
+                    {
+                        count++;
+                        Thread.Sleep(5000);
+                    }
                 }
-                return true;
             }
+            return Device != null;
         }
-        private string WsaIp
+        public bool Connect()
+        {
+            if (Device == null)
+            {
+                AdbClient = new AdvancedAdbClient();
+                AdbClient.Connect(WsaIp);
+                Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+            }
+            return Device != null;
+        }
+        public string WsaIp
         {
             get
             {
                 var find = "arp -a|findstr 00-15-5d";
                 Command.Instance.Excute(find, out string address);
                 address = address.Substring(find + "&exit").Replace("\r\n", "");
+                if (string.IsNullOrEmpty(address))
+                    return string.Empty;
                 LogManager.Instance.LogInfo("WsaIp:" + address);
-                return address;
+                return address.Splits(new[] { ' ' }).FirstOrDefault().Trim();
             }
         }
         public bool Install(string packagePath)
         {
-            if (string.IsNullOrEmpty(DeviceCode))
-                return false;
-            else
+            try
             {
-                string command = $"adb -s {DeviceCode} install \"{packagePath}\"";
-                if (ExcuteCommand(command, out string message))
-                {
-                    LogManager.Instance.LogInfo(message);
-                    return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
-                }
-                return false;
+                PackageManager manager = new PackageManager(AdbClient, Device);
+                manager.InstallPackage(packagePath, false);
+                return true;
             }
+            catch { }
+            return false;
         }
         public bool Downgrade(string packagePath)
         {
-            if (string.IsNullOrEmpty(DeviceCode))
-                return false;
-            else
+            try
             {
-                string command = $"adb -s {DeviceCode} -r -d install \"{packagePath}\"";
-                if (ExcuteCommand(command, out string message))
-                    return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
-                return false;
+                AdbClient.Install(Device, File.OpenRead(packagePath), "-r", "-d");
+                return true;
             }
+            catch { }
+            return false;
         }
-        public bool Remove(string packageName)
-        {
-            if (string.IsNullOrEmpty(DeviceCode))
-                return false;
-            else
-            {
-                string command = $"adb -s {DeviceCode} shell pm uninstall --user 0 \"{packageName}\"";
-                if (ExcuteCommand(command, out string message))
-                    return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
-                return false;
-            }
-        }
-        public bool ExcuteCommand(string cmd, out string message)
+        public bool Uninstall(string packageName)
         {
             try
             {
-                List<string> cmds = new List<string>
-                {
-                    $"cd /d \"{this.ProcessPath()}\"",
-                    cmd
-                };
-                return Command.Instance.Excute(cmds, out message);
+                PackageManager manager = new PackageManager(AdbClient, Device);
+                manager.UninstallPackage(packageName);
+                return true;
             }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-            }
+            catch { }
             return false;
+        }
+        public List<string> GetAll(string condition = "")
+        {
+            PackageManager manager = new PackageManager(AdbClient, Device);
+            var packages = manager.Packages.Select(x => x.Key);
+            return packages.Where(x => string.IsNullOrEmpty(condition) ||
+               x.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).ToList();
         }
     }
 }

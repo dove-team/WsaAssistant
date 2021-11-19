@@ -67,13 +67,12 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
-                if (Adb.Instance.Connect)
+                if (Adb.Instance.TryConnect())
                 {
                     WSARun = true;
                     WSARunState = FindChar("Running");
                     WSAStateHandler?.Invoke(this, true);
                     WSAStart = Visibility.Collapsed;
-                    Adb.Instance.Reload();
                     await LinkWSA();
                 }
                 else
@@ -133,7 +132,7 @@ namespace WSATools.ViewModels
                     WSAStateHandler?.Invoke(this, true);
                     WSARunState = FindChar("Running");
                     WSAStart = Visibility.Collapsed;
-                    Adb.Instance.Reload();
+                    Adb.Instance.Connect();
                     await LinkWSA();
                 }
                 else
@@ -152,8 +151,8 @@ namespace WSATools.ViewModels
             get => packages;
             set => SetProperty(ref packages, value);
         }
-        private string selectPackage;
-        public string SelectPackage
+        private ListItem selectPackage;
+        public ListItem SelectPackage
         {
             get => selectPackage;
             set => SetProperty(ref selectPackage, value);
@@ -250,7 +249,7 @@ namespace WSATools.ViewModels
                    FileName = string.Empty,
                    Filter = FindChar("ApkFile")
                };
-               if (!string.IsNullOrEmpty(SelectPackage) && openFileDialog.ShowDialog() == true)
+               if (!string.IsNullOrEmpty(SelectPackage.Content) && openFileDialog.ShowDialog() == true)
                {
                    if (Adb.Instance.Downgrade(openFileDialog.FileName))
                        MessageBox.Show(FindChar("DowngradeSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -266,12 +265,13 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
-                if (!string.IsNullOrEmpty(SelectPackage))
+                var packageName = SelectPackage?.Content;
+                if (!string.IsNullOrEmpty(packageName))
                 {
-                    if (MessageBox.Show($"{FindChar("UninstallTips")}{SelectPackage}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
+                    if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
                           == MessageBoxResult.Yes)
                     {
-                        if (Adb.Instance.Remove(SelectPackage))
+                        if (Adb.Instance.Uninstall(packageName))
                         {
                             MessageBox.Show(FindChar("UninstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                             await LinkWSA();
@@ -367,7 +367,7 @@ namespace WSATools.ViewModels
             {
                 Packages.Clear();
             });
-            if (string.IsNullOrEmpty(Adb.Instance.DeviceCode))
+            if (!Adb.Instance.Connect())
             {
                 WSARun = false;
                 MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -402,7 +402,6 @@ namespace WSATools.ViewModels
                     {
                         WSAState = FindChar("Installed");
                         WSAEnable = false;
-                        Adb.Instance.Reload();
                         await LinkWSA();
                         MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -424,7 +423,6 @@ namespace WSATools.ViewModels
             {
                 WSAState = FindChar("Installed");
                 WSAEnable = false;
-                Adb.Instance.Reload();
                 await LinkWSA();
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }

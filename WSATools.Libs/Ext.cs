@@ -1,5 +1,4 @@
-﻿using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,21 +64,6 @@ namespace WSATools.Libs
             }
             else
                 throw new TimeoutException("The operation has timed out.");
-        }
-        public static bool UnZip(this string zipFileName, string targetDirectory)
-        {
-            try
-            {
-                var zip = new FastZip();
-                zip.ExtractZip(zipFileName, targetDirectory, "");
-                File.Delete(zipFileName);
-                return Adb.Instance.HasBrige;
-            }
-            catch (Exception ex)
-            {
-                LogManager.Instance.LogError("UnZip", ex);
-            }
-            return false;
         }
         public static bool Before(this string str, string start, string end)
         {

@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
-using System.Linq;
 using WSATools.Libs;
 
 namespace WSATools.Background
@@ -13,7 +11,7 @@ namespace WSATools.Background
             try
             {
                 var path = string.Join(" ", args).Trim();
-                if (Adb.Instance.Connect)
+                if (Adb.Instance.TryConnect())
                 {
                     if (!Adb.Instance.Install(path))
                         Interaction.MsgBox("安装失败！", MsgBoxStyle.Critical, "ERROR");
