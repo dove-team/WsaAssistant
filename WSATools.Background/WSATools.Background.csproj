@@ -10,7 +10,13 @@
 	  <OutputType>WinExe</OutputType>
 	  <UseWPF>True</UseWPF>
 	  <UseWindowsForms>False</UseWindowsForms>
+	  <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSATools.Libs\WSATools.Libs.csproj" />
   </ItemGroup>

@@ -38,7 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="images\icon.ico" />
+    <Resource Include="images\icon.ico">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
     <Resource Include="images\Icon.png" />
     <Resource Include="images\loading.gif" />
   </ItemGroup>

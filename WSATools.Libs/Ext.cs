@@ -1,6 +1,4 @@
 ﻿using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -22,11 +20,19 @@ namespace WSATools.Libs
         {
             try
             {
-                var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WSATools Install";
-                Interaction.Shell($"cmd /c echo yes | REG ADD HKEY_CLASSES_ROOT\\.apk\\shell\\wsa /d \"{title}\"", AppWinStyle.Hide);
-                Thread.Sleep(100);
-                var cmd = Conversions.ToString(Operators.AddObject(Operators.AddObject("cmd /c echo yes | REG ADD HKEY_CLASSES_ROOT\\.apk\\shell\\wsa\\command /d ", path), "\" %1\""));
-                Interaction.Shell(cmd, AppWinStyle.Hide);
+                RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open");
+                if (registryKey == null)
+                {
+                    registryKey = Registry.ClassesRoot.CreateSubKey(".apk\\shell\\open");
+                    var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WSATools Install";
+                    registryKey.SetValue(string.Empty, title);
+                    var commandKey = registryKey.CreateSubKey("Command");
+                    commandKey.SetValue(string.Empty, $"{path} %1");
+                    RegistryKey iconKey = registryKey.CreateSubKey("DefaultIcon");
+                    var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
+                    iconKey.SetValue(string.Empty, iconPath);
+                }
+                DB.Instance.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 return true;
             }
             catch (Exception ex)

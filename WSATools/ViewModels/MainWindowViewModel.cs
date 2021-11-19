@@ -99,6 +99,7 @@ namespace WSATools.ViewModels
             WSAState = FindChar("Checking");
             WSARunState = FindChar("Checking");
             StateBrush = new SolidColorBrush(Colors.Yellow);
+            RegistEnable = !string.IsNullOrEmpty(DB.Instance.GetData("menu"));
             DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             RunOnUIThread(async () =>
             {
@@ -174,6 +175,12 @@ namespace WSATools.ViewModels
         {
             get => vmEnable;
             private set => SetProperty(ref vmEnable, value);
+        }
+        private bool registEnable;
+        public bool RegistEnable
+        {
+            get => registEnable;
+            set => SetProperty(ref registEnable, value);
         }
         private string wsaRunState;
         public string WSARunState
