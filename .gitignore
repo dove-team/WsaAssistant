@@ -1,8 +1,8 @@
 .vs
 bin
 obj
-Setup.exe
-Publish/x64
-Publish/arm64
-OutputDebug
+OutputDebug/x64
+OutputDebug/arm64
+OutputDebug/Release
+OutputDebug/Publish
 *Setup*.exe

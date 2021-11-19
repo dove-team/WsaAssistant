@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>michael_eddy</Authors>
     <OutputType>WinExe</OutputType>
     <Platforms>x64;ARM64</Platforms>
@@ -13,9 +13,15 @@
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="icon.ico" />
     <None Remove="images\icon.ico" />
     <None Remove="images\Icon.png" />
     <None Remove="images\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DynamicData" Version="7.4.3" />
@@ -27,7 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\icon.ico">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="images\Icon.png" />
     <Resource Include="images\loading.gif" />

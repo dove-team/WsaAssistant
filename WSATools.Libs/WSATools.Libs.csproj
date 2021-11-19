@@ -1,18 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>michael_eddy</Authors>
     <Platforms>x64;ARM64</Platforms>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <BaseOutputPath>..\OutputDebug</BaseOutputPath>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+	  <ApplicationIcon>..\WSATools\icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HandyControl" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
