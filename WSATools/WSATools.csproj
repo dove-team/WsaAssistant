@@ -1,42 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <UseWPF>true</UseWPF>
     <Version>1.2.0</Version>
-    <OutputType>WinExe</OutputType>
     <Authors>michael_eddy</Authors>
+    <OutputType>WinExe</OutputType>
     <Platforms>x64;ARM64</Platforms>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
+    <BaseOutputPath>..\OutputDebug</BaseOutputPath>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <BaseOutputPath>..\OutputDebug</BaseOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="bin\**" />
-    <EmbeddedResource Remove="bin\**" />
-    <None Remove="bin\**" />
-    <Page Remove="bin\**" />
-  </ItemGroup>
-
   <ItemGroup>
     <None Remove="images\icon.ico" />
     <None Remove="images\Icon.png" />
     <None Remove="images\loading.gif" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="DynamicData" Version="7.4.3" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\WSATools.Libs\WSATools.Libs.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="images\icon.ico">
       <CopyToOutputDirectory></CopyToOutputDirectory>
@@ -44,7 +32,6 @@
     <Resource Include="images\Icon.png" />
     <Resource Include="images\loading.gif" />
   </ItemGroup>
-
   <ItemGroup>
     <Page Update="Lang\Chinese.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -53,5 +40,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
-
 </Project>
