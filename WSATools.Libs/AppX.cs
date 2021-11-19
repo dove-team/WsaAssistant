@@ -137,7 +137,7 @@ namespace WSATools.Libs
                 for (var idx = 0; idx < PackageList.Count; idx++)
                 {
                     var url = PackageList.GetIndex(idx);
-                    var path = Path.Combine(Environment.CurrentDirectory, url.Item1);
+                    var path = Path.Combine(this.ProcessPath(), url.Item1);
                     if (File.Exists(path))
                     {
                         count++;

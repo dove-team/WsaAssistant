@@ -13,6 +13,11 @@ namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static string ProcessPath(this object _)
+        {
+            var path = Environment.ProcessPath;
+            return Path.GetDirectoryName(path);
+        }
         public static bool AddMenu(this string path, LangType langType)
         {
             try

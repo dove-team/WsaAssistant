@@ -39,10 +39,10 @@ namespace WSATools
             {
                 base.OnStartup(e);
                 LangManager.Instance.Init();
-                DownloadManager.Instance.Init(Environment.CurrentDirectory);
+                DownloadManager.Instance.Init(this.ProcessPath());
                 try
                 {
-                    Process.Start(Path.Combine(Environment.CurrentDirectory, "WSATools.Update.exe"));
+                    Process.Start(Path.Combine(this.ProcessPath(), "WSATools.Update.exe"));
                 }
                 catch { }
             }

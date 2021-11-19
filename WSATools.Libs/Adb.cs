@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace WSATools.Libs
 {
     public sealed class Adb
     {
-        private string AdbRoot { get; }
         private string AdbLocation { get; }
         private List<string> IgnorePackages { get; }
         private string deviceCode;
@@ -20,24 +20,25 @@ namespace WSATools.Libs
             {
                 if (string.IsNullOrEmpty(deviceCode))
                 {
-                    var find = "arp -a|findstr 00-15-5d";
-                    Command.Instance.Excute(find, out string address);
-                    address = address.Substring(find + "&exit").Replace("\r\n", "");
+                    var address = WsaIp;
                     if (!string.IsNullOrEmpty(address))
                     {
                         var wsaIp = address.Splits(new[] { ' ' }).FirstOrDefault();
-                        ExcuteCommand("adb connect " + wsaIp, out _);
+                        ExcuteCommand("adb connect " + wsaIp, out string connect);
+                        LogManager.Instance.LogInfo("adb connect:" + connect);
                         Thread.Sleep(8);
                         if (ExcuteCommand("adb devices", out string message))
                         {
+                            LogManager.Instance.LogInfo("adb devices:" + message);
                             var lines = message.Substring("List of devices attached");
                             foreach (var device in lines.Splits("\r\n"))
                             {
                                 var code = device.Splits('\t').FirstOrDefault();
                                 var cmd = $"adb -s {code} shell getprop ro.product.model";
                                 ExcuteCommand(cmd, out string name);
+                                LogManager.Instance.LogInfo("adb name:" + name);
                                 name = name.Substring(cmd + "&exit");
-                                if (name.Contains("Subsystem for Android(TM)", StringComparison.CurrentCultureIgnoreCase))
+                                if (name.Contains("Subsystem for Android", StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     deviceCode = code;
                                     break;
@@ -46,6 +47,7 @@ namespace WSATools.Libs
                         }
                     }
                 }
+                LogManager.Instance.LogInfo("DeviceCode:" + deviceCode);
                 return deviceCode;
             }
         }
@@ -53,8 +55,7 @@ namespace WSATools.Libs
         public static Adb Instance { get; } = new Adb();
         private Adb()
         {
-            AdbRoot = Path.Combine(Environment.CurrentDirectory, "platform-tools");
-            AdbLocation = Path.Combine(AdbRoot, "adb.exe");
+            AdbLocation = Path.Combine(this.ProcessPath(), "adb.exe");
             IgnorePackages = new List<string>
             {
                 "android","com.microsoft.windows.systemapp","com.android.permissioncontroller","com.android.shell","com.android.webview",
@@ -67,35 +68,6 @@ namespace WSATools.Libs
                 "com.amazon.device.messaging","com.android.networkstack.tethering","com.android.networkstack.permissionconfig","com.android.traceur",
                 "android.auto_generated_rro_vendor__","com.android.localtransport","com.android.hotspot2.osulogin"
             };
-            DownloadManager.Instance.ProgressComplete += Instance_ProgressComplete;
-        }
-        public bool hasComplete = false;
-        private void Instance_ProgressComplete(object sender, bool hasError, string filePath)
-        {
-            if (!hasError)
-            {
-                var path = Path.Combine(Environment.CurrentDirectory, "platform-tools-latest-windows.zip");
-                path.UnZip(Environment.CurrentDirectory);
-            }
-            hasComplete = true;
-        }
-        public async Task<bool> Pepair()
-        {
-            try
-            {
-                if (!HasBrige)
-                {
-                    await DownloadManager.Instance.Create("https://dl.google.com/android/repository/platform-tools-latest-windows.zip")
-                        .ConfigureAwait(false);
-                    while (hasComplete)
-                        return HasBrige;
-                }
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
         public string Reload()
         {
@@ -135,32 +107,54 @@ namespace WSATools.Libs
         {
             get
             {
-                var find = "arp -a|findstr 00-15-5d";
-                Command.Instance.Excute(find, out string address);
-                address = address.Substring(find + "&exit").Replace("\r\n", "");
-                if (string.IsNullOrEmpty(address))
+                if (string.IsNullOrEmpty(WsaIp))
                 {
                     WSA.Instance.Start();
                     int count = 0;
-                    while (count < 4)
+                    while (count < 10)
                     {
                         if (WSA.Instance.Running)
-                            return true;
-                        Thread.Sleep(5000);
+                        {
+                            count = 0;
+                            Thread.Sleep(3000);
+                            while (count < 10)
+                            {
+                                if (!string.IsNullOrEmpty(WsaIp))
+                                    return true;
+                                else
+                                {
+                                    count++;
+                                    Thread.Sleep(3000);
+                                }
+                            }
+                            return false;
+                        }
+                        count++;
+                        Thread.Sleep(3000);
                     }
                     return false;
                 }
                 return true;
             }
         }
+        private string WsaIp
+        {
+            get
+            {
+                var find = "arp -a|findstr 00-15-5d";
+                Command.Instance.Excute(find, out string address);
+                address = address.Substring(find + "&exit").Replace("\r\n", "");
+                LogManager.Instance.LogInfo("WsaIp:" + address);
+                return address;
+            }
+        }
         public bool Install(string packagePath)
         {
-            LogManager.Instance.LogInfo("DeviceCode:" + DeviceCode);
             if (string.IsNullOrEmpty(DeviceCode))
                 return false;
             else
             {
-                string command = $"adb -s{DeviceCode} install {packagePath}";
+                string command = $"adb -s {DeviceCode} install \"{packagePath}\"";
                 if (ExcuteCommand(command, out string message))
                 {
                     LogManager.Instance.LogInfo(message);
@@ -175,7 +169,7 @@ namespace WSATools.Libs
                 return false;
             else
             {
-                string command = $"adb -s{DeviceCode} -r -d install {packagePath}";
+                string command = $"adb -s {DeviceCode} -r -d install \"{packagePath}\"";
                 if (ExcuteCommand(command, out string message))
                     return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
                 return false;
@@ -187,7 +181,7 @@ namespace WSATools.Libs
                 return false;
             else
             {
-                string command = $"adb -s {DeviceCode} shell pm uninstall --user 0 {packageName}";
+                string command = $"adb -s {DeviceCode} shell pm uninstall --user 0 \"{packageName}\"";
                 if (ExcuteCommand(command, out string message))
                     return message.Substring($"{command}&exit").Contains("success", StringComparison.CurrentCultureIgnoreCase);
                 return false;
@@ -199,7 +193,7 @@ namespace WSATools.Libs
             {
                 List<string> cmds = new List<string>
                 {
-                    $"cd \"{AdbRoot}\"",
+                    $"cd /d \"{this.ProcessPath()}\"",
                     cmd
                 };
                 return Command.Instance.Excute(cmds, out message);

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using WSATools.Libs;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools.ViewModels
 {
@@ -120,7 +121,7 @@ namespace WSATools.ViewModels
                 if (File.Exists(file))
                     File.Delete(file);
                 File.WriteAllText(file, shellBuilder.ToString());
-                var shellFile = Path.Combine(Environment.CurrentDirectory, file);
+                var shellFile = Path.Combine(this.ProcessPath(), file);
                 Command.Instance.Shell(shellFile, out string message);
                 LogManager.Instance.LogInfo("Install WSA Script:" + message);
                 File.Delete(shellFile);

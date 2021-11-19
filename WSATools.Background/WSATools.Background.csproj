@@ -8,8 +8,21 @@
 	  <BaseOutputPath>..\OutputDebug</BaseOutputPath>
 	  <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
 	  <OutputType>WinExe</OutputType>
+	  <UseWPF>True</UseWPF>
+	  <UseWindowsForms>False</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\WSATools.Libs\WSATools.Libs.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Libs\adb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\AdbWinApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\AdbWinUsbApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

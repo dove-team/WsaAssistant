@@ -55,7 +55,7 @@ namespace WSATools.ViewModels
         private Task RegisterAsync()
         {
             this.RemoveMenu();
-            var path = Path.Combine(Environment.CurrentDirectory, "WSATools.Background.exe");
+            var path = Path.Combine(this.ProcessPath(), "WSATools.Background.exe");
             if (path.AddMenu(LangManager.Instance.Current))
                 MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             else
@@ -67,9 +67,7 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
             {
                 LoadVisable = Visibility.Visible;
-                WSA.Instance.Start();
-                await Task.Delay(5000);
-                if (WSA.Instance.Running)
+                if (Adb.Instance.Connect)
                 {
                     WSARun = true;
                     WSARunState = FindChar("Running");
@@ -355,38 +353,32 @@ namespace WSATools.ViewModels
              });
             return Task.CompletedTask;
         }
-        private async Task LinkWSA(string condition = "")
+        private Task LinkWSA(string condition = "")
         {
             LoadVisable = Visibility.Visible;
             Dispatcher.Invoke(() =>
             {
                 Packages.Clear();
             });
-            if (await Adb.Instance.Pepair())
+            if (string.IsNullOrEmpty(Adb.Instance.DeviceCode))
             {
-                if (string.IsNullOrEmpty(Adb.Instance.DeviceCode))
-                {
-                    WSARun = false;
-                    MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                else
-                {
-                    var list = Adb.Instance.GetAll(condition);
-                    foreach (var name in list)
-                    {
-                        var item = new ListItem(name);
-                        Dispatcher.Invoke(() =>
-                        {
-                            Packages.Add(item);
-                        });
-                    }
-                }
+                WSARun = false;
+                MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                MessageBox.Show(FindChar("AdbFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                var list = Adb.Instance.GetAll(condition);
+                foreach (var name in list)
+                {
+                    var item = new ListItem(name);
+                    Dispatcher.Invoke(() =>
+                    {
+                        Packages.Add(item);
+                    });
+                }
             }
             LoadVisable = Visibility.Collapsed;
+            return Task.CompletedTask;
         }
         private async Task InitWSA()
         {

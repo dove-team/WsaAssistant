@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
-using System.IO;
 using System.Linq;
 using WSATools.Libs;
 
@@ -12,13 +12,13 @@ namespace WSATools.Background
         {
             try
             {
-                var fileName = Path.GetFileName(Environment.ProcessPath);
-                var path = args.FirstOrDefault();
-                LogManager.Instance.LogInfo(path);
+                var path = string.Join(" ", args).Trim();
                 if (Adb.Instance.Connect)
                 {
                     if (!Adb.Instance.Install(path))
                         Interaction.MsgBox("安装失败！", MsgBoxStyle.Critical, "ERROR");
+                    else
+                        Interaction.MsgBox("安装成功！", MsgBoxStyle.Information, "SUCCESS");
                 }
                 else
                     Interaction.MsgBox("未连接设备！请检查子系统相关设置", MsgBoxStyle.Critical, "ERROR");

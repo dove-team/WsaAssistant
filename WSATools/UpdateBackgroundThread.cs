@@ -88,7 +88,7 @@ namespace WSATools
                             if (!string.IsNullOrEmpty(url))
                             {
                                 UpdateMessage = LangManager.Instance.Current == LangType.Chinese ? model.ChMessage : model.EnMessage;
-                                UpgradeFile = Path.Combine(Environment.CurrentDirectory, $"update.{uri.Ext}");
+                                UpgradeFile = Path.Combine(this.ProcessPath(), $"update.{uri.Ext}");
                                 if (!string.IsNullOrEmpty(UpgradeFile))
                                     await DownloadManager.Instance.Create(url);
                             }

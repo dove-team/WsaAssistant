@@ -38,7 +38,7 @@ namespace WSATools.Libs
                 OnTheFlyDownload = false,
                 MaximumBytesPerSecond = 1024 * 1024,
                 MaxTryAgainOnFailover = int.MaxValue,
-                TempDirectory = Path.Combine(Environment.CurrentDirectory, "temp"),
+                TempDirectory = Path.Combine(this.ProcessPath(), "temp"),
                 RequestConfiguration =
                 {
                     Accept = "*/*",
@@ -102,7 +102,7 @@ namespace WSATools.Libs
         public bool HasClear => array.Count > 0;
         public void Clear()
         {
-            Directory.Delete(Path.Combine(Environment.CurrentDirectory, "temp"));
+            Directory.Delete(Path.Combine(this.ProcessPath(), "temp"));
             Service.Clear();
             foreach (var path in array)
             {
