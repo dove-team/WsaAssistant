@@ -22,6 +22,7 @@ namespace WSATools.Libs
         {
             try
             {
+                LogManager.Instance.LogInfo("shell:" + cmd);
                 var process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;

@@ -103,11 +103,9 @@ namespace WSATools.ViewModels
                             if (File.Exists(file))
                                 File.Delete(file);
                             File.WriteAllText(file, shellBuilder.ToString());
-                            var shellFile = Path.Combine(this.ProcessPath(), file);
-                            Command.Instance.Shell(shellFile, out string message);
+                            Command.Instance.Shell(@".\" + file, out string message);
                             LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                             LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
-                            File.Delete(shellFile);
                             MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         catch (Exception ex)
@@ -173,12 +171,7 @@ namespace WSATools.ViewModels
             {
                 StringBuilder shellBuilder = new StringBuilder();
                 foreach (Tuple<string, string, bool?, DownloadPackage> package in AppX.Instance.PackageList)
-                {
-                    FileInfo fileInfo = new FileInfo(package.Item1);
-                    if (!fileInfo.Exists)
-                        fileInfo = new FileInfo(Path.Combine(this.ProcessPath(), package.Item1));
-                    shellBuilder.AppendLine($"Add-AppxPackage {fileInfo.FullName} -ForceApplicationShutdown");
-                }
+                    shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                 var file = "install.ps1";
@@ -186,10 +179,9 @@ namespace WSATools.ViewModels
                     File.Delete(file);
                 File.WriteAllText(file, shellBuilder.ToString());
                 var shellFile = Path.Combine(this.ProcessPath(), file);
-                Command.Instance.Shell(shellFile, out string message);
+                Command.Instance.Shell(@".\" + file, out string message);
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
-                File.Delete(shellFile);
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
