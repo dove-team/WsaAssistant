@@ -5,7 +5,7 @@
 !define PRODUCT_VERSION "1.2.2"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\adb.exe"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WSATools.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -57,8 +57,8 @@ Section "MainSection" SEC01
   File "Publish\x64\Accessibility.dll"
   File "Publish\x64\adb.exe"
   CreateDirectory "$SMPROGRAMS\WSATools"
-  CreateShortCut "$SMPROGRAMS\WSATools\WSATools.lnk" "$INSTDIR\adb.exe"
-  CreateShortCut "$DESKTOP\WSATools.lnk" "$INSTDIR\adb.exe"
+  CreateShortCut "$SMPROGRAMS\WSATools\WSATools.lnk" "$INSTDIR\WSATools.exe"
+  CreateShortCut "$DESKTOP\WSATools.lnk" "$INSTDIR\WSATools.exe"
   File "Publish\x64\AdbWinApi.dll"
   File "Publish\x64\AdbWinUsbApi.dll"
   File "Publish\x64\AdvancedSharpAdbClient.dll"
@@ -410,10 +410,10 @@ SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\adb.exe"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\WSATools.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\adb.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\WSATools.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"

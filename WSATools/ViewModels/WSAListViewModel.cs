@@ -172,8 +172,13 @@ namespace WSATools.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
-                foreach (Tuple<string, string, bool> package in AppX.Instance.PackageList)
-                    shellBuilder.AppendLine($"Add-AppxPackage {package.Item2} -ForceApplicationShutdown");
+                foreach (Tuple<string, string, bool?, DownloadPackage> package in AppX.Instance.PackageList)
+                {
+                    FileInfo fileInfo = new FileInfo(package.Item1);
+                    if (!fileInfo.Exists)
+                        fileInfo = new FileInfo(Path.Combine(this.ProcessPath(), package.Item1));
+                    shellBuilder.AppendLine($"Add-AppxPackage {fileInfo.FullName} -ForceApplicationShutdown");
+                }
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                 var file = "install.ps1";
