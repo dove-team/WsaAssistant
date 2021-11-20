@@ -10,7 +10,7 @@ namespace WSATools.Libs
 {
     public static class Ext
     {
-        public static string ProcessPath(this object _)
+        public static string ProcessPath<T>(this T _) where T : class
         {
             var path = Environment.ProcessPath;
             return Path.GetDirectoryName(path);

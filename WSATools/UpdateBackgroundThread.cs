@@ -45,7 +45,11 @@ namespace WSATools
                 var content = GetContent($"https://api.pingping6.com/tools/lanzou/?url={url}");
                 var info = JsonConvert.DeserializeObject<JObject>(content);
                 if (info != null && Convert.ToInt32(info["code"].ToString()) == 1)
-                    return info["file"].ToString();
+                {
+                    var file = info["file"].ToString();
+                    LogManager.Instance.LogInfo($"DownloadPath:{file}");
+                    return file;
+                }
             }
             return string.Empty;
         }
@@ -53,17 +57,19 @@ namespace WSATools
         {
             try
             {
-                return HttpClient.GetStringAsync(url).GetAwaiter().GetResult();
+                var stringContent = HttpClient.GetStringAsync(url).GetAwaiter().GetResult();
+                LogManager.Instance.LogInfo($"GetContent:{stringContent}");
+                return stringContent;
             }
             catch { }
             return string.Empty;
         }
         public void ShowUpdate()
         {
+            LogManager.Instance.LogInfo($"ShowUpdate:{(string.IsNullOrEmpty(UpgradeFile) ? "没有最新版本更新！" : "有最新版本更新！")}");
             if (!string.IsNullOrEmpty(UpgradeFile))
             {
-                string title = LangManager.Instance.Current == LangType.Chinese
-                    ? "WSATools有新版本，是否进行更新？" : "WSATools Has new-version，upgrade now？";
+                string title = LangManager.Instance.Current == LangType.Chinese ? "WSATools有新版本，是否进行更新？" : "WSATools Has new-version，upgrade now？";
                 if (MessageBox.Show(UpdateMessage, title, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     Process.Start(UpgradeFile);
@@ -90,7 +96,10 @@ namespace WSATools
                                 UpdateMessage = LangManager.Instance.Current == LangType.Chinese ? model.ChMessage : model.EnMessage;
                                 UpgradeFile = Path.Combine(this.ProcessPath(), $"update.{uri.Ext}");
                                 if (!string.IsNullOrEmpty(UpgradeFile))
+                                {
+                                    LogManager.Instance.LogInfo($"UpgradeFile:{UpgradeFile}");
                                     await DownloadManager.Instance.Create(url);
+                                }
                             }
                         }
                     }

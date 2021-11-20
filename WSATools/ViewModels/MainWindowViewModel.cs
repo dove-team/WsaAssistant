@@ -25,7 +25,7 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand StartWSACommand { get; }
         public IAsyncRelayCommand InstallWSACommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
-        public IAsyncRelayCommand RegisterCommand { get; }        
+        public IAsyncRelayCommand RegisterCommand { get; }
         public IAsyncRelayCommand UninstallApkCommand { get; }
         public MainWindowViewModel()
         {
@@ -157,8 +157,8 @@ namespace WSATools.ViewModels
             get => selectPackage;
             set => SetProperty(ref selectPackage, value);
         }
-        private double processVal = 0;
-        public double ProcessVal
+        private string processVal = "0.00";
+        public string ProcessVal
         {
             get => processVal;
             set => SetProperty(ref processVal, value);
@@ -427,9 +427,9 @@ namespace WSATools.ViewModels
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        private void Downloader_ProcessChange(long receiveSize, long totalSize)
+        private void Downloader_ProcessChange(string progressPercentage)
         {
-            ProcessVal = receiveSize / totalSize * 100;
+            ProcessVal = progressPercentage;
         }
         public override void Dispose()
         {

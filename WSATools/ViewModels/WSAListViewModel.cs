@@ -1,12 +1,15 @@
 ﻿using Downloader;
-using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using WSATools.Libs;
+using System.Windows;
+using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools.ViewModels
@@ -17,25 +20,33 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
+        public IAsyncRelayCommand OfflineCommand { get; }
         public WSAListViewModel()
         {
             CloseCommand = new AsyncRelayCommand(CloseAsync);
             RreshCommand = new AsyncRelayCommand(RreshAsync);
             InstallCommand = new AsyncRelayCommand(InstallAsync);
+            OfflineCommand = new AsyncRelayCommand(OfflineAsync);
             AppX.Instance.DownloadComplete += Instance_DownloadComplete;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
             if (!state)
             {
-                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"),
-                    MessageBoxButton.YesNo, MessageBoxImage.Error))
+                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Error))
+                {
+                    LogManager.Instance.LogInfo("下载WSA异常，重试中！");
                     await AppX.Instance.Retry(false);
+                }
                 else
+                {
+                    LogManager.Instance.LogInfo("下载WSA异常，退出！");
                     Close?.Invoke(this, false);
+                }
             }
             else
             {
+                LogManager.Instance.LogInfo("下载WSA完成，开始安装！");
                 ExcuteCommand();
                 Close?.Invoke(this, true);
             }
@@ -55,8 +66,8 @@ namespace WSATools.ViewModels
             get => timeoutEnable;
             set => SetProperty(ref timeoutEnable, value);
         }
-        private decimal processVal = 0;
-        public decimal ProcessVal
+        private string processVal = "0.00";
+        public string ProcessVal
         {
             get => processVal;
             set => SetProperty(ref processVal, value);
@@ -66,6 +77,52 @@ namespace WSATools.ViewModels
         {
             get => installEnable;
             set => SetProperty(ref installEnable, value);
+        }
+        private Task OfflineAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                var dialog = new Files.FolderBrowserDialog { InitialFolder = this.ProcessPath() };
+                if (dialog.ShowDialog() != DialogResult.Cancel)
+                {
+                    var directory = new DirectoryInfo(dialog.Folder);
+                    List<string> files = new List<string>();
+                    files.AddRange(directory.GetFiles("*.appx", SearchOption.AllDirectories).Select(x => x.FullName) ?? Array.Empty<string>());
+                    files.AddRange(directory.GetFiles("*.msixbundle", SearchOption.AllDirectories).Select(x => x.FullName) ?? Array.Empty<string>());
+                    LogManager.Instance.LogInfo("选择离线安装包：" + string.Join("#", files));
+                    if (files.Count > 0)
+                    {
+                        try
+                        {
+                            StringBuilder shellBuilder = new StringBuilder();
+                            foreach (var f in files)
+                                shellBuilder.AppendLine($"Add-AppxPackage {f} -ForceApplicationShutdown");
+                            Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
+                            Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
+                            var file = "install.ps1";
+                            if (File.Exists(file))
+                                File.Delete(file);
+                            File.WriteAllText(file, shellBuilder.ToString());
+                            var shellFile = Path.Combine(this.ProcessPath(), file);
+                            Command.Instance.Shell(shellFile, out string message);
+                            LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
+                            LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
+                            File.Delete(shellFile);
+                            MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            LogManager.Instance.LogError("ExcuteCommand", ex);
+                        }
+                    }
+                    else
+                    {
+                        LogManager.Instance.LogInfo("Select Empty Folder,Breeak");
+                        MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            });
+            return Task.CompletedTask;
         }
         private Task RreshAsync()
         {
@@ -79,6 +136,7 @@ namespace WSATools.ViewModels
         }
         private Task CloseAsync()
         {
+            LogManager.Instance.LogInfo("User Cancel.");
             Close?.Invoke(this, false);
             return Task.CompletedTask;
         }
@@ -93,6 +151,7 @@ namespace WSATools.ViewModels
                     TimeoutEnable = false;
                     if (await AppX.Instance.PepairAsync())
                     {
+                        LogManager.Instance.LogInfo("Found Local Package to install.");
                         ExcuteCommand();
                         LoadVisable = Visibility.Collapsed;
                     }
@@ -103,7 +162,7 @@ namespace WSATools.ViewModels
                     TimeoutEnable = true;
                     LoadVisable = Visibility.Collapsed;
                     LogManager.Instance.LogError("InstallAsync", ex);
-                    MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
             return Task.CompletedTask;
@@ -123,8 +182,10 @@ namespace WSATools.ViewModels
                 File.WriteAllText(file, shellBuilder.ToString());
                 var shellFile = Path.Combine(this.ProcessPath(), file);
                 Command.Instance.Shell(shellFile, out string message);
-                LogManager.Instance.LogInfo("Install WSA Script:" + message);
+                LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
+                LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                 File.Delete(shellFile);
+                MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -137,9 +198,9 @@ namespace WSATools.ViewModels
             DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }
-        private void Downloader_ProcessChange(long receiveSize, long totalSize)
+        private void Downloader_ProcessChange(string progressPercentage)
         {
-            ProcessVal = Math.Round((decimal)receiveSize / totalSize * 100, 2);
+            ProcessVal = progressPercentage;
         }
         private async Task GetList()
         {

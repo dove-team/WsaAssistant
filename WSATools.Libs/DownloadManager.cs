@@ -79,7 +79,8 @@ namespace WSATools.Libs
         }
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            ProcessChange?.Invoke(e.ProgressedByteSize, e.TotalBytesToReceive);
+            var progressPercentage = e.ProgressPercentage.ToString("0.00");
+            ProcessChange?.Invoke(progressPercentage);
         }
         public void Init(string root)
         {
