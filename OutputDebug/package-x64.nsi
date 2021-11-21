@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WSATools"
-!define PRODUCT_VERSION "1.2.2"
+!define PRODUCT_VERSION "1.2.3"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WSATools.exe"
@@ -114,7 +114,6 @@ Section "MainSection" SEC01
   File "Publish\x64\dbgshim.dll"
   File "Publish\x64\DirectWriteForwarder.dll"
   File "Publish\x64\Downloader.dll"
-  File "Publish\x64\DynamicData.dll"
   SetOutPath "$INSTDIR\en"
   File "Publish\x64\en\HandyControl.resources.dll"
   SetOutPath "$INSTDIR"
@@ -259,7 +258,6 @@ Section "MainSection" SEC01
   File "Publish\x64\System.Private.Uri.dll"
   File "Publish\x64\System.Private.Xml.dll"
   File "Publish\x64\System.Private.Xml.Linq.dll"
-  File "Publish\x64\System.Reactive.dll"
   File "Publish\x64\System.Reflection.DispatchProxy.dll"
   File "Publish\x64\System.Reflection.dll"
   File "Publish\x64\System.Reflection.Emit.dll"
@@ -429,13 +427,12 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
-!insertmacro MUI_UNGETLANGUAGE
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "你确实要完全移除 $(^Name) ，其及所有的组件？" IDYES +2
-  Abort
-  NoAbort:
   KillProcDLL::KillProc "adb.exe"
   KillProcDLL::KillProc "WSATools.exe"
   KillProcDLL::KillProc "WSATools.Background.exe"
+!insertmacro MUI_UNGETLANGUAGE
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "你确实要完全移除 $(^Name) ，其及所有的组件？" IDYES +2
+  Abort
 FunctionEnd
 
 Section Uninstall
@@ -582,7 +579,6 @@ Section Uninstall
   Delete "$INSTDIR\System.Reflection.Emit.dll"
   Delete "$INSTDIR\System.Reflection.dll"
   Delete "$INSTDIR\System.Reflection.DispatchProxy.dll"
-  Delete "$INSTDIR\System.Reactive.dll"
   Delete "$INSTDIR\System.Private.Xml.Linq.dll"
   Delete "$INSTDIR\System.Private.Xml.dll"
   Delete "$INSTDIR\System.Private.Uri.dll"
@@ -725,7 +721,6 @@ Section Uninstall
   Delete "$INSTDIR\hostfxr.dll"
   Delete "$INSTDIR\HandyControl.dll"
   Delete "$INSTDIR\en\HandyControl.resources.dll"
-  Delete "$INSTDIR\DynamicData.dll"
   Delete "$INSTDIR\Downloader.dll"
   Delete "$INSTDIR\DirectWriteForwarder.dll"
   Delete "$INSTDIR\dbgshim.dll"
