@@ -52,7 +52,6 @@ namespace WSATools.Libs
                 }
             };
             array = new List<string>();
-            Build();
         }
         private void Build()
         {

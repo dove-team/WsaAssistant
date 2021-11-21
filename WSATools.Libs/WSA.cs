@@ -1,6 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using HtmlAgilityPack;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WSATools.Libs
 {
@@ -35,6 +41,47 @@ namespace WSATools.Libs
                     count++;
             }
             return (count == PackageList.Count(), Pepair(), Running);
+        }
+        public async Task<bool> HasUpdate()
+        {
+            bool hasNew = false;
+            try
+            {
+                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
+                HttpClient httpClient = new HttpClient(handler);
+                var stringContent = new StringContent("type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN", Encoding.UTF8, "application/x-www-form-urlencoded");
+                var respone = await httpClient.PostAsync("https://store.rg-adguard.net/api/GetFiles", stringContent);
+                if (respone.StatusCode == HttpStatusCode.OK)
+                {
+                    var html = await respone.Content.ReadAsStringAsync();
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(html);
+                    var table = doc.DocumentNode.SelectSingleNode("table");
+                    if (table != null)
+                    {
+                        foreach (var tr in table.SelectNodes("tr"))
+                        {
+                            var a = tr.SelectSingleNode("td").SelectSingleNode("a");
+                            if (a != null && a.InnerText.Contains("WindowsSubsystemForAndroid"))
+                            {
+                                var version = a.InnerText.Splits("_")?.ElementAt(1);
+                                if (!string.IsNullOrEmpty(version))
+                                {
+                                    Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+                                    var packageVersion = message.Split("\r\n").ElementAt(1).Split("_").ElementAt(1).Trim();
+                                    hasNew = version.NewerThan(packageVersion);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("HasUpdate", ex);
+            }
+            return hasNew;
         }
         public bool Init()
         {

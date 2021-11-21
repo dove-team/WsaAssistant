@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WSATools.Libs.Model;
@@ -10,6 +11,30 @@ namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static bool NewerThan(this string v1, string v2)
+        {
+            bool result = false;
+            try
+            {
+                string[] v1s = v1.Splits("."), v2s = v2.Splits(".");
+                for (var idx = 0; idx < v1s.Length; idx++)
+                {
+                    if (int.TryParse(v1s.ElementAt(idx), out int vv1) && int.TryParse(v2s.ElementAt(idx), out int vv2))
+                    {
+                        if (vv1 > vv2)
+                        {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("EqualVersion", ex);
+            }
+            return result;
+        }
         public static string ProcessPath<T>(this T _) where T : class
         {
             var path = Environment.ProcessPath;

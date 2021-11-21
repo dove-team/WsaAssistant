@@ -19,13 +19,13 @@ namespace WSATools.ViewModels
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
+        public IAsyncRelayCommand RegisterCommand { get; }
         public IAsyncRelayCommand UninstallCommand { get; }
         public IAsyncRelayCommand InstallVmCommand { get; }
         public IAsyncRelayCommand InstallApkCommand { get; }
         public IAsyncRelayCommand StartWSACommand { get; }
         public IAsyncRelayCommand InstallWSACommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
-        public IAsyncRelayCommand RegisterCommand { get; }
         public IAsyncRelayCommand UninstallApkCommand { get; }
         public MainWindowViewModel()
         {
@@ -34,12 +34,12 @@ namespace WSATools.ViewModels
             SearchCommand = new AsyncRelayCommand(SearchAsync);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             RegisterCommand = new AsyncRelayCommand(RegisterAsync);
-            StartWSACommand = new AsyncRelayCommand(StartWSAAsync);
             UninstallCommand = new AsyncRelayCommand(UninstallAsync);
-            DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             InstallVmCommand = new AsyncRelayCommand(InstallVmAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
+            StartWSACommand = new AsyncRelayCommand(StartWSAAsync);
             InstallWSACommand = new AsyncRelayCommand(InstallWSAAsync);
+            DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
         }
         private void MainWindowViewModel_WSAStateHandler(object sender, bool state)
@@ -143,6 +143,11 @@ namespace WSATools.ViewModels
                     WSAStart = Visibility.Visible;
                 }
                 LoadVisable = Visibility.Collapsed;
+                if (await WSA.Instance.HasUpdate())
+                {
+                    ShowUpdate = Visibility.Visible;
+                    HasNewVersion = "WSA有最新版本可更新！";
+                }
             });
         }
         private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
@@ -193,6 +198,12 @@ namespace WSATools.ViewModels
             get => stateBrush;
             set => SetProperty(ref stateBrush, value);
         }
+        private Visibility showUpdate = Visibility.Collapsed;
+        public Visibility ShowUpdate
+        {
+            get => showUpdate;
+            set => SetProperty(ref showUpdate, value);
+        }
         private Visibility wsaStart = Visibility.Collapsed;
         public Visibility WSAStart
         {
@@ -222,6 +233,12 @@ namespace WSATools.ViewModels
         {
             get => wsaRemoveable;
             private set => SetProperty(ref wsaRemoveable, value);
+        }
+        private string hasNewVersion;
+        public string HasNewVersion
+        {
+            get => hasNewVersion;
+            set => SetProperty(ref hasNewVersion, value);
         }
         private string searchKeywords;
         public string SearchKeywords
@@ -426,6 +443,7 @@ namespace WSATools.ViewModels
                 await LinkWSA();
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
+            LoadVisable = Visibility.Collapsed;
         }
         private void Downloader_ProcessChange(string progressPercentage)
         {

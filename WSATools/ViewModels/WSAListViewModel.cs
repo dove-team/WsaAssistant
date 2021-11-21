@@ -107,14 +107,17 @@ namespace WSATools.ViewModels
                             LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                             LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                             MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                            LoadVisable = Visibility.Collapsed;
                         }
                         catch (Exception ex)
                         {
+                            LoadVisable = Visibility.Collapsed;
                             LogManager.Instance.LogError("ExcuteCommand", ex);
                         }
                     }
                     else
                     {
+                        LoadVisable = Visibility.Collapsed;
                         LogManager.Instance.LogInfo("Select Empty Folder,Breeak");
                         MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
@@ -135,6 +138,7 @@ namespace WSATools.ViewModels
         private Task CloseAsync()
         {
             LogManager.Instance.LogInfo("User Cancel.");
+            LoadVisable = Visibility.Collapsed;
             Close?.Invoke(this, false);
             return Task.CompletedTask;
         }
@@ -183,6 +187,7 @@ namespace WSATools.ViewModels
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadVisable = Visibility.Collapsed;
             }
             catch (Exception ex)
             {

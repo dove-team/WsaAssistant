@@ -58,6 +58,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
                     <Button IsEnabled="{Binding RegistEnable}" Command="{Binding RegisterCommand}" Content="{DynamicResource Register}" Width="140" />
+                    <Button Visibility="{Binding ShowUpdate}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallWSACommand}" Content="{Binding HasNewVersion}" Width="200" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
                     <Button IsEnabled="{Binding WSARemoveable}" Command="{Binding UninstallCommand}" Content="{DynamicResource RemoveWsa}" Width="140" />
@@ -123,8 +124,8 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Popup x:Name="loading" Width="100" Height="100" Placement="Center">
+        <local:PopupEx x:Name="loading" Width="100" Height="100" Placement="Center" Topmost="False">
             <local:Loading Visibility="{Binding LoadVisable}" Width="100" Height="100" />
-        </Popup>
+        </local:PopupEx>
     </Grid>
 </hc:BlurWindow>
