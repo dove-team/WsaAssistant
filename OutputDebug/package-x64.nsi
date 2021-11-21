@@ -49,6 +49,9 @@ ShowInstDetails show
 ShowUnInstDetails show
 
 Function .onInit
+  KillProcDLL::KillProc "adb.exe"
+  KillProcDLL::KillProc "WSATools.exe"
+  KillProcDLL::KillProc "WSATools.Background.exe"
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
@@ -429,6 +432,10 @@ Function un.onInit
 !insertmacro MUI_UNGETLANGUAGE
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "你确实要完全移除 $(^Name) ，其及所有的组件？" IDYES +2
   Abort
+  NoAbort:
+  KillProcDLL::KillProc "adb.exe"
+  KillProcDLL::KillProc "WSATools.exe"
+  KillProcDLL::KillProc "WSATools.Background.exe"
 FunctionEnd
 
 Section Uninstall

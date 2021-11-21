@@ -40,8 +40,8 @@
     <sys:String x:Key="WsaSuccess">恭喜你，看起来现在的WSA环境很好！</sys:String>
     <sys:String x:Key="DownloadFailed">下载失败，请检查网络后进行重试！</sys:String>
     <sys:String x:Key="WsaFailed">看起来WSA环境安装失败，请安装后再使用！</sys:String>
-    <sys:String x:Key="WsaDownloadFailed">出现异常，获取WSA环境包失败！是否重试？</sys:String>
     <sys:String x:Key="WsaCreateDownloadFailed">创建WSA环境下载任务失败，是否重试试？</sys:String>
+    <sys:String x:Key="WsaPackageFailed">出现异常，获取WSA环境包失败！请点击刷新按钮重试！</sys:String>
     <sys:String x:Key="AdbFailed">初始化ADB环境失败，请稍后重试！或者直接使用APKInstall进行管理！</sys:String>
     <sys:String x:Key="RebootTips">需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)</sys:String>
 </ResourceDictionary>

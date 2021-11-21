@@ -220,14 +220,14 @@ namespace WSATools.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(FindChar("WsaPackageFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("GetList", ex);
-                MessageBox.Show(FindChar("WsaDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(FindChar("WsaPackageFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             LoadVisable = Visibility.Collapsed;
         }

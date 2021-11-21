@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using WSATools.Libs;
 using WSATools.ViewModels;
 using MessageBox = HandyControl.Controls.MessageBox;
@@ -55,9 +56,23 @@ namespace WSATools
                 DownloadManager.Instance.Clear();
             base.OnClosing(e);
         }
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
+        }
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            MouseDown += MainWindow_MouseDown;
             UpdateBackgroundThread.Instance.CheckUpdate();
+        }
+        private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch { }
         }
     }
 }

@@ -49,6 +49,9 @@ ShowInstDetails show
 ShowUnInstDetails show
 
 Function .onInit
+  KillProcDLL::KillProc "adb.exe"
+  KillProcDLL::KillProc "WSATools.exe"
+  KillProcDLL::KillProc "WSATools.Background.exe"
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
@@ -379,13 +382,17 @@ SectionEnd
 
 Function un.onUninstSuccess
   HideWindow
-  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) ï¿½Ñ³É¹ï¿½ï¿½Ø´ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½"
+  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) ÒÑ³É¹¦µØ´ÓÄãµÄ¼ÆËã»úÒÆ³ý¡£"
 FunctionEnd
 
 Function un.onInit
 !insertmacro MUI_UNGETLANGUAGE
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "ï¿½ï¿½È·ÊµÒªï¿½ï¿½È«ï¿½Æ³ï¿½ $(^Name) ï¿½ï¿½ï¿½ä¼°ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿?" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "ÄãÈ·ÊµÒªÍêÈ«ÒÆ³ý $(^Name) £¬Æä¼°ËùÓÐµÄ×é¼þ£¿" IDYES +2
   Abort
+  NoAbort:
+  KillProcDLL::KillProc "adb.exe"
+  KillProcDLL::KillProc "WSATools.exe"
+  KillProcDLL::KillProc "WSATools.Background.exe"
 FunctionEnd
 
 Section Uninstall

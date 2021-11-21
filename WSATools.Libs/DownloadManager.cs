@@ -75,6 +75,8 @@ namespace WSATools.Libs
                 address = package.Address;
                 array.Add(package.FileName);
             }
+            if (e.Error is Exception ex)
+                LogManager.Instance.LogError("OnDownloadFileCompleted", ex);
             ProgressComplete?.Invoke(sender, hasError, address);
         }
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)

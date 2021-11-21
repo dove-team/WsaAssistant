@@ -11,6 +11,7 @@
     <BaseOutputPath>..\OutputDebug</BaseOutputPath>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="icon.ico" />
@@ -24,7 +25,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicData" Version="7.4.3" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>

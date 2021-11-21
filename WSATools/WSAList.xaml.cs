@@ -1,5 +1,7 @@
 ﻿using HandyControl.Controls;
 using System;
+using System.Windows;
+using System.Windows.Input;
 using WSATools.Libs;
 using WSATools.ViewModels;
 
@@ -21,6 +23,11 @@ namespace WSATools
                 ViewModel.Close += ViewModel_Close;
                 ViewModel.Loading += ViewModel_Loading;
             }
+        }
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            DragMove();
         }
         private void ViewModel_Loading(object sender, bool result)
         {
@@ -46,6 +53,18 @@ namespace WSATools
             {
                 LogManager.Instance.LogError("WSAList Close", ex);
             }
+        }
+        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            MouseDown += WSAList_MouseDown;
+        }
+        private void WSAList_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch { }
         }
     }
 }

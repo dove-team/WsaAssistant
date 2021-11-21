@@ -60,8 +60,13 @@ namespace WSATools.Libs
                             var failedList = PackageList.Where(x => x.Item3 == null || x.Item3 == false);
                             if (failedList != null && failedList.Any())
                             {
+                                for (var idx = 0; idx < failedList.Count(); idx++)
+                                {
+                                    var failed = failedList.ElementAt(idx);
+                                    PackageList.AddOrUpdate(failed.Item1, failed.Item2, null, failed.Item4);
+                                }
                                 var list = failedList.Select(x => x.Item2).ToArray();
-                                await DownloadManager.Instance.Create(list);
+                                await DownloadManager.Instance.Create(list).ConfigureAwait(false);
                             }
                             return true;
                         }

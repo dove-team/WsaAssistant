@@ -7,7 +7,7 @@
         ResizeMode="NoResize" xmlns:vm="clr-namespace:WSATools.ViewModels"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowStyle="None"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="WSAList" Height="450" Width="560">
+        Title="WSAList" Height="450" Width="560" Loaded="BlurWindow_Loaded">
     <Window.DataContext>
         <vm:WSAListViewModel x:Name="viewModel" />
     </Window.DataContext>

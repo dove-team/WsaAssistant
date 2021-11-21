@@ -42,6 +42,6 @@
     <sys:String x:Key="WsaFailed">It seems that the WSA environment installation failed, please install it before use!</sys:String>
     <sys:String x:Key="WsaCreateDownloadFailed">Failed to create a WSA environment download task, do you want to try again?</sys:String>
     <sys:String x:Key="AdbFailed">Failed to initialize ADB environment, please try again later! Or directly use APKInstall for management!</sys:String>
-    <sys:String x:Key="WsaDownloadFailed">An exception occurred and failed to obtain the WSA environment package! do you want to try again?</sys:String>
+    <sys:String x:Key="WsaPackageFailed">An exception occurred and failed to obtain the WSA environment package! Please click the refresh button to try again!</sys:String>
     <sys:String x:Key="RebootTips">The system needs restarted to complete the operation! (Restart the system within 10s after confirming, please save your data and restart!!!)</sys:String>
 </ResourceDictionary>
