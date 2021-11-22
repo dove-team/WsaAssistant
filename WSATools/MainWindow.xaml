@@ -54,11 +54,11 @@
                     </TextBlock>
                     <TextBlock Text="{Binding WSAState}" Foreground="DarkRed" />
                     <Button Content="{DynamicResource Install}" Style="{StaticResource ButtonPrimary}" IsEnabled="{Binding WSAEnable}" Command="{Binding InstallWSACommand}"
-                        Margin="24,0,0,0" Width="100" />
+                        Margin="8,0,0,0" Width="100" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
                     <Button IsEnabled="{Binding RegistEnable}" Command="{Binding RegisterCommand}" Content="{DynamicResource Register}" Width="140" />
-                    <Button Visibility="{Binding ShowUpdate}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallWSACommand}" Content="{Binding HasNewVersion}" Width="200" />
+                    <Button Margin="24,0,0,0" Visibility="{Binding ShowUpdate}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallWSACommand}" Content="{Binding HasNewVersion}" Width="200" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2">
                     <Button IsEnabled="{Binding WSARemoveable}" Command="{Binding UninstallCommand}" Content="{DynamicResource RemoveWsa}" Width="140" />

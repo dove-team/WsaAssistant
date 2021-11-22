@@ -48,14 +48,6 @@ namespace WSATools
                     break;
             }
         }
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            ViewModel.Dispose();
-            if (DownloadManager.Instance.HasClear && MessageBox.Show(ViewModel.FindChar("RemvoeDownload"),
-                ViewModel.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                DownloadManager.Instance.Clear();
-            base.OnClosing(e);
-        }
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -73,6 +65,17 @@ namespace WSATools
                 DragMove();
             }
             catch { }
+        }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!UpdateBackgroundThread.Instance.ShowUpdate(e))
+            {
+                if (DownloadManager.Instance.HasClear && MessageBox.Show(ViewModel.FindChar("RemvoeDownload"),
+                    ViewModel.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    DownloadManager.Instance.Clear();
+                e.Cancel = false;
+            }
+            base.OnClosing(e);
         }
     }
 }

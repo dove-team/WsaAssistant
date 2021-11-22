@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
+using FolderBrowserDialog = WpfCore.FolderPicker.FolderBrowserDialog;
 
 namespace WSATools.ViewModels
 {
@@ -82,7 +83,7 @@ namespace WSATools.ViewModels
         {
             RunOnUIThread(() =>
             {
-                var dialog = new Files.FolderBrowserDialog { InitialFolder = this.ProcessPath() };
+                var dialog = new FolderBrowserDialog { InitialFolder = this.ProcessPath() };
                 if (dialog.ShowDialog() != DialogResult.Cancel)
                 {
                     var directory = new DirectoryInfo(dialog.Folder);

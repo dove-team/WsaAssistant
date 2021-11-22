@@ -12,6 +12,7 @@ using WSATools.Libs;
 using WSATools.Libs.Model;
 using System.Windows;
 using System.Threading;
+using System.ComponentModel;
 using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools
@@ -64,11 +65,13 @@ namespace WSATools
             catch { }
             return string.Empty;
         }
-        public void ShowUpdate()
+        public bool ShowUpdate(CancelEventArgs e)
         {
-            LogManager.Instance.LogInfo($"ShowUpdate:{(string.IsNullOrEmpty(UpgradeFile) ? "没有最新版本更新！" : "有最新版本更新！")}");
-            if (!string.IsNullOrEmpty(UpgradeFile))
+            var hasUpdate = !string.IsNullOrEmpty(UpgradeFile);
+            LogManager.Instance.LogInfo($"ShowUpdate:{(hasUpdate ? "有最新版本更新！" : "没有最新版本更新！")}");
+            if (hasUpdate)
             {
+                e.Cancel = true;
                 string title = LangManager.Instance.Current == LangType.Chinese ? "WSATools有新版本，是否进行更新？" : "WSATools Has new-version，upgrade now？";
                 if (MessageBox.Show(UpdateMessage, title, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
@@ -76,6 +79,7 @@ namespace WSATools
                     Thread.Sleep(2000);
                 }
             }
+            return hasUpdate;
         }
         public void CheckUpdate()
         {

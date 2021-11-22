@@ -26,11 +26,6 @@ namespace WSATools
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
-        protected override void OnExit(ExitEventArgs e)
-        {
-            UpdateBackgroundThread.Instance.ShowUpdate();
-            base.OnExit(e);
-        }
         protected override void OnStartup(StartupEventArgs e)
         {
             var applicationName = Assembly.GetExecutingAssembly().GetName().Name ?? string.Empty;
