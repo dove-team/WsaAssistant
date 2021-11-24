@@ -1,11 +1,9 @@
-﻿using HtmlAgilityPack;
+﻿using Downloader;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WSATools.Libs
@@ -22,10 +20,14 @@ namespace WSATools.Libs
                 return instance;
             }
         }
-        public IEnumerable<string> PackageList { get; }
+        public IEnumerable<string> FeatureList { get; }
+        public event BooleanHandler DownloadComplete;
+        public Node<string, string, bool?, DownloadPackage> PackageList { get; }
         private WSA()
         {
-            PackageList = new[] { "HypervisorPlatform", "VirtualMachinePlatform" };
+            PackageList = new Node<string, string, bool?, DownloadPackage>();
+            FeatureList = new[] { "HypervisorPlatform", "VirtualMachinePlatform" };
+            DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
         public void Start()
         {
@@ -35,45 +37,31 @@ namespace WSATools.Libs
         public (bool VM, bool WSA, bool Run) State()
         {
             var count = 0;
-            foreach (var package in PackageList)
+            foreach (var package in FeatureList)
             {
-                if (Check(package))
+                if (CheckFeature(package))
                     count++;
             }
-            return (count == PackageList.Count(), Pepair(), Running);
+            return (count == FeatureList.Count(), Pepair(), Running);
         }
         public async Task<bool> HasUpdate()
         {
             bool hasNew = false;
             try
             {
-                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
-                HttpClient httpClient = new HttpClient(handler);
-                var stringContent = new StringContent("type=ProductId&url=9p3395vx91nr&ring=WIS&lang=zh-CN", Encoding.UTF8, "application/x-www-form-urlencoded");
-                var respone = await httpClient.PostAsync("https://store.rg-adguard.net/api/GetFiles", stringContent);
-                if (respone.StatusCode == HttpStatusCode.OK)
+                var packages = await AppX.Instance.GetPackages("9p3395vx91nr");
+                foreach (var package in packages)
                 {
-                    var html = await respone.Content.ReadAsStringAsync();
-                    HtmlDocument doc = new HtmlDocument();
-                    doc.LoadHtml(html);
-                    var table = doc.DocumentNode.SelectSingleNode("table");
-                    if (table != null)
+                    if (package.Key.Contains("windowssubsystemforandroid", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        foreach (var tr in table.SelectNodes("tr"))
+                        var version = package.Key.Splits("_")?.ElementAt(1);
+                        if (!string.IsNullOrEmpty(version))
                         {
-                            var a = tr.SelectSingleNode("td").SelectSingleNode("a");
-                            if (a != null && a.InnerText.Contains("WindowsSubsystemForAndroid"))
-                            {
-                                var version = a.InnerText.Splits("_")?.ElementAt(1);
-                                if (!string.IsNullOrEmpty(version))
-                                {
-                                    Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
-                                    var packageVersion = message.Split("\r\n").ElementAt(1).Split("_").ElementAt(1).Trim();
-                                    hasNew = version.NewerThan(packageVersion);
-                                }
-                                break;
-                            }
+                            Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+                            var packageVersion = message.Split("\r\n").ElementAt(1).Split("_").ElementAt(1).Trim();
+                            hasNew = version.NewerThan(packageVersion);
                         }
+                        break;
                     }
                 }
             }
@@ -86,10 +74,10 @@ namespace WSATools.Libs
         public bool Init()
         {
             int count = 0;
-            foreach (var package in PackageList)
+            foreach (var package in FeatureList)
             {
-                if (!Check(package))
-                    Install(package);
+                if (!CheckFeature(package))
+                    InstallFeature(package);
                 else
                     count++;
             }
@@ -103,12 +91,12 @@ namespace WSATools.Libs
                 return ps != null && ps.Length > 0;
             }
         }
-        private void Install(string packageName)
+        private void InstallFeature(string packageName)
         {
             Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out string message);
             LogManager.Instance.LogInfo("Install WSA:" + message);
         }
-        private bool Check(string packageName)
+        private bool CheckFeature(string packageName)
         {
             Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
             LogManager.Instance.LogInfo("Check VM:" + message);
@@ -119,6 +107,81 @@ namespace WSATools.Libs
             Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
             LogManager.Instance.LogInfo("Pepair WSA:" + message);
             return !string.IsNullOrEmpty(message);
+        }
+        public async Task<bool> Retry(bool reconstruction)
+        {
+            GC.Collect();
+            switch (reconstruction)
+            {
+                case true:
+                    {
+                        return await PepairAsync();
+                    }
+                default:
+                    {
+                        try
+                        {
+                            var failedList = PackageList.Where(x => x.Item3 == null || x.Item3 == false);
+                            if (failedList != null && failedList.Any())
+                            {
+                                for (var idx = 0; idx < failedList.Count(); idx++)
+                                {
+                                    var failed = failedList.ElementAt(idx);
+                                    PackageList.AddOrUpdate(failed.Item1, failed.Item2, null, failed.Item4);
+                                }
+                                var list = failedList.Select(x => x.Item2).ToArray();
+                                await DownloadManager.Instance.Create(list).ConfigureAwait(false);
+                            }
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            LogManager.Instance.LogError("Retry", ex);
+                            return false;
+                        }
+                    }
+            }
+        }
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, string address)
+        {
+            var item = PackageList.FindItem(address);
+            PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
+            if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+            {
+                var count = PackageList.GetCount(x => x.Item3 == true);
+                DownloadComplete?.Invoke(this, count == PackageList.Count);
+            }
+        }
+        public async Task<Node<string, string, bool?, DownloadPackage>> GetFilePath()
+        {
+            var packages = await AppX.Instance.GetPackages("9p3395vx91nr");
+            foreach (var package in packages)
+                PackageList.AddOrUpdate(package.Key, package.Value);
+            return PackageList;
+        }
+        public async Task<bool> PepairAsync()
+        {
+            int count = 0;
+            try
+            {
+                for (var idx = 0; idx < PackageList.Count; idx++)
+                {
+                    var url = PackageList.GetIndex(idx);
+                    var path = Path.Combine(this.ProcessPath(), url.Item1);
+                    if (File.Exists(path))
+                    {
+                        count++;
+                        PackageList.AddOrUpdate(url.Item1, url.Item2, true, new DownloadPackage { FileName = path });
+                    }
+                    else
+                        await DownloadManager.Instance.Create(url.Item2).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("PepairAsync", ex);
+            }
+            return count == PackageList.Count;
         }
         public void Clear()
         {

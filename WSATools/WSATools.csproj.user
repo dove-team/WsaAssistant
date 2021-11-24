@@ -12,6 +12,9 @@
     <Compile Update="Loading.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MainFrame.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="WSAList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -29,6 +32,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Loading.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MainFrame.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

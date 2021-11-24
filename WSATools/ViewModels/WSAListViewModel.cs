@@ -28,7 +28,7 @@ namespace WSATools.ViewModels
             RreshCommand = new AsyncRelayCommand(RreshAsync);
             InstallCommand = new AsyncRelayCommand(InstallAsync);
             OfflineCommand = new AsyncRelayCommand(OfflineAsync);
-            AppX.Instance.DownloadComplete += Instance_DownloadComplete;
+            WSA.Instance.DownloadComplete += Instance_DownloadComplete;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
@@ -37,7 +37,7 @@ namespace WSATools.ViewModels
                 if (MessageBoxResult.Yes == MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Error))
                 {
                     LogManager.Instance.LogInfo("下载WSA异常，重试中！");
-                    await AppX.Instance.Retry(false);
+                    await WSA.Instance.Retry(false);
                 }
                 else
                 {
@@ -152,7 +152,7 @@ namespace WSATools.ViewModels
                 try
                 {
                     TimeoutEnable = false;
-                    if (await AppX.Instance.PepairAsync())
+                    if (await WSA.Instance.PepairAsync())
                     {
                         LogManager.Instance.LogInfo("Found Local Package to install.");
                         ExcuteCommand();
@@ -175,7 +175,7 @@ namespace WSATools.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
-                foreach (Tuple<string, string, bool?, DownloadPackage> package in AppX.Instance.PackageList)
+                foreach (Tuple<string, string, bool?, DownloadPackage> package in WSA.Instance.PackageList)
                     shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
@@ -212,7 +212,7 @@ namespace WSATools.ViewModels
             {
                 if (Packages == null || Packages.Count == 0)
                 {
-                    var pairs = await AppX.Instance.GetFilePath();
+                    var pairs = await WSA.Instance.GetFilePath();
                     if (pairs != null && pairs.Count > 0)
                     {
                         foreach (Tuple<string, string, bool?, DownloadPackage> pair in pairs)

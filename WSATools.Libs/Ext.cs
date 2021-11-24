@@ -3,14 +3,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using WSATools.Libs.Model;
 
 namespace WSATools.Libs
 {
     public static class Ext
     {
+        public static bool ItemContains(this IEnumerable<string> source, string content)
+        {
+            int count = 0;
+            for (var idx = 0; idx < source.Count(); idx++)
+                count += source.ElementAt(idx).Contains(content, StringComparison.CurrentCultureIgnoreCase) ? 1 : 0;
+            return count > 0;
+        }
+        public static bool ItemContainEquals(this IEnumerable<string> source, string content1, string content2)
+        {
+            int count1 = 0, count2 = 0;
+            for (var idx = 0; idx < source.Count(); idx++)
+                count1 += source.ElementAt(idx).Contains(content1, StringComparison.CurrentCultureIgnoreCase) ? 1 : 0;
+            for (var idx = 0; idx < source.Count(); idx++)
+                count2 += source.ElementAt(idx).Contains(content2, StringComparison.CurrentCultureIgnoreCase) ? 1 : 0;
+            return count1 == count2;
+        }
         public static bool NewerThan(this string v1, string v2)
         {
             bool result = false;
@@ -77,18 +91,6 @@ namespace WSATools.Libs
                 LogManager.Instance.LogError("RemoveMenu", ex);
                 return false;
             }
-        }
-        public static async Task TimeoutAfter(this Task task, TimeSpan timeout)
-        {
-            using var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var completedTask = await Task.WhenAny(task, Task.Delay(timeout, timeoutCancellationTokenSource.Token));
-            if (completedTask == task)
-            {
-                timeoutCancellationTokenSource.Cancel();
-                await task;
-            }
-            else
-                throw new TimeoutException("The operation has timed out.");
         }
         public static bool Before(this string str, string start, string end)
         {

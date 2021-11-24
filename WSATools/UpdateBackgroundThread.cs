@@ -67,6 +67,7 @@ namespace WSATools
         }
         public bool ShowUpdate(CancelEventArgs e)
         {
+            HttpClient.Dispose();
             var hasUpdate = !string.IsNullOrEmpty(UpgradeFile);
             LogManager.Instance.LogInfo($"ShowUpdate:{(hasUpdate ? "有最新版本更新！" : "没有最新版本更新！")}");
             if (hasUpdate)
