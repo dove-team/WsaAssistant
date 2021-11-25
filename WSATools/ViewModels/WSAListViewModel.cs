@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MessageBox = HandyControl.Controls.MessageBox;
 using FolderBrowserDialog = WpfCore.FolderPicker.FolderBrowserDialog;
+using WSATools.Libs.Model;
 
 namespace WSATools.ViewModels
 {

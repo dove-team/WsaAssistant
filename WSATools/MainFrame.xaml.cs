@@ -1,17 +1,7 @@
 ﻿using HandyControl.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace WSATools
 {
@@ -20,6 +10,43 @@ namespace WSATools
         public MainFrame()
         {
             InitializeComponent();
+        }
+        private void Navigate_Click(object sender, RoutedEventArgs e)
+        {
+            switch (((Button)sender).Content.ToString())
+            {
+                case "环境":
+                    {
+                        frame.Navigate(new Uri("Views/WsaPage.xaml"));
+                        break;
+                    }
+                case "应用":
+                    {
+                        break;
+                    }
+                case "更多":
+                    {
+                        break;
+                    }
+                case "关于":
+                    {
+                        break;
+                    }
+                case "退出":
+                    {
+                        Application.Current.Shutdown();
+                        break;
+                    }
+            }
+        }
+        private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BlurWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

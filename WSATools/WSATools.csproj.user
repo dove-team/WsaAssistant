@@ -15,6 +15,9 @@
     <Compile Update="MainFrame.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\WsaPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="WSAList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +41,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\WsaPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="WSAList.xaml">

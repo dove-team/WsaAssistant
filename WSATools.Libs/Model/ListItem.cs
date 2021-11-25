@@ -1,4 +1,4 @@
-﻿namespace WSATools.ViewModels
+﻿namespace WSATools.Libs.Model
 {
     public sealed class ListItem
     {
