@@ -2,9 +2,9 @@
 
 namespace WSATools.Views
 {
-    public partial class WsaPage : Page
+    public partial class AppPage : Page
     {
-        public WsaPage()
+        public AppPage()
         {
             InitializeComponent();
         }

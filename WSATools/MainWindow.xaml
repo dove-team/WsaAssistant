@@ -82,46 +82,6 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Grid Grid.Column="2" Margin="8">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding WSARunState}" VerticalAlignment="Center" />
-                        <Ellipse Margin="12,0,0,0" Canvas.Left="60" Canvas.Top="80" Width="20" Height="20" Fill="{Binding StateBrush}" VerticalAlignment="Center" />
-                        <Button Margin="12,0,0,0" Content="{DynamicResource StartWsa}" Visibility="{Binding WSAStart}" Command="{Binding StartWSACommand}" />
-                    </StackPanel>
-                    <TextBlock Text="{DynamicResource SearchPackage}" Grid.Row="1" />
-                    <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,12,0,0">
-                        <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" />
-                        <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchCommand}" />
-                    </StackPanel>
-                    <Grid Grid.Row="3" Margin="0,12,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="12" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Install}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding InstallApkCommand}" />
-                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Downgrade}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding DowngradeCommand}" />
-                    </Grid>
-                    <Grid Grid.Row="4" Margin="0,12,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="12" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Refresh}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Command="{Binding RefreshCommand}" />
-                        <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Remove}" IsEnabled="{Binding WSARun,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding UninstallApkCommand}" />
-                    </Grid>
-                    <Button Content="{DynamicResource Close}" Command="{Binding CloseCommand}" Grid.Row="5"
-                        VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="80" Height="32" />
-                </Grid>
             </Grid>
         </Grid>
         <local:PopupEx x:Name="loading" Width="100" Height="100" Placement="Center" Topmost="False">

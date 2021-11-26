@@ -31,15 +31,7 @@ namespace WSATools
         }
         private void ViewModel_Loading(object sender, bool result)
         {
-            switch (result)
-            {
-                case false:
-                    loading.IsOpen = false;
-                    break;
-                case true:
-                    loading.IsOpen = true;
-                    break;
-            }
+
         }
         private void ViewModel_Close(object sender, bool? result)
         {
@@ -60,11 +52,6 @@ namespace WSATools
         }
         private void WSAList_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                DragMove();
-            }
-            catch { }
         }
     }
 }

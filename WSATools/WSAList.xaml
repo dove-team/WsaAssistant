@@ -53,8 +53,5 @@
                 <Button Command="{Binding CloseCommand}" Content="{DynamicResource Close}" Width="100" Margin="0,24,0,0" />
             </StackPanel>
         </Grid>
-        <local:PopupEx x:Name="loading" Width="100" Height="100" Placement="Center" Topmost="False">
-            <local:Loading Visibility="{Binding LoadVisable}" Width="100" Height="100" />
-        </local:PopupEx>
     </Grid>
 </hc:BlurWindow>

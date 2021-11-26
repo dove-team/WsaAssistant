@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WSATools
 {
@@ -17,19 +18,22 @@ namespace WSATools
             {
                 case "环境":
                     {
-                        frame.Navigate(new Uri("Views/WsaPage.xaml"));
+                        frame.Navigate(new Uri("pack://application:,,,/Views/WsaPage.xaml"));
                         break;
                     }
                 case "应用":
                     {
+                        frame.Navigate(new Uri("pack://application:,,,/Views/AppPage.xaml"));
                         break;
                     }
                 case "更多":
                     {
+
                         break;
                     }
                 case "关于":
                     {
+
                         break;
                     }
                 case "退出":
@@ -41,9 +45,16 @@ namespace WSATools
         }
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
-
+            MouseDown += WSAList_MouseDown;
         }
-
+        private void WSAList_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch { }
+        }
         private void BlurWindow_Unloaded(object sender, RoutedEventArgs e)
         {
 

@@ -34,15 +34,18 @@ namespace WSATools.Libs
             var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
             Command.Instance.Excute(cmd, out _);
         }
-        public (bool VM, bool WSA, bool Run) State()
+        public bool HasFeature
         {
-            var count = 0;
-            foreach (var package in FeatureList)
+            get
             {
-                if (CheckFeature(package))
-                    count++;
+                var count = 0;
+                foreach (var package in FeatureList)
+                {
+                    if (CheckFeature(package))
+                        count++;
+                }
+                return count == FeatureList.Count();
             }
-            return (count == FeatureList.Count(), Pepair(), Running);
         }
         public async Task<bool> HasUpdate()
         {
@@ -71,7 +74,7 @@ namespace WSATools.Libs
             }
             return hasNew;
         }
-        public bool Init()
+        public bool InstallFeature()
         {
             int count = 0;
             foreach (var package in FeatureList)
@@ -102,11 +105,14 @@ namespace WSATools.Libs
             LogManager.Instance.LogInfo("Check VM:" + message);
             return message.Before("状态", "已启用");
         }
-        public bool Pepair()
+        public bool HasWsa
         {
-            Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
-            LogManager.Instance.LogInfo("Pepair WSA:" + message);
-            return !string.IsNullOrEmpty(message);
+            get
+            {
+                Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+                LogManager.Instance.LogInfo("Pepair WSA:" + message);
+                return !string.IsNullOrEmpty(message);
+            }
         }
         public async Task<bool> Retry(bool reconstruction)
         {

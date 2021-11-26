@@ -15,6 +15,9 @@
     <Compile Update="MainFrame.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\AppPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\WsaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,16 +34,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="CommonDictionary.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Loading.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainFrame.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainWindow.xaml">
+    <Page Update="Views\AppPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\WsaPage.xaml">

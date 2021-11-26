@@ -14,10 +14,17 @@
     <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="MainWindow.xaml.cs" />
+    <Compile Remove="ViewModels\MainWindowViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="icon.ico" />
     <None Remove="images\icon.ico" />
     <None Remove="images\Icon.png" />
     <None Remove="images\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="MainWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico">

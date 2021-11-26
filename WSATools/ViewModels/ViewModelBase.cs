@@ -10,20 +10,22 @@ namespace WSATools.ViewModels
     public abstract class ViewModelBase : ObservableObject, IDisposable
     {
         public event BooleanHandler Loading;
+        private MainFrameViewModel MainView { get; }
         public Dispatcher Dispatcher { get; protected set; }
-        private Visibility loadVisable = Visibility.Collapsed;
-        public Visibility LoadVisable
+        public ViewModelBase()
         {
-            get => loadVisable;
-            set
-            {
-                SetProperty(ref loadVisable, value);
-                Dispatcher.Invoke(() =>
-                {
-                    var boolean = value == Visibility.Visible;
-                    Loading?.Invoke(this, boolean);
-                });
-            }
+            if (Application.Current.MainWindow.DataContext is MainFrameViewModel viewModel)
+                MainView = viewModel;
+        }
+        protected void ShowLoading()
+        {
+            if (MainView != null)
+                MainView.LoadVisable = Visibility.Visible;
+        }
+        protected void HideLoading()
+        {
+            if (MainView != null)
+                MainView.LoadVisable = Visibility.Collapsed;
         }
         protected void RunOnUIThread(Action action)
         {
