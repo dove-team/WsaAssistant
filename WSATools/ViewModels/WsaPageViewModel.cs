@@ -106,29 +106,7 @@ namespace WSATools.ViewModels
         }
         private Task InstallWsaAsync()
         {
-            RunOnUIThread(() =>
-            {
-                WSAList list = new WSAList();
-                if (list.ShowDialog() != null)
-                {
-                    if (WSA.Instance.HasWsa)
-                    {
-                        WsaStatus = FindChar("Installed");
-                        HasWsa = Visibility.Collapsed;
-                        InstallWsa = Visibility.Visible;
-                        MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        WsaStatus = FindChar("NotInstall");
-                        HasWsa = Visibility.Collapsed;
-                        InstallWsa = Visibility.Visible;
-                        MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-                else
-                    MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
-            });
+            InstallWsa();
             return Task.CompletedTask;
         }
         private Task InstallFeatureAsync()

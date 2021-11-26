@@ -3,13 +3,11 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using WSATools.Libs;
 
 namespace WSATools.ViewModels
 {
     public abstract class ViewModelBase : ObservableObject, IDisposable
     {
-        public event BooleanHandler Loading;
         private MainFrameViewModel MainView { get; }
         public Dispatcher Dispatcher { get; protected set; }
         public ViewModelBase()
@@ -61,5 +59,10 @@ namespace WSATools.ViewModels
             return obj == null ? string.Empty : obj.ToString();
         }
         public abstract void Dispose();
+        public void InstallWsa()
+        {
+            if (Application.Current.MainWindow is MainFrame main)
+                main.frame.Navigate(new Uri("pack://application:,,,/Views/InstallWsaPage.xaml"));
+        }
     }
 }

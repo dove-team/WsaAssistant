@@ -38,6 +38,7 @@ namespace WSATools.ViewModels
             set => SetProperty(ref packages, value);
         }
         public IAsyncRelayCommand SearchCommand { get; }
+        public IAsyncRelayCommand RefreshCommand { get; }
         public IAsyncRelayCommand UninstallCommand { get; }
         public IAsyncRelayCommand InstallApkCommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
@@ -45,6 +46,7 @@ namespace WSATools.ViewModels
         public AppPageViewModel()
         {
             SearchCommand = new AsyncRelayCommand(SearchAsync);
+            RefreshCommand = new AsyncRelayCommand(RefreshAsync);
             UninstallCommand = new AsyncRelayCommand(UninstallAsync);
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
@@ -58,6 +60,16 @@ namespace WSATools.ViewModels
             {
                 await SearchApps();
             });
+        }
+        private Task RefreshAsync()
+        {
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                await SearchApps();
+                HideLoading();
+            });
+            return Task.CompletedTask;
         }
         private Task DowngradeAsync()
         {

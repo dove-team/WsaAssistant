@@ -1,29 +1,30 @@
-﻿using Downloader;
+﻿using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.IO;
-using System.Text;
-using WSATools.Libs;
-using System.Windows;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WSATools.Libs;
+using System.Windows;
+using System.Collections.ObjectModel;
+using WSATools.Libs.Model;
+using System.Windows.Forms;
+using System.IO;
+using Downloader;
 using MessageBox = HandyControl.Controls.MessageBox;
 using FolderBrowserDialog = WpfCore.FolderPicker.FolderBrowserDialog;
-using WSATools.Libs.Model;
+using WSATools.Views;
 
 namespace WSATools.ViewModels
 {
-    public sealed class WSAListViewModel : ViewModelBase
+    public sealed class InstallWsaPageViewModel : ViewModelBase
     {
         public event CloseHandler Close;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
         public IAsyncRelayCommand OfflineCommand { get; }
-        public WSAListViewModel()
+        public InstallWsaPageViewModel()
         {
             CloseCommand = new AsyncRelayCommand(CloseAsync);
             RreshCommand = new AsyncRelayCommand(RreshAsync);
@@ -54,7 +55,7 @@ namespace WSATools.ViewModels
             }
             InstallEnable = true;
             TimeoutEnable = true;
-         //   LoadVisable = Visibility.Collapsed;
+            HideLoading();
         }
         private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
         public ObservableCollection<ListItem> Packages
@@ -109,17 +110,17 @@ namespace WSATools.ViewModels
                             LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                             LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                             MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                    //        LoadVisable = Visibility.Collapsed;
+                            HideLoading();
                         }
                         catch (Exception ex)
                         {
-                   //         LoadVisable = Visibility.Collapsed;
+                            HideLoading();
                             LogManager.Instance.LogError("ExcuteCommand", ex);
                         }
                     }
                     else
                     {
-             //           LoadVisable = Visibility.Collapsed;
+                        HideLoading();
                         LogManager.Instance.LogInfo("Select Empty Folder,Breeak");
                         MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
@@ -131,16 +132,16 @@ namespace WSATools.ViewModels
         {
             RunOnUIThread(async () =>
             {
-                //LoadVisable = Visibility.Visible;
+                ShowLoading();
                 await GetList();
-                //LoadVisable = Visibility.Collapsed;
+                HideLoading();
             });
             return Task.CompletedTask;
         }
         private Task CloseAsync()
         {
             LogManager.Instance.LogInfo("User Cancel.");
-            //LoadVisable = Visibility.Collapsed;
+            HideLoading();
             Close?.Invoke(this, false);
             return Task.CompletedTask;
         }
@@ -149,7 +150,7 @@ namespace WSATools.ViewModels
             RunOnUIThread(async () =>
             {
                 InstallEnable = false;
-               //LoadVisable = Visibility.Visible;
+                ShowLoading();
                 try
                 {
                     TimeoutEnable = false;
@@ -157,14 +158,14 @@ namespace WSATools.ViewModels
                     {
                         LogManager.Instance.LogInfo("Found Local Package to install.");
                         ExcuteCommand();
-                   //     LoadVisable = Visibility.Collapsed;
+                        HideLoading();
                     }
                 }
                 catch (Exception ex)
                 {
                     InstallEnable = true;
                     TimeoutEnable = true;
-            //        LoadVisable = Visibility.Collapsed;
+                    HideLoading();
                     LogManager.Instance.LogError("InstallAsync", ex);
                     MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -189,7 +190,7 @@ namespace WSATools.ViewModels
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-          //      LoadVisable = Visibility.Collapsed;
+                HideLoading();
             }
             catch (Exception ex)
             {
@@ -198,7 +199,7 @@ namespace WSATools.ViewModels
         }
         public async void LoadAsync(object sender, EventArgs e)
         {
-            Dispatcher = (sender as WSAList).Dispatcher;
+            Dispatcher = (sender as InstallWsaPage).Dispatcher;
             DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }
@@ -208,7 +209,7 @@ namespace WSATools.ViewModels
         }
         private async Task GetList()
         {
-         //   LoadVisable = Visibility.Visible;
+            ShowLoading();
             try
             {
                 if (Packages == null || Packages.Count == 0)
@@ -236,7 +237,7 @@ namespace WSATools.ViewModels
                 LogManager.Instance.LogError("GetList", ex);
                 MessageBox.Show(FindChar("WsaPackageFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
-     //       LoadVisable = Visibility.Collapsed;
+            HideLoading();
         }
         public override void Dispose()
         {

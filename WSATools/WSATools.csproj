@@ -16,6 +16,8 @@
   <ItemGroup>
     <Compile Remove="MainWindow.xaml.cs" />
     <Compile Remove="ViewModels\MainWindowViewModel.cs" />
+    <Compile Remove="ViewModels\WSAListViewModel.cs" />
+    <Compile Remove="WSAList.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="icon.ico" />
@@ -25,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <Page Remove="MainWindow.xaml" />
+    <Page Remove="WSAList.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico">

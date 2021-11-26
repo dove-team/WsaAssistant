@@ -9,19 +9,16 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Loading.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="MainFrame.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\AppPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\WsaPage.xaml.cs">
+    <Compile Update="Views\InstallWsaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="WSAList.xaml.cs">
+    <Compile Update="Views\WsaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -34,19 +31,16 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Loading.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="MainFrame.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\AppPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\WsaPage.xaml">
+    <Page Update="Views\InstallWsaPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="WSAList.xaml">
+    <Page Update="Views\WsaPage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
