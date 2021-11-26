@@ -16,7 +16,7 @@ namespace WSATools.ViewModels
             get => wsaRuning;
             set => SetProperty(ref wsaRuning, value);
         }
-        private Visibility startWsa = Visibility.Visible;
+        private Visibility startWsa = Visibility.Collapsed;
         public Visibility StartWsa
         {
             get => startWsa;
@@ -39,6 +39,12 @@ namespace WSATools.ViewModels
         {
             get => installRegist;
             set => SetProperty(ref installRegist, value);
+        }
+        private string wsaRunStatus;
+        public string WsaRunStatus
+        {
+            get => wsaRunStatus;
+            set => SetProperty(ref wsaRunStatus, value);
         }
         private string wsaStatus;
         public string WsaStatus
@@ -106,7 +112,7 @@ namespace WSATools.ViewModels
         }
         private Task InstallWsaAsync()
         {
-            InstallWsa();
+            NavigateTo("InstallWsaPage");
             return Task.CompletedTask;
         }
         private Task InstallFeatureAsync()
@@ -136,9 +142,8 @@ namespace WSATools.ViewModels
         public void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as WsaPage).Dispatcher;
-            WsaStatus = RegistStatus = FeatureStatus = FindChar("Checking");
-            RunOnUIThread(async () =>
-            {
+            WsaRunStatus = WsaStatus = FeatureStatus = FindChar("Checking");
+            RunOnUIThread(() => {
                 ShowLoading();
                 if (WSA.Instance.HasFeature)
                 {
@@ -168,19 +173,35 @@ namespace WSATools.ViewModels
                 {
                     WsaRuning = Visibility.Visible;
                     StartWsa = Visibility.Collapsed;
-                    RegistStatus = FindChar("Running");
+                    WsaRunStatus = FindChar("Running");
                 }
                 else
                 {
                     StartWsa = Visibility.Visible;
                     WsaRuning = Visibility.Collapsed;
-                    RegistStatus = FindChar("NotRunning");
+                    WsaRunStatus = FindChar("NotRunning");
                 }
-                if (await WSA.Instance.HasUpdate())
+                using (DB db = new DB())
+                {
+                    if (db.GetData<object>("menu", out _))
+                    {
+                        RegistStatus = FindChar("Regist");
+                        HasRegist = Visibility.Visible;
+                        InstallRegist = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        RegistStatus = FindChar("NotRegist");
+                        InstallRegist = Visibility.Visible;
+                        HasRegist = Visibility.Collapsed;
+                    }
+                }
+                //if (await WSA.Instance.HasUpdate())
                 {
 
                 }
                 HideLoading();
+                return Task.CompletedTask;
             });
         }
         public override void Dispose()

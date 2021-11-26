@@ -8,12 +8,22 @@ namespace WSATools.ViewModels
 {
     public abstract class ViewModelBase : ObservableObject, IDisposable
     {
+        private MainFrame MainWindow { get; }
         private MainFrameViewModel MainView { get; }
         public Dispatcher Dispatcher { get; protected set; }
         public ViewModelBase()
         {
-            if (Application.Current.MainWindow.DataContext is MainFrameViewModel viewModel)
-                MainView = viewModel;
+            if (Application.Current.MainWindow is MainFrame mainFrame)
+            {
+                MainWindow = mainFrame;
+                if (MainWindow.DataContext is MainFrameViewModel viewModel)
+                    MainView = viewModel;
+            }
+        }
+        protected void NavigateTo(string pageName)
+        {
+            var uri = new Uri($"pack://application:,,,/Views/{pageName}.xaml");
+            MainWindow.frame.Navigate(uri);
         }
         protected void ShowLoading()
         {
@@ -59,10 +69,5 @@ namespace WSATools.ViewModels
             return obj == null ? string.Empty : obj.ToString();
         }
         public abstract void Dispose();
-        public void InstallWsa()
-        {
-            if (Application.Current.MainWindow is MainFrame main)
-                main.frame.Navigate(new Uri("pack://application:,,,/Views/InstallWsaPage.xaml"));
-        }
     }
 }

@@ -56,10 +56,7 @@ namespace WSATools.ViewModels
         {
             Dispatcher = (sender as AppPage).Dispatcher;
             AdbEnable = Adb.Instance.TryConnect();
-            RunOnUIThread(async () =>
-            {
-                await SearchApps();
-            });
+            RunOnUIThread(async () => { await SearchApps(); });
         }
         private Task RefreshAsync()
         {
@@ -163,14 +160,11 @@ namespace WSATools.ViewModels
             });
             return Task.CompletedTask;
         }
-        private Task SearchApps(string condition = "")
+        private async Task SearchApps(string condition = "")
         {
             ShowLoading();
-            Dispatcher.Invoke(() =>
-            {
-                Packages.Clear();
-            });
-            if (!Adb.Instance.Connect())
+            Dispatcher.Invoke(() => { Packages.Clear(); });
+            if (!await Adb.Instance.Connect())
             {
                 AdbEnable = false;
                 MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -182,14 +176,10 @@ namespace WSATools.ViewModels
                 foreach (var name in list)
                 {
                     var item = new ListItem(name);
-                    Dispatcher.Invoke(() =>
-                    {
-                        Packages.Add(item);
-                    });
+                    Dispatcher.Invoke(() => { Packages.Add(item); });
                 }
             }
             HideLoading();
-            return Task.CompletedTask;
         }
         public override void Dispose()
         {

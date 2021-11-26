@@ -20,13 +20,13 @@ namespace WSATools.Libs
                 return instance;
             }
         }
-        public IEnumerable<string> FeatureList { get; }
+        public List<string> FeatureList { get; }
         public event BooleanHandler DownloadComplete;
         public Node<string, string, bool?, DownloadPackage> PackageList { get; }
         private WSA()
         {
             PackageList = new Node<string, string, bool?, DownloadPackage>();
-            FeatureList = new[] { "HypervisorPlatform", "VirtualMachinePlatform" };
+            FeatureList = new List<string> { "HypervisorPlatform", "VirtualMachinePlatform" };
             DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
         public void Start()
@@ -84,7 +84,7 @@ namespace WSATools.Libs
                 else
                     count++;
             }
-            return count < 3;
+            return count != FeatureList.Count;
         }
         public bool Running
         {

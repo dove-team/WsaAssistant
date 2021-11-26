@@ -1,51 +1,79 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SQLite;
+using System;
 using System.IO;
-using System.Text;
+using WSATools.Libs.Model;
 
 namespace WSATools.Libs
 {
-    public sealed class DB
+    public sealed class DB : IDisposable
     {
-        private static DB instance;
-        public static DB Instance
+        private SQLiteConnection Connection { get; }
+        public DB()
         {
-            get
+            var path = Path.Combine(Environment.CurrentDirectory, "data.db");
+            Connection = new SQLiteConnection(path);
+            Init();
+        }
+        private void Init()
+        {
+            try
             {
-                if (instance == null)
-                    instance = new DB();
-                return instance;
+                Connection.Table<Setting>().FirstOrDefault();
+            }
+            catch
+            {
+                Connection.CreateTable<Setting>(CreateFlags.AutoIncPK);
             }
         }
-        private DirectoryInfo Directory { get; }
-        private DB()
+        public bool GetData<T>(string name, out T value)
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            Directory = new DirectoryInfo(Path.Combine(path, ".wsatools"));
-            if (!Directory.Exists)
-                Directory.Create();
-        }
-        public void SetData(string key, string value)
-        {
-            var filePath = Path.Combine(Directory.FullName, $"{key}.db");
-            FileInfo fileInfo = new FileInfo(filePath);
-            if (fileInfo.Exists)
-                fileInfo.Delete();
-            using var fs = fileInfo.Create();
-            var bytes = Encoding.UTF8.GetBytes(value);
-            fs.Write(bytes);
-        }
-        public string GetData(string key)
-        {
-            var filePath = Path.Combine(Directory.FullName, $"{key}.db");
-            FileInfo fileInfo = new FileInfo(filePath);
-            if (fileInfo.Exists)
+            try
             {
-                using var fs = fileInfo.OpenRead();
-                var bytes = new byte[fs.Length];
-                fs.Write(bytes);
-                return Encoding.UTF8.GetString(bytes);
+                var entity = Connection.Table<Setting>().FirstOrDefault(x => x.Name == name);
+                if (entity != null)
+                {
+                    value = JsonConvert.DeserializeObject<T>(entity.Value);
+                    return true;
+                }
             }
-            return string.Empty;
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("GetData", ex);
+            }
+            value = default;
+            return false;
+        }
+        public void SetData<T>(string name, T value)
+        {
+            try
+            {
+                var entity = Connection.Table<Setting>().FirstOrDefault(x => x.Name == name);
+                if (entity != null)
+                {
+                    entity.Value = JsonConvert.SerializeObject(value);
+                    Connection.Update(entity);
+                }
+                else
+                {
+                    entity = new Setting
+                    {
+                        Value = JsonConvert.SerializeObject(value),
+                        Name = name
+                    };
+                    Connection.Insert(entity);
+                }
+            }
+            catch { }
+        }
+        public void Dispose()
+        {
+            try
+            {
+                Connection.Close();
+                Connection.Dispose();
+            }
+            catch { }
         }
     }
 }

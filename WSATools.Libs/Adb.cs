@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WSATools.Libs
 {
@@ -28,6 +29,8 @@ namespace WSATools.Libs
             {
                 AdbServer server = new AdbServer();
                 var path = Path.Combine(this.ProcessPath(), "adb.exe");
+                if (!File.Exists(path))
+                    throw new FileNotFoundException("ADB文件已丢失，请重新安装程序！");
                 StartServerResult result = server.StartServer(path, false);
                 if (result != StartServerResult.Started)
                     throw new ApplicationException("Can't start adb server");
@@ -58,15 +61,18 @@ namespace WSATools.Libs
             }
             return Device != null;
         }
-        public bool Connect()
+        public Task<bool> Connect()
         {
-            if (Device == null)
-            {
-                AdbClient = new AdvancedAdbClient();
-                AdbClient.Connect(WsaIp);
-                Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
-            }
-            return Device != null;
+            return Task.Factory.StartNew(() =>
+             {
+                 if (Device == null)
+                 {
+                     AdbClient = new AdvancedAdbClient();
+                     AdbClient.Connect(WsaIp);
+                     Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                 }
+                 return Device != null;
+             });
         }
         public string WsaIp
         {

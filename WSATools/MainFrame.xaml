@@ -29,9 +29,8 @@
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
             <Button Click="Navigate_Click">环境</Button>
             <Button Click="Navigate_Click" Margin="0,8,0,0">应用</Button>
-            <Button Click="Navigate_Click" Margin="0,8,0,0">更多</Button>
             <Button Click="Navigate_Click" Margin="0,8,0,0">关于</Button>
-            <Button Click="Navigate_Click" Margin="0,8,0,0">退出</Button>
+            <Button Click="Navigate_Click" Margin="0,8,0,0" Content="{DynamicResource Close}" />
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="1" >
             <Grid.RowDefinitions>

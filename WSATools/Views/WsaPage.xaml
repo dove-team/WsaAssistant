@@ -33,10 +33,10 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="Windows环境" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="需要启用虚拟机平台和Windows虚拟机监控程序平台" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource FeatureStatus}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource FeatureStatusDesc}" />
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasFeature}" Text="{Binding FeatureStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallFeature}" Command="{Binding InstallFeatureCommand}">安装</Button>
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallFeature}" Command="{Binding InstallFeatureCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
         <Border Grid.Row="1" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -51,10 +51,10 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="Android子环境" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="需要安装Android子环境和依赖包" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaStatus}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource WsaStatusDesc}" />
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasWsa}" Text="{Binding WsaStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallWsa}" Command="{Binding InstallWsaCommand}">安装</Button>
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallWsa}" Command="{Binding InstallWsaCommand}"  Content="{DynamicResource Install}" />
             </Grid>
         </Border>
         <Border Grid.Row="2" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -69,10 +69,10 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="Android子环境状态" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="已安装Android子环境的运行状态" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding WsaRuning}" Text="{Binding WsaStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding StartWsa}" Command="{Binding StartWsaCommand}">启动</Button>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaRuning}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource WsaRuningDesc}" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding WsaRuning}" Text="{Binding WsaRunStatus}" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding StartWsa}" Command="{Binding StartWsaCommand}" Content="{DynamicResource Start}" />
             </Grid>
         </Border>
         <Border Grid.Row="3" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -87,10 +87,10 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="快捷安装APK" />
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="注册APK文件双击或者右键菜单安装到Android子环境中" />
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource RegistApk}" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource RegistApkDesc}" />
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasRegist}" Text="{Binding RegistStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallRegist}">安装</Button>
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallRegist}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
     </Grid>

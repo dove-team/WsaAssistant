@@ -70,7 +70,8 @@ namespace WSATools.Libs
                     var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
                     iconKey.SetValue(string.Empty, iconPath);
                 }
-                DB.Instance.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                using (DB db = new DB())
+                    db.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 return true;
             }
             catch (Exception ex)

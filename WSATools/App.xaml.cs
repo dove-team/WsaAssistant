@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using WSATools.Libs;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools
 {
@@ -51,14 +52,19 @@ namespace WSATools
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
+            {
+                MessageBox.Show("出现未知的错误！" + ex.Message);
                 LogManager.Instance.LogError("UnhandledException", ex);
+            }
         }
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
+            MessageBox.Show("出现未知的错误！" + e.Exception.Message);
             LogManager.Instance.LogError("UnobservedTaskException", e.Exception);
         }
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            MessageBox.Show("出现未知的错误！" + e.Exception.Message);
             LogManager.Instance.LogError("DispatcherUnhandledException", e.Exception);
         }
     }

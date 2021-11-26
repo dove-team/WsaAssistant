@@ -19,7 +19,6 @@ namespace WSATools.ViewModels
 {
     public sealed class InstallWsaPageViewModel : ViewModelBase
     {
-        public event CloseHandler Close;
         public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
@@ -44,14 +43,14 @@ namespace WSATools.ViewModels
                 else
                 {
                     LogManager.Instance.LogInfo("下载WSA异常，退出！");
-                    Close?.Invoke(this, false);
+                    NavigateTo("WsaPage");
                 }
             }
             else
             {
                 LogManager.Instance.LogInfo("下载WSA完成，开始安装！");
                 ExcuteCommand();
-                Close?.Invoke(this, true);
+                NavigateTo("WsaPage");
             }
             InstallEnable = true;
             TimeoutEnable = true;
@@ -142,7 +141,7 @@ namespace WSATools.ViewModels
         {
             LogManager.Instance.LogInfo("User Cancel.");
             HideLoading();
-            Close?.Invoke(this, false);
+            NavigateTo("WsaPage");
             return Task.CompletedTask;
         }
         private Task InstallAsync()

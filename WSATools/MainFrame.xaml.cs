@@ -26,14 +26,9 @@ namespace WSATools
                         frame.Navigate(new Uri("pack://application:,,,/Views/AppPage.xaml"));
                         break;
                     }
-                case "更多":
-                    {
-
-                        break;
-                    }
                 case "关于":
                     {
-
+                        frame.Navigate(new Uri("pack://application:,,,/Views/AboutPage.xaml"));
                         break;
                     }
                 case "退出":

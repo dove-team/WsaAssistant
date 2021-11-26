@@ -27,7 +27,7 @@ namespace WSATools.Libs
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
-                process.StartInfo.Arguments = cmd;
+                process.StartInfo.Arguments = $" -windowstyle hidden {cmd}";
                 process.Start();
                 message = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
