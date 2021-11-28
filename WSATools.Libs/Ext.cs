@@ -69,9 +69,9 @@ namespace WSATools.Libs
                     RegistryKey iconKey = registryKey.CreateSubKey("DefaultIcon");
                     var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
                     iconKey.SetValue(string.Empty, iconPath);
-                }
-                using (DB db = new DB())
+                    using DB db = new DB();
                     db.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                }
                 return true;
             }
             catch (Exception ex)

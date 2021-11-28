@@ -90,7 +90,7 @@
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource RegistApk}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource RegistApkDesc}" />
                 <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasRegist}" Text="{Binding RegistStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallRegist}" Content="{DynamicResource Install}" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallRegist}" Command="{Binding RegistCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
     </Grid>

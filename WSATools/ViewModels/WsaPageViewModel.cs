@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using WSATools.Libs;
@@ -82,14 +83,31 @@ namespace WSATools.ViewModels
             get => installFeature;
             set => SetProperty(ref installFeature, value);
         }
+        public IAsyncRelayCommand RegistCommand { get; }
         public IAsyncRelayCommand StartWsaCommand { get; }
         public IAsyncRelayCommand InstallWsaCommand { get; }
         public IAsyncRelayCommand InstallFeatureCommand { get; }
         public WsaPageViewModel()
         {
+            RegistCommand = new AsyncRelayCommand(RegistAsync);
             StartWsaCommand = new AsyncRelayCommand(StartWsaAsync);
             InstallWsaCommand = new AsyncRelayCommand(InstallWsaAsync);
             InstallFeatureCommand = new AsyncRelayCommand(InstallFeatureAsync);
+        }
+        private Task RegistAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                ShowLoading();
+                this.RemoveMenu();
+                var path = Path.Combine(this.ProcessPath(), "WSATools.Background.exe");
+                if (path.AddMenu(LangManager.Instance.Current))
+                    MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                HideLoading();
+            });
+            return Task.CompletedTask;
         }
         private Task StartWsaAsync()
         {
@@ -143,7 +161,8 @@ namespace WSATools.ViewModels
         {
             Dispatcher = (sender as WsaPage).Dispatcher;
             WsaRunStatus = WsaStatus = FeatureStatus = FindChar("Checking");
-            RunOnUIThread(() => {
+            RunOnUIThread(async () =>
+            {
                 ShowLoading();
                 if (WSA.Instance.HasFeature)
                 {
@@ -196,12 +215,11 @@ namespace WSATools.ViewModels
                         HasRegist = Visibility.Collapsed;
                     }
                 }
-                //if (await WSA.Instance.HasUpdate())
+                if (await WSA.Instance.HasUpdate())
                 {
 
                 }
                 HideLoading();
-                return Task.CompletedTask;
             });
         }
         public override void Dispose()

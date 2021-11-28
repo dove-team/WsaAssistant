@@ -44,7 +44,7 @@ namespace WSATools.Libs
                     if (CheckFeature(package))
                         count++;
                 }
-                return count == FeatureList.Count();
+                return count == FeatureList.Count;
             }
         }
         public async Task<bool> HasUpdate()

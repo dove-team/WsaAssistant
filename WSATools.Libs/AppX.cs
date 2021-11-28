@@ -107,7 +107,6 @@ namespace WSATools.Libs
             if (directory != null && directory.Count > 0)
             {
                 var names = directory.Select(x => x.Key).ToList();
-                //WIN11只有64位，直接选取X64/ARM64包即可
                 if (IsArm)
                 {
                     if (names.ItemContainEquals("arm", "arm64"))
