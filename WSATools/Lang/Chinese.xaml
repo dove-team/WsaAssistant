@@ -18,6 +18,7 @@
     <sys:String x:Key="NotRunning">未运行</sys:String>
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
+    <sys:String x:Key="ExitApp">是否退出App?</sys:String>
     <sys:String x:Key="UninstallTips">确定卸载</sys:String>
     <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>
     <sys:String x:Key="PackageList">已安装应用</sys:String>
@@ -43,4 +44,8 @@
     <sys:String x:Key="RegistApkDesc">注册APK文件双击或者右键菜单安装到Android子环境中</sys:String>
     <sys:String x:Key="WsaPackageFailed">出现异常，获取WSA环境包失败！请点击刷新按钮重试！</sys:String>
     <sys:String x:Key="RebootTips">需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)</sys:String>
+    <sys:String x:Key="AboutContent" xml:space="preserve">    WSA助手是一个辅助用户安装Windows Subsystem for Android的工具，避免了复杂的操作一键操作即可进行安装所需要的环境，使得您的设备能够在电脑上开始体验安卓应用（后称WSA）。
+    本应用还囊括了APK应用管理、APK应用快捷安装（通过注册后将可直接在APK文件双击或者右键菜单中直接安装到WSA中）、GPU驱动和兼容包安装的功能，能够更好的体验到WSA的便捷性和高效性。
+    如果WSA有最新版本，本应用也会在启动本应用的时候自动检测并提醒您是否有新版本可用！您可以根据您的需要进行更新，当然目前还是推荐您及时更新到最新版以获取更好的使用体验！
+    同时，本应用也能够自动检测最新软件版本，并提醒有新版本可用，您选择更新的话应用会自动下载最新的版本并且等待您退出应用的时候提示您进行更新！不会影响您中途的使用！</sys:String>
 </ResourceDictionary>

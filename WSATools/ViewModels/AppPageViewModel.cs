@@ -55,17 +55,22 @@ namespace WSATools.ViewModels
         public void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as AppPage).Dispatcher;
-            AdbEnable = Adb.Instance.TryConnect();
-            RunOnUIThread(async () => { await SearchApps(); });
+            RunOnUIThread(() =>
+           {
+               ShowLoading();
+               AdbEnable = Adb.Instance.TryConnect();
+               SearchApps();
+               HideLoading();
+           });
         }
         private Task RefreshAsync()
         {
-            RunOnUIThread(async () =>
-            {
-                ShowLoading();
-                await SearchApps();
-                HideLoading();
-            });
+            RunOnUIThread(() =>
+           {
+               ShowLoading();
+               SearchApps();
+               HideLoading();
+           });
             return Task.CompletedTask;
         }
         private Task DowngradeAsync()
@@ -91,60 +96,60 @@ namespace WSATools.ViewModels
         }
         private Task UninstallApkAsync()
         {
-            RunOnUIThread(async () =>
-            {
-                ShowLoading();
-                var packageName = SelectPackage?.Content;
-                if (!string.IsNullOrEmpty(packageName))
-                {
-                    if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
-                          == MessageBoxResult.Yes)
-                    {
-                        if (Adb.Instance.Uninstall(packageName))
-                        {
-                            MessageBox.Show(FindChar("UninstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                            await SearchApps();
-                        }
-                        else
-                            MessageBox.Show(FindChar("UninstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                HideLoading();
-            });
+            RunOnUIThread(() =>
+           {
+               ShowLoading();
+               var packageName = SelectPackage?.Content;
+               if (!string.IsNullOrEmpty(packageName))
+               {
+                   if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
+                         == MessageBoxResult.Yes)
+                   {
+                       if (Adb.Instance.Uninstall(packageName))
+                       {
+                           MessageBox.Show(FindChar("UninstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                           SearchApps();
+                       }
+                       else
+                           MessageBox.Show(FindChar("UninstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                   }
+               }
+               HideLoading();
+           });
             return Task.CompletedTask;
         }
         private Task InstallApkAsync()
         {
-            RunOnUIThread(async () =>
-            {
-                ShowLoading();
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    FileName = string.Empty,
-                    Filter = FindChar("ApkFile")
-                };
-                if (openFileDialog.ShowDialog() == true)
-                {
-                    if (Adb.Instance.Install(openFileDialog.FileName))
-                    {
-                        MessageBox.Show(FindChar("InstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                        await SearchApps();
-                    }
-                    else
-                        MessageBox.Show(FindChar("InstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                HideLoading();
-            });
+            RunOnUIThread(() =>
+           {
+               ShowLoading();
+               OpenFileDialog openFileDialog = new OpenFileDialog
+               {
+                   FileName = string.Empty,
+                   Filter = FindChar("ApkFile")
+               };
+               if (openFileDialog.ShowDialog() == true)
+               {
+                   if (Adb.Instance.Install(openFileDialog.FileName))
+                   {
+                       MessageBox.Show(FindChar("InstallSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                       SearchApps();
+                   }
+                   else
+                       MessageBox.Show(FindChar("InstallFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+               }
+               HideLoading();
+           });
             return Task.CompletedTask;
         }
         private Task SearchAsync()
         {
-            RunOnUIThread(async () =>
-            {
-                ShowLoading();
-                await SearchApps(SearchKeywords);
-                HideLoading();
-            });
+            RunOnUIThread(() =>
+           {
+               ShowLoading();
+               SearchApps(SearchKeywords);
+               HideLoading();
+           });
             return Task.CompletedTask;
         }
         private Task UninstallAsync()
@@ -160,11 +165,11 @@ namespace WSATools.ViewModels
             });
             return Task.CompletedTask;
         }
-        private async Task SearchApps(string condition = "")
+        private void SearchApps(string condition = "")
         {
             ShowLoading();
             Dispatcher.Invoke(() => { Packages.Clear(); });
-            if (!await Adb.Instance.Connect())
+            if (!Adb.Instance.Connect())
             {
                 AdbEnable = false;
                 MessageBox.Show(FindChar("DevlopTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Warning);

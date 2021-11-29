@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Background="WhiteSmoke"
       mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600" Title="AboutPage">
-    <Grid>
-
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="{DynamicResource AboutContent}" TextWrapping="WrapWithOverflow"
+                   FontSize="15" Padding="6" />
+    </StackPanel>
 </Page>

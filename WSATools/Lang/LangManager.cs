@@ -57,4 +57,12 @@ namespace WSATools
             }
         }
     }
+    static class Ext
+    {
+        public static string FindChar(this Window _, string key)
+        {
+            var obj = LangManager.Instance.Resource[key];
+            return obj == null ? string.Empty : obj.ToString();
+        }
+    }
 }

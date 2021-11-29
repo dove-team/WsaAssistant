@@ -2,6 +2,7 @@
 using AdvancedSharpAdbClient.DeviceCommands;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -61,18 +62,23 @@ namespace WSATools.Libs
             }
             return Device != null;
         }
-        public Task<bool> Connect()
+        public void Close()
         {
-            return Task.Factory.StartNew(() =>
-             {
-                 if (Device == null)
-                 {
-                     AdbClient = new AdvancedAdbClient();
-                     AdbClient.Connect(WsaIp);
-                     Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
-                 }
-                 return Device != null;
-             });
+            if (AdbServer.Instance.GetStatus().IsRunning)
+            {
+                foreach (var process in Process.GetProcessesByName("ADB.EXE"))
+                    process.Kill();
+            }
+        }
+        public bool Connect()
+        {
+            if (Device == null)
+            {
+                AdbClient = new AdvancedAdbClient();
+                AdbClient.Connect(WsaIp);
+                Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+            }
+            return Device != null;
         }
         public string WsaIp
         {

@@ -3,6 +3,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WSATools.Libs;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WSATools
 {
@@ -14,26 +16,27 @@ namespace WSATools
         }
         private void Navigate_Click(object sender, RoutedEventArgs e)
         {
-            switch (((Button)sender).Content.ToString())
+            switch (((Button)sender).CommandParameter.ToString())
             {
-                case "环境":
+                case "wsa":
                     {
                         frame.Navigate(new Uri("pack://application:,,,/Views/WsaPage.xaml"));
                         break;
                     }
-                case "应用":
+                case "app":
                     {
                         frame.Navigate(new Uri("pack://application:,,,/Views/AppPage.xaml"));
                         break;
                     }
-                case "关于":
+                case "about":
                     {
                         frame.Navigate(new Uri("pack://application:,,,/Views/AboutPage.xaml"));
                         break;
                     }
-                case "退出":
+                case "exit":
                     {
-                        Application.Current.Shutdown();
+                        if (MessageBox.Show(this.FindChar("ExitApp"), this.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                            Application.Current.Shutdown();
                         break;
                     }
             }
@@ -52,7 +55,7 @@ namespace WSATools
         }
         private void BlurWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-
+            Adb.Instance.Close();
         }
     }
 }

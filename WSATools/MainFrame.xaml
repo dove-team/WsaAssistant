@@ -27,10 +27,10 @@
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center">
-            <Button Click="Navigate_Click">环境</Button>
-            <Button Click="Navigate_Click" Margin="0,8,0,0">应用</Button>
-            <Button Click="Navigate_Click" Margin="0,8,0,0">关于</Button>
-            <Button Click="Navigate_Click" Margin="0,8,0,0" Content="{DynamicResource Close}" />
+            <Button Click="Navigate_Click" CommandParameter="wsa">环境</Button>
+            <Button Click="Navigate_Click" CommandParameter="app" Margin="0,8,0,0">应用</Button>
+            <Button Click="Navigate_Click" CommandParameter="about" Margin="0,8,0,0">关于</Button>
+            <Button Click="Navigate_Click" CommandParameter="exit" Margin="0,8,0,0" Content="{DynamicResource Close}" />
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="1" >
             <Grid.RowDefinitions>

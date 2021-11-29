@@ -14,6 +14,7 @@
     <sys:String x:Key="AppName">WSATools</sys:String>
     <sys:String x:Key="Offline">offline install</sys:String>
     <sys:String x:Key="NotRegist">Not Regist</sys:String>
+    <sys:String x:Key="ExitApp">Exit App?</sys:String>
     <sys:String x:Key="NotInstall">Not Install</sys:String>
     <sys:String x:Key="SearchContent">Search</sys:String>
     <sys:String x:Key="ApkFile">APK File|*.apk</sys:String>
@@ -43,4 +44,8 @@
     <sys:String x:Key="RegistApkDesc">Register for APK file double-click or right-click menu installation into the WSA</sys:String>
     <sys:String x:Key="WsaPackageFailed">An exception occurred and failed to obtain the WSA environment package! Please click the refresh button to try again!</sys:String>
     <sys:String x:Key="RebootTips">The system needs restarted to complete the operation! (Restart the system within 10s after confirming, please save your data and restart!!!)</sys:String>
+    <sys:String x:Key="AboutContent" xml:space="preserve">    WSA-Assistant is a tool that assists users in installing Windows Subsystem for Android. It avoids the complicated operation and one-click operation to install the required environment, so that your device can start to experience Android applications on the computer (hereinafter referred to as WSA).
+     This application also includes the functions of APK application management, APK application quick installation (by double-clicking the APK file after registration or directly installing into the WSA from the right-click menu), GPU driver and compatible package installation functions, which can be better experienced The convenience and efficiency of WSA.
+     If there is the latest version of WSA, this application will also automatically detect and remind you if there is a new version available when you start this application! You can update according to your needs, of course, it is recommended that you update to the latest version in time to get a better experience!
+     At the same time, this application can also automatically detect the latest software version and remind you that a new version is available. If you choose to update, the application will automatically download the latest version and will prompt you to update when you exit the application! Will not affect your halfway use!</sys:String>
 </ResourceDictionary>
