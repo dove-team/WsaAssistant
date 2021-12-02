@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Tips">Tips</sys:String>
+    <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="Start">Start</sys:String>
+    <sys:String x:Key="Install">Install</sys:String>
+    <sys:String x:Key="Regist">Regist</sys:String>
+    <sys:String x:Key="Refresh">Refresh</sys:String>
+    <sys:String x:Key="Remove">Remove</sys:String>
+    <sys:String x:Key="Running">Running</sys:String>
+    <sys:String x:Key="Installed">Installed</sys:String>
+    <sys:String x:Key="Checking">Checking</sys:String>
+    <sys:String x:Key="AppName">WsaAssistant</sys:String>
+    <sys:String x:Key="Offline">offline install</sys:String>
+    <sys:String x:Key="NotRegist">Not Regist</sys:String>
+    <sys:String x:Key="ExitApp">Exit App?</sys:String>
+    <sys:String x:Key="NotInstall">Not Install</sys:String>
+    <sys:String x:Key="SearchContent">Search</sys:String>
+    <sys:String x:Key="ApkFile">APK File|*.apk</sys:String>
+    <sys:String x:Key="WsaStatus">Wsa Status</sys:String>
+    <sys:String x:Key="Downgrade">Downgrade</sys:String>
+    <sys:String x:Key="PackageList">Package List</sys:String>
+    <sys:String x:Key="NotRunning">Not Running</sys:String>
+    <sys:String x:Key="InstallFailed">Install Failed！</sys:String>
+    <sys:String x:Key="RegistApk">Quickly install APK</sys:String>
+    <sys:String x:Key="SearchPackage">Search Package:</sys:String>
+    <sys:String x:Key="FeatureStatus">Windows Feature</sys:String>
+    <sys:String x:Key="WsaRuning">WSA Running Status</sys:String>
+    <sys:String x:Key="DependencyList">Dependency List</sys:String>
+    <sys:String x:Key="UninstallFailed">Uninstall Failed！</sys:String>
+    <sys:String x:Key="InstallSuccess">Install Successful！</sys:String>
+    <sys:String x:Key="DownloadProcess">Download Process:</sys:String>
+    <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
+    <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>
+    <sys:String x:Key="DowngradeFailed">Downgrade installation failed！</sys:String>
+    <sys:String x:Key="DowngradeSuccess">Downgrade installation successful！</sys:String>
+    <sys:String x:Key="DevlopTips">Please check whether the developer mode is turned on!</sys:String>
+    <sys:String x:Key="NeedWsa">Doesnot install WSA，please install it before using this function！</sys:String>
+    <sys:String x:Key="WsaRuningDesc">The running status of the Android sub-environment is installed.</sys:String>
+    <sys:String x:Key="WsaSuccess">Congratulations, it looks like the current WSA environment is very good!</sys:String>
+    <sys:String x:Key="WsaStatusDesc">You need to install android subenvironments and dependency packages</sys:String>
+    <sys:String x:Key="FeatureStatusDesc">You need to enable the hypervisor and Windows hypervisor platforms</sys:String>
+    <sys:String x:Key="WsaFailed">It seems that the WSA environment installation failed, please install it before use!</sys:String>
+    <sys:String x:Key="RegistApkDesc">Register for APK file double-click or right-click menu installation into the WSA</sys:String>
+    <sys:String x:Key="WsaPackageFailed">An exception occurred and failed to obtain the WSA environment package! Please click the refresh button to try again!</sys:String>
+    <sys:String x:Key="RebootTips">The system needs restarted to complete the operation! (Restart the system within 10s after confirming, please save your data and restart!!!)</sys:String>
+    <sys:String x:Key="AboutContent" xml:space="preserve">    WSA-Assistant is a tool that assists users in installing Windows Subsystem for Android. It avoids the complicated operation and one-click operation to install the required environment, so that your device can start to experience Android applications on the computer (hereinafter referred to as WSA).
+     This application also includes the functions of APK application management, APK application quick installation (by double-clicking the APK file after registration or directly installing into the WSA from the right-click menu), GPU driver and compatible package installation functions, which can be better experienced The convenience and efficiency of WSA.
+     If there is the latest version of WSA, this application will also automatically detect and remind you if there is a new version available when you start this application! You can update according to your needs, of course, it is recommended that you update to the latest version in time to get a better experience!
+     At the same time, this application can also automatically detect the latest software version and remind you that a new version is available. If you choose to update, the application will automatically download the latest version and will prompt you to update when you exit the application! Will not affect your halfway use!</sys:String>
+</ResourceDictionary>

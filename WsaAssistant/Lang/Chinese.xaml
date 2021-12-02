@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Tips">提示</sys:String>
+    <sys:String x:Key="Close">关闭</sys:String>
+    <sys:String x:Key="Start">启动</sys:String>
+    <sys:String x:Key="Install">安装</sys:String>
+    <sys:String x:Key="Refresh">刷新</sys:String>
+    <sys:String x:Key="Remove">卸载</sys:String>
+    <sys:String x:Key="Regist">已注册</sys:String>
+    <sys:String x:Key="Running">运行中</sys:String>
+    <sys:String x:Key="Checking">检测中</sys:String>
+    <sys:String x:Key="Offline">离线安装</sys:String>
+    <sys:String x:Key="Installed">已安装</sys:String>
+    <sys:String x:Key="Downgrade">降级</sys:String>
+    <sys:String x:Key="NotRegist">未注册</sys:String>
+    <sys:String x:Key="NotInstall">未安装</sys:String>   
+    <sys:String x:Key="NotRunning">未运行</sys:String>
+    <sys:String x:Key="SearchContent">搜索</sys:String>
+    <sys:String x:Key="AppName">WSA助手</sys:String>
+    <sys:String x:Key="ExitApp">是否退出App?</sys:String>
+    <sys:String x:Key="UninstallTips">确定卸载</sys:String>
+    <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>
+    <sys:String x:Key="PackageList">已安装应用</sys:String>
+    <sys:String x:Key="InstallFailed">安装失败！</sys:String>
+    <sys:String x:Key="SearchPackage">搜索包：</sys:String>
+    <sys:String x:Key="RegistApk">快捷安装APK</sys:String>
+    <sys:String x:Key="InstallSuccess">安装成功！</sys:String>
+    <sys:String x:Key="UninstallFailed">卸载失败！</sys:String>
+    <sys:String x:Key="WsaStatus">Android子环境</sys:String>
+    <sys:String x:Key="DependencyList">安装包列表</sys:String>
+    <sys:String x:Key="UninstallSuccess">卸载成功！</sys:String>
+    <sys:String x:Key="DownloadProcess">下载进度：</sys:String>
+    <sys:String x:Key="FeatureStatus">Windows环境</sys:String>
+    <sys:String x:Key="WsaRuning">Android子环境状态</sys:String>
+    <sys:String x:Key="DowngradeFailed">降级安装失败！</sys:String>
+    <sys:String x:Key="DowngradeSuccess">降级安装成功！</sys:String>
+    <sys:String x:Key="NeedWsa">未安装WSA，请安装后重试！</sys:String>
+    <sys:String x:Key="DevlopTips">请检查是否开启开发人员模式！</sys:String>
+    <sys:String x:Key="WsaSuccess">恭喜你，看起来现在的WSA环境很好！</sys:String>
+    <sys:String x:Key="WsaStatusDesc">需要安装Android子环境和依赖包</sys:String>
+    <sys:String x:Key="WsaRuningDesc">已安装Android子环境的运行状态</sys:String>
+    <sys:String x:Key="WsaFailed">看起来WSA环境安装失败，请安装后再使用！</sys:String>
+    <sys:String x:Key="FeatureStatusDesc">需要启用虚拟机平台和Windows虚拟机监控程序平台</sys:String>
+    <sys:String x:Key="RegistApkDesc">注册APK文件双击或者右键菜单安装到Android子环境中</sys:String>
+    <sys:String x:Key="WsaPackageFailed">出现异常，获取WSA环境包失败！请点击刷新按钮重试！</sys:String>
+    <sys:String x:Key="RebootTips">需要重启系统以完成操作！(确定后10s内重启系统，请保存好你的数据后进行重启！！！)</sys:String>
+    <sys:String x:Key="AboutContent" xml:space="preserve">    WSA助手是一个辅助用户安装Windows Subsystem for Android的工具，避免了复杂的操作一键操作即可进行安装所需要的环境，使得您的设备能够在电脑上开始体验安卓应用（后称WSA）。
+    本应用还囊括了APK应用管理、APK应用快捷安装（通过注册后将可直接在APK文件双击或者右键菜单中直接安装到WSA中）、GPU驱动和兼容包安装的功能，能够更好的体验到WSA的便捷性和高效性。
+    如果WSA有最新版本，本应用也会在启动本应用的时候自动检测并提醒您是否有新版本可用！您可以根据您的需要进行更新，当然目前还是推荐您及时更新到最新版以获取更好的使用体验！
+    同时，本应用也能够自动检测最新软件版本，并提醒有新版本可用，您选择更新的话应用会自动下载最新的版本并且等待您退出应用的时候提示您进行更新！不会影响您中途的使用！</sys:String>
+</ResourceDictionary>
