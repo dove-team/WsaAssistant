@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace WsaAssistant.Libs
 {
@@ -64,11 +63,15 @@ namespace WsaAssistant.Libs
         }
         public void Close()
         {
-            if (AdbServer.Instance.GetStatus().IsRunning)
+            try
             {
-                foreach (var process in Process.GetProcessesByName("ADB.EXE"))
-                    process.Kill();
+                if (AdbServer.Instance.GetStatus().IsRunning)
+                {
+                    foreach (var process in Process.GetProcessesByName("ADB.EXE"))
+                        process.Kill();
+                }
             }
+            catch { }
         }
         public bool Connect()
         {

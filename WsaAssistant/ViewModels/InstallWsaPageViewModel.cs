@@ -19,13 +19,11 @@ namespace WsaAssistant.ViewModels
 {
     public sealed class InstallWsaPageViewModel : ViewModelBase
     {
-        public IAsyncRelayCommand CloseCommand { get; }
         public IAsyncRelayCommand RreshCommand { get; }
         public IAsyncRelayCommand InstallCommand { get; }
         public IAsyncRelayCommand OfflineCommand { get; }
         public InstallWsaPageViewModel()
         {
-            CloseCommand = new AsyncRelayCommand(CloseAsync);
             RreshCommand = new AsyncRelayCommand(RreshAsync);
             InstallCommand = new AsyncRelayCommand(InstallAsync);
             OfflineCommand = new AsyncRelayCommand(OfflineAsync);
@@ -137,13 +135,6 @@ namespace WsaAssistant.ViewModels
             });
             return Task.CompletedTask;
         }
-        private Task CloseAsync()
-        {
-            LogManager.Instance.LogInfo("User Cancel.");
-            HideLoading();
-            NavigateTo("WsaPage");
-            return Task.CompletedTask;
-        }
         private Task InstallAsync()
         {
             RunOnUIThread(async () =>
@@ -188,6 +179,7 @@ namespace WsaAssistant.ViewModels
                 Command.Instance.Shell(@".\" + file, out string message);
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
+                File.Delete(file);
                 MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                 HideLoading();
             }

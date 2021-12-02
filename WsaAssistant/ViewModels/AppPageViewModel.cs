@@ -56,20 +56,20 @@ namespace WsaAssistant.ViewModels
         {
             Dispatcher = (sender as AppPage).Dispatcher;
             RunOnUIThread(() =>
-           {
-               ShowLoading();
-               if (WSA.Instance.HasWsa)
-               {
-                   AdbEnable = Adb.Instance.TryConnect();
-                   SearchApps();
-               }
-               else
-               {
-                   MessageBox.Show(FindChar("NeedWsa"), FindChar("Tips"), 
-                       MessageBoxButton.OK, MessageBoxImage.Information);
-               }
-               HideLoading();
-           });
+            {
+                ShowLoading();
+                if (WSA.Instance.HasWsa)
+                {
+                    AdbEnable = Adb.Instance.TryConnect();
+                    SearchApps();
+                }
+                else
+                {
+                    MessageBox.Show(FindChar("NeedWsa"), FindChar("Tips"),
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                HideLoading();
+            });
         }
         private Task RefreshAsync()
         {

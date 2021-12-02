@@ -22,8 +22,11 @@ namespace WsaAssistant.ViewModels
         }
         protected void NavigateTo(string pageName)
         {
-            var uri = new Uri($"pack://application:,,,/Views/{pageName}.xaml");
-            MainWindow.frame.Navigate(uri);
+            Dispatcher.Invoke(() =>
+            {
+                var uri = new Uri($"pack://application:,,,/Views/{pageName}.xaml");
+                MainWindow.frame.Navigate(uri);
+            });
         }
         protected void ShowLoading()
         {

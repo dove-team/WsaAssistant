@@ -36,6 +36,15 @@ namespace WsaAssistant.Libs
                 DownloadComplete?.Invoke(this, count == PackageList.Count);
             }
         }
+        public bool HasOpenGL
+        {
+            get
+            {
+                Command.Instance.Shell("Get-AppxPackage|findstr Microsoft.D3DMappingLayers", out string message);
+                LogManager.Instance.LogInfo("Pepair OpenGL:" + message);
+                return !string.IsNullOrEmpty(message);
+            }
+        }
         public async Task<bool> InstallOpenGL()
         {
             try
@@ -60,6 +69,40 @@ namespace WsaAssistant.Libs
             {
                 LogManager.Instance.LogError("InstallOpen", ex);
                 return false;
+            }
+        }
+        public async Task<bool> Retry(bool reconstruction)
+        {
+            GC.Collect();
+            switch (reconstruction)
+            {
+                case true:
+                    {
+                        return await InstallOpenGL();
+                    }
+                default:
+                    {
+                        try
+                        {
+                            var failedList = PackageList.Where(x => x.Item3 == null || x.Item3 == false);
+                            if (failedList != null && failedList.Any())
+                            {
+                                for (var idx = 0; idx < failedList.Count(); idx++)
+                                {
+                                    var failed = failedList.ElementAt(idx);
+                                    PackageList.AddOrUpdate(failed.Item1, failed.Item2, null, failed.Item4);
+                                }
+                                var list = failedList.Select(x => x.Item2).ToArray();
+                                await DownloadManager.Instance.Create(list).ConfigureAwait(false);
+                            }
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            LogManager.Instance.LogError("Retry", ex);
+                            return false;
+                        }
+                    }
             }
         }
         public async Task WSLDrive(GPUType type)
