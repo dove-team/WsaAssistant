@@ -36,6 +36,15 @@ namespace WsaAssistant.Libs
                 DownloadComplete?.Invoke(this, count == PackageList.Count);
             }
         }
+        public bool HasOpenGL
+        {
+            get
+            {
+                Command.Instance.Shell("Get-AppxPackage|findstr Microsoft.D3DMappingLayers", out string message);
+                LogManager.Instance.LogInfo("Pepair OpenGL:" + message);
+                return !string.IsNullOrEmpty(message);
+            }
+        }
         public async Task<bool> InstallOpenGL()
         {
             try

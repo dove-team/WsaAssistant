@@ -18,6 +18,9 @@
     <Compile Update="Views\AppPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\DrivePage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\InstallWsaPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -41,6 +44,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\AppPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\DrivePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\InstallWsaPage.xaml">

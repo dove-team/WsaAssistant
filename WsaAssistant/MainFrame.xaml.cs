@@ -25,7 +25,7 @@ namespace WsaAssistant
                     }
                 case "drive":
                     {
-                        frame.Navigate(new Uri(""));
+                        frame.Navigate(new Uri("pack://application:,,,/Views/DrivePage.xaml"));
                         break;
                     }
                 case "app":

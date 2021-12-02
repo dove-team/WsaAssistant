@@ -215,10 +215,6 @@ namespace WsaAssistant.ViewModels
                         HasRegist = Visibility.Collapsed;
                     }
                 }
-                if (await WSA.Instance.HasUpdate())
-                {
-
-                }
                 HideLoading();
             });
         }
