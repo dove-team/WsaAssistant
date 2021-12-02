@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WsaAssistant"
-!define PRODUCT_VERSION "1.3.0"
+!define PRODUCT_VERSION "1.3.1"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WsaAssistant.exe"
@@ -775,11 +775,17 @@ Section Uninstall
   Delete "$INSTDIR\AdbWinApi.dll"
   Delete "$INSTDIR\adb.exe"
   Delete "$INSTDIR\Accessibility.dll"
+  Delete "$INSTDIR\temp\*"
+  Delete "$INSTDIR\wsa_tools_log\*"
+  Delete "$INSTDIR\*.appx"
+  Delete "$INSTDIR\*.Msixbundle"
 
   Delete "$SMPROGRAMS\WsaAssistant\Uninstall.lnk"
   Delete "$DESKTOP\WsaAssistant.lnk"
   Delete "$SMPROGRAMS\WsaAssistant\WsaAssistant.lnk"
 
+  RMDir "$INSTDIR\temp"
+  RMDir "$INSTDIR\wsa_tools_log"
   RMDir "$SMPROGRAMS\WsaAssistant"
   RMDir "$INSTDIR\zh-Hant"
   RMDir "$INSTDIR\zh-Hans"

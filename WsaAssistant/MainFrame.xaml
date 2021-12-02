@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         WindowStartupLocation="CenterScreen" WindowStyle="None"
         xmlns:vm="clr-namespace:WsaAssistant.ViewModels"
-        mc:Ignorable="d" ResizeMode="NoResize" Unloaded="BlurWindow_Unloaded"
+        mc:Ignorable="d" ResizeMode="NoResize"
         Title="MainFrame" Height="450" Width="800" Loaded="BlurWindow_Loaded">
     <Window.DataContext>
         <vm:MainFrameViewModel x:Name="viewModel" />
@@ -30,6 +30,7 @@
             <Button Click="Navigate_Click" CommandParameter="wsa">环境</Button>
             <Button Click="Navigate_Click" CommandParameter="drive" Margin="0,8,0,0">驱动</Button>
             <Button Click="Navigate_Click" CommandParameter="app" Margin="0,8,0,0">应用</Button>
+            <Button Click="Navigate_Click" CommandParameter="setting" Margin="0,8,0,0">设置</Button>
             <Button Click="Navigate_Click" CommandParameter="about" Margin="0,8,0,0">关于</Button>
             <Button Click="Navigate_Click" CommandParameter="exit" Margin="0,8,0,0" Content="{DynamicResource Close}" />
         </StackPanel>

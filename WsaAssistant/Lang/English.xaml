@@ -39,7 +39,10 @@
     <sys:String x:Key="NvidiaDesc">Nvidia GPU Drive for WSL</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
     <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>
+    <sys:String x:Key="CreateDownloadFailed">Create Download Failed！</sys:String>
     <sys:String x:Key="DowngradeFailed">Downgrade installation failed！</sys:String>
+    <sys:String x:Key="OpenGLFailed">Compatibility Pack Download Failed！</sys:String>
+    <sys:String x:Key="OpenGLSuccess">Compatibility Pack Install Successful！</sys:String>
     <sys:String x:Key="DowngradeSuccess">Downgrade installation successful！</sys:String>
     <sys:String x:Key="OpenGLName">OpenCL™ and OpenGL® Compatibility Pack</sys:String>
     <sys:String x:Key="DevlopTips">Please check whether the developer mode is turned on!</sys:String>

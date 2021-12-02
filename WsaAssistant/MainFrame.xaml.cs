@@ -1,5 +1,6 @@
 ﻿using HandyControl.Controls;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,6 +34,11 @@ namespace WsaAssistant
                         frame.Navigate(new Uri("pack://application:,,,/Views/AppPage.xaml"));
                         break;
                     }
+                case "setting":
+                    {
+                        frame.Navigate(new Uri("pack://application:,,,/Views/SettingPage.xaml"));
+                        break;
+                    }
                 case "about":
                     {
                         frame.Navigate(new Uri("pack://application:,,,/Views/AboutPage.xaml"));
@@ -58,7 +64,7 @@ namespace WsaAssistant
             }
             catch { }
         }
-        private void BlurWindow_Unloaded(object sender, RoutedEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             Adb.Instance.Close();
         }

@@ -52,7 +52,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource AmdName}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource AmdDesc}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding AmdEnable}" Command="{Binding InstallAmdCommand}" Content="{DynamicResource Install}" />
+                <Button Style="{StaticResource ButtonPrimary}" Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding AmdEnable}" Command="{Binding InstallAmdCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
         <Border Grid.Row="2" Padding="6" BorderBrush="Gray" BorderThickness="1">
@@ -89,6 +89,5 @@
                 <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding NvidiaEnable}" Command="{Binding InstallNvidiaCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
-
     </Grid>
 </Page>

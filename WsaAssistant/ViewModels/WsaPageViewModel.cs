@@ -161,7 +161,7 @@ namespace WsaAssistant.ViewModels
         {
             Dispatcher = (sender as WsaPage).Dispatcher;
             WsaRunStatus = WsaStatus = FeatureStatus = FindChar("Checking");
-            RunOnUIThread(async () =>
+            RunOnUIThread(() =>
             {
                 ShowLoading();
                 if (WSA.Instance.HasFeature)

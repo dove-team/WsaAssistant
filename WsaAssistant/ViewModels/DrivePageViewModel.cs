@@ -1,9 +1,15 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using Downloader;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
+using System.IO;
 using System.Management;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WsaAssistant.Libs;
+using WsaAssistant.Libs.Model;
 using WsaAssistant.Views;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace WsaAssistant.ViewModels
 {
@@ -43,21 +49,96 @@ namespace WsaAssistant.ViewModels
             InstallAmdCommand = new AsyncRelayCommand(InstallAmdAsync);
             InstallNvidiaCommand = new AsyncRelayCommand(InstallNvidiaAsync);
             InstallOpenGLCommand = new AsyncRelayCommand(InstallOpenGLAsync);
+            Drives.Instance.DownloadComplete += Instance_DownloadComplete;
+        }
+        private async void Instance_DownloadComplete(object sender, bool state)
+        {
+            if (!state)
+            {
+                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("OpenGLFailed"), FindChar("Tips"),
+                    MessageBoxButton.YesNo, MessageBoxImage.Error))
+                {
+                    LogManager.Instance.LogInfo("下载OpenGL异常，重试中！");
+                    await Drives.Instance.Retry(true);
+                }
+                else
+                {
+                    LogManager.Instance.LogInfo("下载OpenGL异常，退出！");
+                }
+            }
+            else
+            {
+                LogManager.Instance.LogInfo("下载OpenGL完成，开始安装！");
+                ExcuteCommand();
+                OpenGLEnable = !Drives.Instance.HasOpenGL;
+            }
+            HideLoading();
+        }
+        private void ExcuteCommand()
+        {
+            try
+            {
+                StringBuilder shellBuilder = new StringBuilder();
+                foreach (Tuple<string, string, bool?, DownloadPackage> package in Drives.Instance.PackageList)
+                    shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
+                Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
+                Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
+                var file = "install_gd.ps1";
+                if (File.Exists(file))
+                    File.Delete(file);
+                File.WriteAllText(file, shellBuilder.ToString());
+                var shellFile = Path.Combine(this.ProcessPath(), file);
+                Command.Instance.Shell(@".\" + file, out string message);
+                LogManager.Instance.LogInfo("Install OpenGL Script Result:" + message);
+                LogManager.Instance.LogInfo("Install OpenGL Script Content:" + shellBuilder.ToString());
+                File.Delete(file);
+                MessageBox.Show(FindChar("OpenGLSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                HideLoading();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("ExcuteCommand", ex);
+            }
         }
         private Task InstallIntelAsync()
         {
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                await Drives.Instance.WSLDrive(GPUType.Intel);
+                HideLoading();
+            });
             return Task.CompletedTask;
         }
         private Task InstallNvidiaAsync()
         {
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                await Drives.Instance.WSLDrive(GPUType.Nvidia);
+                HideLoading();
+            });
             return Task.CompletedTask;
         }
         private Task InstallAmdAsync()
         {
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                await Drives.Instance.WSLDrive(GPUType.AMD);
+                HideLoading();
+            });
             return Task.CompletedTask;
         }
         private Task InstallOpenGLAsync()
         {
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                if (!await Drives.Instance.InstallOpenGL())
+                    MessageBox.Show(FindChar("CreateDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                HideLoading();
+            });
             return Task.CompletedTask;
         }
         public void LoadAsync(object sender, EventArgs e)
@@ -66,7 +147,7 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(() =>
             {
                 ShowLoading();
-                OpenGLEnable = Drives.Instance.HasOpenGL;
+                OpenGLEnable = !Drives.Instance.HasOpenGL;
                 foreach (ManagementObject mo in new ManagementObjectSearcher("Select * from Win32_VideoController").Get())
                 {
                     var name = mo["Name"].ToString();

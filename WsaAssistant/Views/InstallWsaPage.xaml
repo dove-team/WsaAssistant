@@ -30,15 +30,14 @@
                 </ListView.View>
             </ListView>
             <StackPanel Orientation="Vertical" Grid.Column="2" Margin="12" VerticalAlignment="Bottom">
-                <Button Command="{Binding OfflineCommand}" Content="{DynamicResource Offline}" Width="100" />
+                <Button IsEnabled="{Binding InstallEnable}" Command="{Binding OfflineCommand}" Content="{DynamicResource Offline}" Width="100" />
                 <TextBlock Text="{DynamicResource DownloadProcess}" Margin="0,24,0,0" />
                 <TextBlock Margin="0,24,0,0" HorizontalAlignment="Right">
                     <Run Text="{Binding ProcessVal,UpdateSourceTrigger=PropertyChanged}" />
                     <Run Text="%" />
                 </TextBlock>
                 <Button IsEnabled="{Binding InstallEnable}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallCommand}" Content="{DynamicResource Install}" Width="100" Margin="0,24,0,0" />
-                <Button Style="{StaticResource ButtonPrimary}" Command="{Binding RreshCommand}" Content="{DynamicResource Refresh}" Width="100" Margin="0,24,0,0" />
-                <Button Command="{Binding CloseCommand}" Content="{DynamicResource Close}" Width="100" Margin="0,24,0,0" />
+                <Button Command="{Binding RreshCommand}" Content="{DynamicResource Refresh}" Width="100" Margin="0,24,0,0" />
             </StackPanel>
         </Grid>
     </Grid>
