@@ -55,6 +55,7 @@ namespace WsaAssistant
         private void BlurWindow_Loaded(object sender, RoutedEventArgs e)
         {
             MouseDown += WSAList_MouseDown;
+            Client.Instance.CheckUpdate();
         }
         private void WSAList_MouseDown(object sender, MouseButtonEventArgs e)
         {

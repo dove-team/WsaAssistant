@@ -14,10 +14,11 @@
     <sys:String x:Key="Installed">已安装</sys:String>
     <sys:String x:Key="Downgrade">降级</sys:String>
     <sys:String x:Key="NotRegist">未注册</sys:String>
-    <sys:String x:Key="NotInstall">未安装</sys:String>   
+    <sys:String x:Key="NotInstall">未安装</sys:String>
     <sys:String x:Key="NotRunning">未运行</sys:String>
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
+    <sys:String x:Key="WsaUpdate">更新WSA</sys:String>
     <sys:String x:Key="ExitApp">是否退出App?</sys:String>
     <sys:String x:Key="UninstallTips">确定卸载</sys:String>
     <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>
@@ -27,8 +28,10 @@
     <sys:String x:Key="RegistApk">快捷安装APK</sys:String>
     <sys:String x:Key="IntelName">Intel显卡驱动</sys:String>
     <sys:String x:Key="AmdName">AMD显卡驱动</sys:String>
+    <sys:String x:Key="ClientUpdate">更新客户端</sys:String>
     <sys:String x:Key="InstallSuccess">安装成功！</sys:String>
     <sys:String x:Key="UninstallFailed">卸载失败！</sys:String>
+    <sys:String x:Key="UpdateDesc">更新到最新版本</sys:String>
     <sys:String x:Key="WsaStatus">Android子环境</sys:String>
     <sys:String x:Key="DependencyList">安装包列表</sys:String>
     <sys:String x:Key="UninstallSuccess">卸载成功！</sys:String>

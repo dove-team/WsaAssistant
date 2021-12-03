@@ -20,11 +20,13 @@
     <sys:String x:Key="WsaStatus">Wsa Status</sys:String>
     <sys:String x:Key="AppName">WsaAssistant</sys:String>
     <sys:String x:Key="Downgrade">Downgrade</sys:String>
+    <sys:String x:Key="WsaUpdate">Update WSA</sys:String>
     <sys:String x:Key="PackageList">Package List</sys:String>
     <sys:String x:Key="NotRunning">Not Running</sys:String>
     <sys:String x:Key="IntelName">Intel GPU Drive</sys:String>
     <sys:String x:Key="AmdName">AMD GPU Drive</sys:String>
     <sys:String x:Key="InstallFailed">Install Failed！</sys:String>
+    <sys:String x:Key="ClientUpdate">Client Update</sys:String>
     <sys:String x:Key="NvidiaName">Nvidia GPU Drive</sys:String>
     <sys:String x:Key="RegistApk">Quickly install APK</sys:String>
     <sys:String x:Key="SearchPackage">Search Package:</sys:String>
@@ -36,6 +38,7 @@
     <sys:String x:Key="IntelDesc">Intel GPU Drive for WSL</sys:String>
     <sys:String x:Key="AmdDesc">AMD GPU Drive for WSL</sys:String>
     <sys:String x:Key="DownloadProcess">Download Process:</sys:String>
+    <sys:String x:Key="UpdateDesc">Update to newest version</sys:String>
     <sys:String x:Key="NvidiaDesc">Nvidia GPU Drive for WSL</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
     <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>

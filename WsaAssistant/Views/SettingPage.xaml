@@ -7,7 +7,7 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors" Background="WhiteSmoke"
       mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="600" Title="SettingPage">
     <Page.DataContext>
-        <vm:InstallWsaPageViewModel x:Name="viewModel" />
+        <vm:SettingPageViewModel x:Name="viewModel" />
     </Page.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -15,6 +15,45 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <Label Content="开发中..." />
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Border Padding="6" BorderBrush="Gray" BorderThickness="1">
+                <Grid Height="42">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="28" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaUpdate}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource UpdateDesc}" />
+                    <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding HasWsaUpdate}" Command="{Binding UpdateWsaCommand}" Content="{DynamicResource Install}" />
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
+                <Grid Height="42">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="28" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource ClientUpdate}" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource UpdateDesc}" />
+                    <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding HasClientUpdate}" Command="{Binding UpdateClientCommand}"  Content="{DynamicResource Install}" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Page>
