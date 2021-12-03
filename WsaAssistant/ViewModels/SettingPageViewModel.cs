@@ -34,7 +34,7 @@ namespace WsaAssistant.ViewModels
         {
             if (!state)
             {
-                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"),
+                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("ClientFailed"), FindChar("Tips"),
                     MessageBoxButton.YesNo, MessageBoxImage.Error))
                 {
                     LogManager.Instance.LogInfo("下载客户端异常，重试中！");
@@ -44,12 +44,20 @@ namespace WsaAssistant.ViewModels
             else
             {
                 LogManager.Instance.LogInfo("下载客户端完成，开始安装！");
-
+                MessageBox.Show(FindChar("ClientSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                Client.Instance.Install();
+                Application.Current.Shutdown();
             }
+            HideLoading();
         }
-        private async Task UpdateClientAsync()
+        private  Task UpdateClientAsync()
         {
-            await Client.Instance.Start();
+            RunOnUIThread(async () =>
+            {
+                ShowLoading();
+                await Client.Instance.Start();
+            });
+            return Task.CompletedTask;
         }
         private Task UpdateWsaAsync()
         {

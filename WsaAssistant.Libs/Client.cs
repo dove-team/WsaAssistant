@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -23,6 +24,7 @@ namespace WsaAssistant.Libs
             }
         }
         private HttpClient HttpClient { get; }
+        private string SavePath { get; set; }
         private string DownloadPath { get; set; }
         public event BooleanHandler DownloadComplete;
         public bool HasUpdate => !string.IsNullOrEmpty(DownloadPath);
@@ -33,6 +35,7 @@ namespace WsaAssistant.Libs
         }
         private void DownloadManager_ProgressComplete(object sender, bool hasError, string filePath)
         {
+            SavePath = filePath;
             DownloadComplete?.Invoke(this, !hasError);
         }
         public void CheckUpdate()
@@ -66,6 +69,14 @@ namespace WsaAssistant.Libs
                 }
                 catch { }
             });
+        }
+        public void Install()
+        {
+            try
+            {
+                Process.Start(SavePath);
+            }
+            catch { }
         }
         public async Task<bool> Start()
         {
