@@ -49,6 +49,12 @@ namespace WsaAssistant
             }
             mutex.ReleaseMutex();
         }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            if (DownloadManager.Instance.HasClear)
+                DownloadManager.Instance.Clear();
+        }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)

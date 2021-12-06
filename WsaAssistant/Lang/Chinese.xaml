@@ -19,6 +19,8 @@
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
     <sys:String x:Key="WsaUpdate">更新WSA</sys:String>
+    <sys:String x:Key="OperaFailed">操作失败!</sys:String>
+    <sys:String x:Key="OperaSuccess">操作成功!</sys:String>
     <sys:String x:Key="ExitApp">是否退出App?</sys:String>
     <sys:String x:Key="UninstallTips">确定卸载</sys:String>
     <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>

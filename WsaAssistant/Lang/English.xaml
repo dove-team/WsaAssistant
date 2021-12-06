@@ -27,6 +27,7 @@
     <sys:String x:Key="AmdName">AMD GPU Drive</sys:String>
     <sys:String x:Key="InstallFailed">Install Failed！</sys:String>
     <sys:String x:Key="ClientUpdate">Client Update</sys:String>
+    <sys:String x:Key="OperaFailed">Operation Failed!</sys:String>
     <sys:String x:Key="NvidiaName">Nvidia GPU Drive</sys:String>
     <sys:String x:Key="RegistApk">Quickly install APK</sys:String>
     <sys:String x:Key="SearchPackage">Search Package:</sys:String>
@@ -37,6 +38,7 @@
     <sys:String x:Key="InstallSuccess">Install Successful！</sys:String>
     <sys:String x:Key="IntelDesc">Intel GPU Drive for WSL</sys:String>
     <sys:String x:Key="AmdDesc">AMD GPU Drive for WSL</sys:String>
+    <sys:String x:Key="OperaSuccess">Operation Successful!</sys:String>
     <sys:String x:Key="DownloadProcess">Download Process:</sys:String>
     <sys:String x:Key="ClientFailed">Client Download Failed！</sys:String>
     <sys:String x:Key="UpdateDesc">Update to newest version</sys:String>

@@ -28,6 +28,7 @@ namespace WsaAssistant.ViewModels
             InstallCommand = new AsyncRelayCommand(InstallAsync);
             OfflineCommand = new AsyncRelayCommand(OfflineAsync);
             WSA.Instance.DownloadComplete += Instance_DownloadComplete;
+            DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
@@ -191,7 +192,6 @@ namespace WsaAssistant.ViewModels
         public async void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as InstallWsaPage).Dispatcher;
-            DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
             await GetList();
         }
         private void Downloader_ProcessChange(string progressPercentage)
@@ -232,6 +232,7 @@ namespace WsaAssistant.ViewModels
         }
         public override void Dispose()
         {
+            WSA.Instance.DownloadComplete -= Instance_DownloadComplete;
             DownloadManager.Instance.ProcessChange -= Downloader_ProcessChange;
         }
     }

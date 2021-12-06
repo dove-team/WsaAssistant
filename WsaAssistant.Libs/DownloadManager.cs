@@ -6,6 +6,8 @@ using Downloader;
 using System.Net;
 using System.ComponentModel;
 using DownloadProgressChangedEventArgs = Downloader.DownloadProgressChangedEventArgs;
+using System.Linq;
+using WsaAssistant.Libs.Model;
 
 namespace WsaAssistant.Libs
 {
@@ -53,13 +55,20 @@ namespace WsaAssistant.Libs
             };
             array = new List<string>();
         }
-        private void Build()
+        private void Build(HttpHeader headers)
         {
             if (Service != null)
             {
                 Service.Clear();
                 Service.DownloadFileCompleted -= OnDownloadFileCompleted;
                 Service.DownloadProgressChanged -= DownloadProgressChanged;
+            }
+            configuration.RequestConfiguration.Referer = headers.Referer;
+            configuration.RequestConfiguration.Headers.Clear();
+            if (headers.Headers != null && headers.Headers.Count > 0)
+            {
+                foreach (var header in headers.Headers)
+                    configuration.RequestConfiguration.Headers.Add(header);
             }
             Service = new DownloadService(configuration);
             Service.DownloadFileCompleted += OnDownloadFileCompleted;
@@ -87,14 +96,19 @@ namespace WsaAssistant.Libs
         {
             SaveDirectory = new DirectoryInfo(root);
         }
-        public async Task Create(string url)
+        public async Task Create(string url, HttpHeader headers)
         {
             try
             {
-                Build();
+                Build(headers);
                 await Service.DownloadFileTaskAsync(url, SaveDirectory).ConfigureAwait(false);
             }
             catch { }
+        }
+        public async Task Create(HttpHeader headers, params string[] urls)
+        {
+            foreach (var url in urls)
+                await Create(url, headers);
         }
         public async Task Create(params string[] urls)
         {

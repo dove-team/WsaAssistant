@@ -77,7 +77,7 @@ namespace WsaAssistant.ViewModels
         }
         public override void Dispose()
         {
-
+            Client.Instance.DownloadComplete -= Instance_DownloadComplete;
         }
     }
 }
