@@ -4,11 +4,13 @@
 	  <UseWPF>True</UseWPF>
 	  <Authors>michael_eddy</Authors>
 	  <OutputType>WinExe</OutputType>
+	  <DebugType>embedded</DebugType>
 	  <Platforms>x64;ARM64</Platforms>
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	  <BaseOutputPath>..\OutputDebug</BaseOutputPath>
-	  <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+	  <NeutralLanguage>zh-Hans;en-US</NeutralLanguage>
 	  <ApplicationIcon>..\WsaAssistant\icon.ico</ApplicationIcon>
+	  <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\WsaAssistant.Libs\WsaAssistant.Libs.csproj" />
