@@ -24,7 +24,18 @@
   <ItemGroup>
     <Folder Include="Libs\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Libs\adb.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\AdbWinApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Libs\AdbWinUsbApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="xcopy &quot;$(ProjectDir)Libs\*&quot; &quot;$(SolutionDir)OutputDebug\x64\Debug\net6.0-windows10.0.22000.0\&quot; /i /s /r /y /c" />
+		<Exec Condition=" '$(Configuration)' == 'Debug' " Command="xcopy &quot;$(ProjectDir)Libs\*&quot; &quot;$(SolutionDir)OutputDebug\x64\Debug\net6.0-windows10.0.22000.0\&quot; /i /s /r /y /c" />
 	</Target>
 </Project>
