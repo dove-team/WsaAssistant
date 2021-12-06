@@ -24,6 +24,7 @@ namespace WsaAssistant.Background
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("Start Host", ex);
+                Interaction.MsgBox("安装失败！未知错误：" + ex.Message, MsgBoxStyle.Critical, "ERROR");
             }
         }
     }

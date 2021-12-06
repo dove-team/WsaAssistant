@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UseWPF>true</UseWPF>
-    <Version>1.3.1</Version>
+    <Version>1.3.2</Version>
     <Authors>michael_eddy</Authors>
     <OutputType>WinExe</OutputType>
+    <DebugType>embedded</DebugType>
     <Platforms>x64;ARM64</Platforms>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <NeutralLanguage>zh-CN</NeutralLanguage>
+    <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <BaseOutputPath>..\OutputDebug</BaseOutputPath>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="MainWindow.xaml.cs" />

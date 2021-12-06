@@ -19,6 +19,8 @@
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
     <sys:String x:Key="WsaUpdate">更新WSA</sys:String>
+    <sys:String x:Key="OperaFailed">操作失败!</sys:String>
+    <sys:String x:Key="OperaSuccess">操作成功!</sys:String>
     <sys:String x:Key="ExitApp">是否退出App?</sys:String>
     <sys:String x:Key="UninstallTips">确定卸载</sys:String>
     <sys:String x:Key="ApkFile">APK文件|*.apk</sys:String>
@@ -41,6 +43,7 @@
     <sys:String x:Key="OpenGLFailed">兼容包下载失败！</sys:String>
     <sys:String x:Key="WsaRuning">Android子环境状态</sys:String>
     <sys:String x:Key="OpenGLSuccess">兼容包安装成功！</sys:String>
+    <sys:String x:Key="ClientFailed">下载客户端更新失败！</sys:String>
     <sys:String x:Key="DowngradeFailed">降级安装失败！</sys:String>
     <sys:String x:Key="DowngradeSuccess">降级安装成功！</sys:String>
     <sys:String x:Key="NeedWsa">未安装WSA，请安装后重试！</sys:String>
@@ -54,6 +57,7 @@
     <sys:String x:Key="WsaRuningDesc">已安装Android子环境的运行状态</sys:String>
     <sys:String x:Key="WsaSuccess">恭喜你，看起来现在的WSA环境很好！</sys:String>
     <sys:String x:Key="WsaFailed">看起来WSA环境安装失败，请安装后再使用！</sys:String>
+    <sys:String x:Key="ClientSuccess">下载客户端更新成功，程序将退出进行安装！</sys:String>
     <sys:String x:Key="FeatureStatusDesc">需要启用虚拟机平台和Windows虚拟机监控程序平台</sys:String>
     <sys:String x:Key="RegistApkDesc">注册APK文件双击或者右键菜单安装到Android子环境中</sys:String>
     <sys:String x:Key="OpenGLDesc">受支持的应用将在运行时采用硬件加速，以获得更好的性能。</sys:String>

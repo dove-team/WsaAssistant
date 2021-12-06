@@ -59,37 +59,23 @@ namespace WsaAssistant.Libs
             try
             {
                 RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open");
-                if (registryKey == null)
-                {
-                    registryKey = Registry.ClassesRoot.CreateSubKey(".apk\\shell\\open");
-                    var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
-                    registryKey.SetValue(string.Empty, title);
-                    var commandKey = registryKey.CreateSubKey("Command");
-                    commandKey.SetValue(string.Empty, $"{path} %1");
-                    RegistryKey iconKey = registryKey.CreateSubKey("DefaultIcon");
-                    var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
-                    iconKey.SetValue(string.Empty, iconPath);
-                    using DB db = new DB();
-                    db.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
-                }
+                if (registryKey != null)
+                    Registry.ClassesRoot.DeleteSubKeyTree(".apk\\shell\\open");
+                registryKey = Registry.ClassesRoot.CreateSubKey(".apk\\shell\\open");
+                var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
+                registryKey.SetValue(string.Empty, title);
+                var commandKey = registryKey.CreateSubKey("Command");
+                commandKey.SetValue(string.Empty, $"{path} %1");
+                RegistryKey iconKey = registryKey.CreateSubKey("DefaultIcon");
+                var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
+                iconKey.SetValue(string.Empty, iconPath);
+                using DB db = new DB();
+                db.SetData("menu", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 return true;
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("AddMenu", ex);
-                return false;
-            }
-        }
-        public static bool RemoveMenu(this object _)
-        {
-            try
-            {
-                Registry.ClassesRoot.DeleteSubKeyTree(@".apk\shell\wsa");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogManager.Instance.LogError("RemoveMenu", ex);
                 return false;
             }
         }

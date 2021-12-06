@@ -27,6 +27,7 @@
     <sys:String x:Key="AmdName">AMD GPU Drive</sys:String>
     <sys:String x:Key="InstallFailed">Install Failed！</sys:String>
     <sys:String x:Key="ClientUpdate">Client Update</sys:String>
+    <sys:String x:Key="OperaFailed">Operation Failed!</sys:String>
     <sys:String x:Key="NvidiaName">Nvidia GPU Drive</sys:String>
     <sys:String x:Key="RegistApk">Quickly install APK</sys:String>
     <sys:String x:Key="SearchPackage">Search Package:</sys:String>
@@ -37,7 +38,9 @@
     <sys:String x:Key="InstallSuccess">Install Successful！</sys:String>
     <sys:String x:Key="IntelDesc">Intel GPU Drive for WSL</sys:String>
     <sys:String x:Key="AmdDesc">AMD GPU Drive for WSL</sys:String>
+    <sys:String x:Key="OperaSuccess">Operation Successful!</sys:String>
     <sys:String x:Key="DownloadProcess">Download Process:</sys:String>
+    <sys:String x:Key="ClientFailed">Client Download Failed！</sys:String>
     <sys:String x:Key="UpdateDesc">Update to newest version</sys:String>
     <sys:String x:Key="NvidiaDesc">Nvidia GPU Drive for WSL</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
@@ -56,6 +59,7 @@
     <sys:String x:Key="FeatureStatusDesc">You need to enable the hypervisor and Windows hypervisor platforms</sys:String>
     <sys:String x:Key="WsaFailed">It seems that the WSA environment installation failed, please install it before use!</sys:String>
     <sys:String x:Key="RegistApkDesc">Register for APK file double-click or right-click menu installation into the WSA</sys:String>
+    <sys:String x:Key="ClientSuccess">The download of the client update was successful and the program will exit for installation！</sys:String>
     <sys:String x:Key="OpenGLDesc">If a DirectX 12 driver is installed, supported apps will run with hardware acceleration for better performance.</sys:String>
     <sys:String x:Key="WsaPackageFailed">An exception occurred and failed to obtain the WSA environment package! Please click the refresh button to try again!</sys:String>
     <sys:String x:Key="RebootTips">The system needs restarted to complete the operation! (Restart the system within 10s after confirming, please save your data and restart!!!)</sys:String>

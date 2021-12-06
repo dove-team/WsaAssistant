@@ -99,12 +99,12 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(() =>
             {
                 ShowLoading();
-                this.RemoveMenu();
                 var path = Path.Combine(this.ProcessPath(), "WsaAssistant.Background.exe");
                 if (path.AddMenu(LangManager.Instance.Current))
                     MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                UpdateRegist();
                 HideLoading();
             });
             return Task.CompletedTask;
@@ -200,23 +200,25 @@ namespace WsaAssistant.ViewModels
                     WsaRuning = Visibility.Collapsed;
                     WsaRunStatus = FindChar("NotRunning");
                 }
-                using (DB db = new DB())
-                {
-                    if (db.GetData<object>("menu", out _))
-                    {
-                        RegistStatus = FindChar("Regist");
-                        HasRegist = Visibility.Visible;
-                        InstallRegist = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        RegistStatus = FindChar("NotRegist");
-                        InstallRegist = Visibility.Visible;
-                        HasRegist = Visibility.Collapsed;
-                    }
-                }
+                UpdateRegist();
                 HideLoading();
             });
+        }
+        private void UpdateRegist()
+        {
+            using DB db = new DB();
+            if (db.GetData<object>("menu", out _))
+            {
+                RegistStatus = FindChar("Regist");
+                HasRegist = Visibility.Visible;
+                InstallRegist = Visibility.Collapsed;
+            }
+            else
+            {
+                RegistStatus = FindChar("NotRegist");
+                InstallRegist = Visibility.Visible;
+                HasRegist = Visibility.Collapsed;
+            }
         }
         public override void Dispose()
         {

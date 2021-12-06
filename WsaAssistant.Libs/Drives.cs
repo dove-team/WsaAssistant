@@ -108,6 +108,7 @@ namespace WsaAssistant.Libs
         public async Task WSLDrive(GPUType type)
         {
             string url = string.Empty;
+            HttpHeader headers = new HttpHeader();
             switch (type)
             {
                 case GPUType.Intel:
@@ -117,10 +118,13 @@ namespace WsaAssistant.Libs
                     url = "https://developer.nvidia.com/51006_quadro_win11_win10-dch_64bit_international";
                     break;
                 case GPUType.AMD:
-                    url = "https://drivers.amd.com/drivers/DX12-WSL-Radeon-Software-Adrenalin-20.45.01.31-Dec15.exe";
-                    break;
+                    {
+                        headers.Referer = "https://www.amd.com/";
+                        url = "https://drivers.amd.com/drivers/DX12-WSL-Radeon-Software-Adrenalin-20.45.01.31-Dec15.exe";
+                        break;
+                    }
             }
-            await DownloadManager.Instance.Create(url).ConfigureAwait(false);
+            await DownloadManager.Instance.Create(url, headers).ConfigureAwait(false);
         }
     }
 }

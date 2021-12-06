@@ -15,6 +15,12 @@ namespace WsaAssistant.ViewModels
 {
     public sealed class DrivePageViewModel : ViewModelBase
     {
+        private string processVal = string.Empty;
+        public string ProcessVal
+        {
+            get => processVal;
+            set => SetProperty(ref processVal, value);
+        }
         private bool openGLEnable = false;
         public bool OpenGLEnable
         {
@@ -50,6 +56,11 @@ namespace WsaAssistant.ViewModels
             InstallNvidiaCommand = new AsyncRelayCommand(InstallNvidiaAsync);
             InstallOpenGLCommand = new AsyncRelayCommand(InstallOpenGLAsync);
             Drives.Instance.DownloadComplete += Instance_DownloadComplete;
+            DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
+        }
+        private void Downloader_ProcessChange(string progressPercentage)
+        {
+            ProcessVal = progressPercentage;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
@@ -106,7 +117,6 @@ namespace WsaAssistant.ViewModels
             {
                 ShowLoading();
                 await Drives.Instance.WSLDrive(GPUType.Intel);
-                HideLoading();
             });
             return Task.CompletedTask;
         }
@@ -163,7 +173,8 @@ namespace WsaAssistant.ViewModels
         }
         public override void Dispose()
         {
-
+            Drives.Instance.DownloadComplete -= Instance_DownloadComplete;
+            DownloadManager.Instance.ProcessChange -= Downloader_ProcessChange;
         }
     }
 }
