@@ -73,7 +73,7 @@ namespace WsaAssistant.ViewModels
             get => processVal;
             set => SetProperty(ref processVal, value);
         }
-        private bool installEnable = true;
+        private bool installEnable = false;
         public bool InstallEnable
         {
             get => installEnable;
@@ -83,6 +83,7 @@ namespace WsaAssistant.ViewModels
         {
             RunOnUIThread(() =>
             {
+                InstallEnable = false;
                 var dialog = new FolderBrowserDialog { InitialFolder = this.ProcessPath() };
                 if (dialog.ShowDialog() != DialogResult.Cancel)
                 {
@@ -123,6 +124,7 @@ namespace WsaAssistant.ViewModels
                         MessageBox.Show(FindChar("WsaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
+                InstallEnable = true;
             });
             return Task.CompletedTask;
         }
@@ -200,6 +202,7 @@ namespace WsaAssistant.ViewModels
         }
         private async Task GetList()
         {
+            InstallEnable = false;
             ShowLoading();
             try
             {
@@ -216,6 +219,7 @@ namespace WsaAssistant.ViewModels
                                 Packages.Add(item);
                             });
                         }
+                        InstallEnable = true;
                     }
                     else
                     {

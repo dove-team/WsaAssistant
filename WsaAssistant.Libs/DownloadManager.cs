@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using Downloader;
 using System.Net;
 using System.ComponentModel;
-using DownloadProgressChangedEventArgs = Downloader.DownloadProgressChangedEventArgs;
-using System.Linq;
 using WsaAssistant.Libs.Model;
+using DownloadProgressChangedEventArgs = Downloader.DownloadProgressChangedEventArgs;
 
 namespace WsaAssistant.Libs
 {
@@ -63,12 +62,15 @@ namespace WsaAssistant.Libs
                 Service.DownloadFileCompleted -= OnDownloadFileCompleted;
                 Service.DownloadProgressChanged -= DownloadProgressChanged;
             }
-            configuration.RequestConfiguration.Referer = headers.Referer;
-            configuration.RequestConfiguration.Headers.Clear();
-            if (headers.Headers != null && headers.Headers.Count > 0)
+            if (headers != null)
             {
-                foreach (var header in headers.Headers)
-                    configuration.RequestConfiguration.Headers.Add(header);
+                configuration.RequestConfiguration.Referer = headers.Referer;
+                configuration.RequestConfiguration.Headers.Clear();
+                if (headers.Headers != null && headers.Headers.Count > 0)
+                {
+                    foreach (var header in headers.Headers)
+                        configuration.RequestConfiguration.Headers.Add(header);
+                }
             }
             Service = new DownloadService(configuration);
             Service.DownloadFileCompleted += OnDownloadFileCompleted;
@@ -105,15 +107,10 @@ namespace WsaAssistant.Libs
             }
             catch { }
         }
-        public async Task Create(HttpHeader headers, params string[] urls)
-        {
-            foreach (var url in urls)
-                await Create(url, headers);
-        }
         public async Task Create(params string[] urls)
         {
             foreach (var url in urls)
-                await Create(url);
+                await Create(url, headers: null);
         }
         public bool HasClear => array.Count > 0;
         public void Clear()
