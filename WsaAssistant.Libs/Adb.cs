@@ -38,28 +38,33 @@ namespace WsaAssistant.Libs
         }
         public bool TryConnect()
         {
-            if (Device == null)
+            try
             {
-                if (!WSA.Instance.Running)
-                    WSA.Instance.Start();
-                var count = 0;
-                while (count < 10)
+                if (Device == null)
                 {
-                    if (!string.IsNullOrEmpty(WsaIp))
+                    if (!WSA.Instance.Running)
+                        WSA.Instance.Start();
+                    var count = 0;
+                    while (count < 10)
                     {
-                        AdbClient = new AdvancedAdbClient();
-                        AdbClient.Connect(WsaIp);
-                        Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
-                        break;
-                    }
-                    else
-                    {
-                        count++;
-                        Thread.Sleep(5000);
+                        if (!string.IsNullOrEmpty(WsaIp))
+                        {
+                            AdbClient = new AdvancedAdbClient();
+                            AdbClient.Connect(WsaIp);
+                            Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                            break;
+                        }
+                        else
+                        {
+                            count++;
+                            Thread.Sleep(5000);
+                        }
                     }
                 }
+                return Device != null;
             }
-            return Device != null;
+            catch { }
+            return false;
         }
         public void Close()
         {
@@ -75,36 +80,54 @@ namespace WsaAssistant.Libs
         }
         public bool Connect()
         {
-            if (Device == null)
+            try
             {
-                AdbClient = new AdvancedAdbClient();
-                AdbClient.Connect(WsaIp);
-                Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                if (Device == null)
+                {
+                    AdbClient = new AdvancedAdbClient();
+                    AdbClient.Connect(WsaIp);
+                    Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                }
+                return Device != null;
             }
-            return Device != null;
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Connect", ex);
+            }
+            return false;
         }
         public string WsaIp
         {
             get
             {
-                var find = "arp -a|findstr 00-15-5d";
-                Command.Instance.Excute(find, out string address);
-                address = address.Substring(find + "&exit").Replace("\r\n", "");
-                if (string.IsNullOrEmpty(address))
+                try
+                {
+                    var find = "arp -a|findstr 00-15-5d";
+                    Command.Instance.Excute(find, out string address);
+                    address = address.Substring(find + "&exit").Replace("\r\n", "");
+                    if (string.IsNullOrEmpty(address))
+                        return string.Empty;
+                    LogManager.Instance.LogInfo("WsaIp:" + address);
+                    return address.Splits(new[] { ' ' }).FirstOrDefault().Trim();
+                }
+                catch (Exception ex)
+                {
+                    LogManager.Instance.LogError("WsaIp", ex);
                     return string.Empty;
-                LogManager.Instance.LogInfo("WsaIp:" + address);
-                return address.Splits(new[] { ' ' }).FirstOrDefault().Trim();
+                }
             }
         }
         public bool Install(string packagePath)
         {
             try
             {
-                PackageManager manager = new PackageManager(AdbClient, Device);
-                manager.InstallPackage(packagePath, false);
+                AdbClient.Install(Device, File.OpenRead(packagePath));
                 return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Install", ex);
+            }
             return false;
         }
         public bool Downgrade(string packagePath)
@@ -114,7 +137,10 @@ namespace WsaAssistant.Libs
                 AdbClient.Install(Device, File.OpenRead(packagePath), "-r", "-d");
                 return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Downgrade", ex);
+            }
             return false;
         }
         public bool Uninstall(string packageName)
@@ -125,15 +151,26 @@ namespace WsaAssistant.Libs
                 manager.UninstallPackage(packageName);
                 return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Uninstall", ex);
+            }
             return false;
         }
         public List<string> GetAll(string condition = "")
         {
-            PackageManager manager = new PackageManager(AdbClient, Device);
-            var packages = manager.Packages.Select(x => x.Key);
-            return packages.Where(x => string.IsNullOrEmpty(condition) ||
-               x.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            try
+            {
+                PackageManager manager = new PackageManager(AdbClient, Device);
+                var packages = manager.Packages.Select(x => x.Key);
+                return packages.Where(x => string.IsNullOrEmpty(condition) ||
+                   x.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("GetAll", ex);
+                return new List<string>();
+            }
         }
     }
 }

@@ -86,6 +86,11 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(() =>
             {
                 ShowLoading();
+                if (SelectPackage == null)
+                {
+
+                    return;
+                }
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     FileName = string.Empty,
