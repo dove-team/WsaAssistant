@@ -22,10 +22,10 @@ namespace WsaAssistant.Libs
         }
         public List<string> FeatureList { get; }
         public event BooleanHandler DownloadComplete;
-        public Node<string, string, bool?, DownloadPackage> PackageList { get; }
+        public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }
         private WSA()
         {
-            PackageList = new Node<string, string, bool?, DownloadPackage>();
+            PackageList = new Node<string, Uri, bool?, DownloadPackage>();
             FeatureList = new List<string> { "HypervisorPlatform", "VirtualMachinePlatform" };
             DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
@@ -148,21 +148,24 @@ namespace WsaAssistant.Libs
                     }
             }
         }
-        private void DownloadManager_ProgressComplete(object sender, bool hasError, string address)
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address,string path)
         {
             var item = PackageList.FindItem(address);
-            PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
-            if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+            if (item != null)
             {
-                var count = PackageList.GetCount(x => x.Item3 == true);
-                DownloadComplete?.Invoke(this, count == PackageList.Count);
+                PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
+                if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+                {
+                    var count = PackageList.GetCount(x => x.Item3 == true);
+                    DownloadComplete?.Invoke(this, count == PackageList.Count);
+                }
             }
         }
-        public async Task<Node<string, string, bool?, DownloadPackage>> GetFilePath()
+        public async Task<Node<string, Uri, bool?, DownloadPackage>> GetFilePath()
         {
             var packages = await AppX.Instance.GetPackages("9p3395vx91nr");
             foreach (var package in packages)
-                PackageList.AddOrUpdate(package.Key, package.Value);
+                PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
             return PackageList;
         }
         public async Task<bool> PepairAsync()

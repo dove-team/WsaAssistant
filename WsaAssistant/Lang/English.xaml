@@ -45,11 +45,12 @@
     <sys:String x:Key="NvidiaDesc">Nvidia GPU Drive for WSL</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
     <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>
+    <sys:String x:Key="OpenGLFailed">Insatll OpenGL Drive Failed!</sys:String>
     <sys:String x:Key="CreateDownloadFailed">Create Download Failed！</sys:String>
     <sys:String x:Key="DowngradeFailed">Downgrade installation failed！</sys:String>
-    <sys:String x:Key="OpenGLFailed">Compatibility Pack Download Failed！</sys:String>
     <sys:String x:Key="OpenGLSuccess">Compatibility Pack Install Successful！</sys:String>
     <sys:String x:Key="DowngradeSuccess">Downgrade installation successful！</sys:String>
+    <sys:String x:Key="OpenGLDFailed">Compatibility Pack Download Failed,retry?</sys:String>
     <sys:String x:Key="OpenGLName">OpenCL™ and OpenGL® Compatibility Pack</sys:String>
     <sys:String x:Key="DevlopTips">Please check whether the developer mode is turned on!</sys:String>
     <sys:String x:Key="NeedWsa">Doesnot install WSA，please install it before using this function！</sys:String>
@@ -59,6 +60,7 @@
     <sys:String x:Key="FeatureStatusDesc">You need to enable the hypervisor and Windows hypervisor platforms</sys:String>
     <sys:String x:Key="WsaFailed">It seems that the WSA environment installation failed, please install it before use!</sys:String>
     <sys:String x:Key="RegistApkDesc">Register for APK file double-click or right-click menu installation into the WSA</sys:String>
+    <sys:String x:Key="DownloadDriveFailed">Download Drive Failed,please try it later or go to {0} download by yourself.</sys:String>
     <sys:String x:Key="ClientSuccess">The download of the client update was successful and the program will exit for installation！</sys:String>
     <sys:String x:Key="OpenGLDesc">If a DirectX 12 driver is installed, supported apps will run with hardware acceleration for better performance.</sys:String>
     <sys:String x:Key="WsaPackageFailed">An exception occurred and failed to obtain the WSA environment package! Please click the refresh button to try again!</sys:String>

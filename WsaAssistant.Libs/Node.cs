@@ -43,7 +43,7 @@ namespace WsaAssistant.Libs
             foreach (var tuple in tuples)
                 yield return tuple;
         }
-        public Tuple<T, T2, T3, T4> FindItem(string address)
+        public Tuple<T, T2, T3, T4> FindItem(T2 address)
         {
             return tuples.FirstOrDefault(x => x.Item2.Equals(address));
         }

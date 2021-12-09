@@ -23,8 +23,8 @@ namespace WsaAssistant.Libs
                 return instance;
             }
         }
-        private HttpClient HttpClient { get; }
         private string SavePath { get; set; }
+        private HttpClient HttpClient { get; }
         private string DownloadPath { get; set; }
         public event BooleanHandler DownloadComplete;
         public bool HasUpdate => !string.IsNullOrEmpty(DownloadPath);
@@ -33,9 +33,9 @@ namespace WsaAssistant.Libs
             HttpClient = new HttpClient();
             DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
-        private void DownloadManager_ProgressComplete(object sender, bool hasError, string filePath)
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address, string path)
         {
-            SavePath = filePath;
+            SavePath = path;
             DownloadComplete?.Invoke(this, !hasError);
         }
         public void CheckUpdate()

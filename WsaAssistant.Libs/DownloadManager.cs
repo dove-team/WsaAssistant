@@ -79,15 +79,16 @@ namespace WsaAssistant.Libs
         private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             var hasError = e.Cancelled || e.Error != null;
-            string address = string.Empty;
+            string address = string.Empty, path = string.Empty;
             if (e.UserState is DownloadPackage package)
             {
                 address = package.Address;
-                array.Add(package.FileName);
+                path = package.FileName;
+                array.Add(path);
             }
             if (e.Error is Exception ex)
                 LogManager.Instance.LogError("OnDownloadFileCompleted", ex);
-            ProgressComplete?.Invoke(sender, hasError, address);
+            ProgressComplete?.Invoke(sender, hasError, new Uri(address), path);
         }
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
@@ -98,14 +99,21 @@ namespace WsaAssistant.Libs
         {
             SaveDirectory = new DirectoryInfo(root);
         }
-        public async Task Create(string url, HttpHeader headers)
+        public async Task<bool> Create(string url, HttpHeader headers)
         {
             try
             {
                 Build(headers);
                 await Service.DownloadFileTaskAsync(url, SaveDirectory).ConfigureAwait(false);
+                return true;
             }
             catch { }
+            return false;
+        }
+        public async Task Create(params Uri[] urls)
+        {
+            foreach (var url in urls)
+                await Create(url.AbsoluteUri, headers: null);
         }
         public async Task Create(params string[] urls)
         {
