@@ -15,7 +15,13 @@ namespace WsaAssistant.ViewModels
 {
     public sealed class DrivePageViewModel : ViewModelBase
     {
-        private string processVal = string.Empty;
+        private Visibility processVisable = Visibility.Collapsed;
+        public Visibility ProcessVisable
+        {
+            get => processVisable;
+            set => SetProperty(ref processVisable, value);
+        }
+        private string processVal = "已下载：0%";
         public string ProcessVal
         {
             get => processVal;
@@ -45,6 +51,7 @@ namespace WsaAssistant.ViewModels
             get => intelEnable;
             set => SetProperty(ref intelEnable, value);
         }
+        private GPUType GPU { get; set; }
         public IAsyncRelayCommand InstallIntelCommand { get; }
         public IAsyncRelayCommand InstallAmdCommand { get; }
         public IAsyncRelayCommand InstallNvidiaCommand { get; }
@@ -60,28 +67,55 @@ namespace WsaAssistant.ViewModels
         }
         private void Downloader_ProcessChange(string progressPercentage)
         {
-            ProcessVal = progressPercentage;
+            ProcessVal = $"已下载：{progressPercentage} %" ;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
-            if (!state)
+            if (sender is string)
             {
-                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("OpenGLFailed"), FindChar("Tips"),
-                    MessageBoxButton.YesNo, MessageBoxImage.Error))
+                switch (GPU)
                 {
-                    LogManager.Instance.LogInfo("下载OpenGL异常，重试中！");
-                    await Drives.Instance.Retry(true);
+                    case GPUType.AMD:
+                        AmdEnable = true;
+                        break;
+                    case GPUType.Intel:
+                        IntelEnable = true;
+                        break;
+                    case GPUType.Nvidia:
+                        NvidiaEnable = true;
+                        break;
                 }
-                else
+                if (!state)
                 {
+                    ProcessVisable = Visibility.Collapsed;
                     LogManager.Instance.LogInfo("下载OpenGL异常，退出！");
+                    string message = string.Format(FindChar("DownloadDriveFailed"), Drives.Instance.GetLink(GPU));
+                    MessageBox.Show(message, FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                LogManager.Instance.LogInfo("下载OpenGL完成，开始安装！");
-                ExcuteCommand();
-                OpenGLEnable = !Drives.Instance.HasOpenGL;
+                if (!state)
+                {
+                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("OpenGLDFailed"), FindChar("Tips"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Error))
+                    {
+                        LogManager.Instance.LogInfo("下载OpenGL异常，重试中！");
+                        await Drives.Instance.Retry(true);
+                    }
+                    else
+                    {
+                        OpenGLEnable = true;
+                        ProcessVisable = Visibility.Collapsed;
+                        LogManager.Instance.LogInfo("下载OpenGL异常，退出！");
+                    }
+                }
+                else
+                {
+                    LogManager.Instance.LogInfo("下载OpenGL完成，开始安装！");
+                    ExcuteCommand();
+                    ProcessVisable = Visibility.Collapsed;
+                }
             }
             HideLoading();
         }
@@ -90,7 +124,7 @@ namespace WsaAssistant.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
-                foreach (Tuple<string, string, bool?, DownloadPackage> package in Drives.Instance.PackageList)
+                foreach (Tuple<string, Uri, bool?, DownloadPackage> package in Drives.Instance.PackageList)
                     shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
@@ -103,7 +137,16 @@ namespace WsaAssistant.ViewModels
                 LogManager.Instance.LogInfo("Install OpenGL Script Result:" + message);
                 LogManager.Instance.LogInfo("Install OpenGL Script Content:" + shellBuilder.ToString());
                 File.Delete(file);
-                MessageBox.Show(FindChar("OpenGLSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                if (Drives.Instance.HasOpenGL)
+                {
+                    OpenGLEnable = false;
+                    MessageBox.Show(FindChar("OpenGLSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    OpenGLEnable = true;
+                    MessageBox.Show(FindChar("OpenGLFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 HideLoading();
             }
             catch (Exception ex)
@@ -116,6 +159,9 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(async () =>
             {
                 ShowLoading();
+                IntelEnable = false;
+                GPU = GPUType.Intel;
+                ProcessVisable = Visibility.Visible;
                 await Drives.Instance.WSLDrive(GPUType.Intel);
             });
             return Task.CompletedTask;
@@ -125,6 +171,9 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(async () =>
             {
                 ShowLoading();
+                NvidiaEnable = false;
+                GPU = GPUType.Nvidia;
+                ProcessVisable = Visibility.Visible;
                 await Drives.Instance.WSLDrive(GPUType.Nvidia);
                 HideLoading();
             });
@@ -135,6 +184,9 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(async () =>
             {
                 ShowLoading();
+                AmdEnable = false;
+                GPU = GPUType.AMD;
+                ProcessVisable = Visibility.Visible;
                 await Drives.Instance.WSLDrive(GPUType.AMD);
                 HideLoading();
             });
@@ -145,9 +197,21 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(async () =>
             {
                 ShowLoading();
+                OpenGLEnable = false;
+                ProcessVisable = Visibility.Visible;
                 if (!await Drives.Instance.InstallOpenGL())
+                {
+                    OpenGLEnable = true;
+                    ProcessVisable = Visibility.Collapsed;
                     MessageBox.Show(FindChar("CreateDownloadFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                HideLoading();
+                }
+                else if (Drives.Instance.PackageList.Count == Drives.Instance.PackageList.GetCount(x => x.Item3 == true))
+                {
+                    OpenGLEnable = true;
+                    ExcuteCommand();
+                    ProcessVisable = Visibility.Collapsed;
+                    HideLoading();
+                }
             });
             return Task.CompletedTask;
         }

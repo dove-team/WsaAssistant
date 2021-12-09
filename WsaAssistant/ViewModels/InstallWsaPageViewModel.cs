@@ -170,7 +170,7 @@ namespace WsaAssistant.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
-                foreach (Tuple<string, string, bool?, DownloadPackage> package in WSA.Instance.PackageList)
+                foreach (Tuple<string, Uri, bool?, DownloadPackage> package in WSA.Instance.PackageList)
                     shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
@@ -211,7 +211,7 @@ namespace WsaAssistant.ViewModels
                     var pairs = await WSA.Instance.GetFilePath();
                     if (pairs != null && pairs.Count > 0)
                     {
-                        foreach (Tuple<string, string, bool?, DownloadPackage> pair in pairs)
+                        foreach (Tuple<string, Uri, bool?, DownloadPackage> pair in pairs)
                         {
                             var item = new ListItem(pair.Item1, pair.Item2);
                             Dispatcher.Invoke(() =>

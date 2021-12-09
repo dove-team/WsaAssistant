@@ -1,5 +1,6 @@
 ﻿using Downloader;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,20 +21,35 @@ namespace WsaAssistant.Libs
             }
         }
         public event BooleanHandler DownloadComplete;
-        public Node<string, string, bool?, DownloadPackage> PackageList { get; }
+        public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }
         private Drives()
         {
-            PackageList = new Node<string, string, bool?, DownloadPackage>();
+            PackageList = new Node<string, Uri, bool?, DownloadPackage>();
             DownloadManager.Instance.ProgressComplete += Instance_ProgressComplete;
         }
-        private void Instance_ProgressComplete(object sender, bool hasError, string address)
+        private void Instance_ProgressComplete(object sender, bool hasError, Uri address, string path)
         {
             var item = PackageList.FindItem(address);
-            PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
-            if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+            if (item != null)
             {
-                var count = PackageList.GetCount(x => x.Item3 == true);
-                DownloadComplete?.Invoke(this, count == PackageList.Count);
+                PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
+                if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+                {
+                    var count = PackageList.GetCount(x => x.Item3 == true);
+                    DownloadComplete?.Invoke(this, count == PackageList.Count);
+                }
+            }
+            else
+            {
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = Path.GetDirectoryName(path)
+                };
+                Process.Start(psi);
+                DownloadComplete?.Invoke(path, true);
             }
         }
         public bool HasOpenGL
@@ -50,18 +66,19 @@ namespace WsaAssistant.Libs
             try
             {
                 var packages = await AppX.Instance.GetPackages("9nqpsl29bfff");
-                var count = 0;
                 for (var idx = 0; idx < packages.Count; idx++)
                 {
                     var package = packages.ElementAt(idx);
                     var path = Path.Combine(this.ProcessPath(), package.Key);
                     if (File.Exists(path))
                     {
-                        count++;
-                        PackageList.AddOrUpdate(package.Key, package.Value, true, new DownloadPackage { FileName = path });
+                        PackageList.AddOrUpdate(package.Key, new Uri(package.Value), true, new DownloadPackage { FileName = path });
                     }
                     else
+                    {
+                        PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
                         await DownloadManager.Instance.Create(package.Value).ConfigureAwait(false);
+                    }
                 }
                 return true;
             }
@@ -70,6 +87,23 @@ namespace WsaAssistant.Libs
                 LogManager.Instance.LogError("InstallOpen", ex);
                 return false;
             }
+        }
+        public string GetLink(GPUType type)
+        {
+            string url = string.Empty;
+            switch (type)
+            {
+                case GPUType.Intel:
+                    url = "https://downloadmirror.intel.com/685037/igfx_win_101.1069.exe";
+                    break;
+                case GPUType.Nvidia:
+                    url = "https://developer.nvidia.com/51006_quadro_win11_win10-dch_64bit_international";
+                    break;
+                case GPUType.AMD:
+                    url = "https://drivers.amd.com/drivers/DX12-WSL-Radeon-Software-Adrenalin-20.45.01.31-Dec15.exe";
+                    break;
+            }
+            return url;
         }
         public async Task<bool> Retry(bool reconstruction)
         {
@@ -107,23 +141,10 @@ namespace WsaAssistant.Libs
         }
         public async Task WSLDrive(GPUType type)
         {
-            string url = string.Empty;
+            string url = GetLink(type);
             HttpHeader headers = new HttpHeader();
-            switch (type)
-            {
-                case GPUType.Intel:
-                    url = "https://downloadmirror.intel.com/685037/igfx_win_101.1069.exe";
-                    break;
-                case GPUType.Nvidia:
-                    url = "https://developer.nvidia.com/51006_quadro_win11_win10-dch_64bit_international";
-                    break;
-                case GPUType.AMD:
-                    {
-                        headers.Referer = "https://www.amd.com/";
-                        url = "https://drivers.amd.com/drivers/DX12-WSL-Radeon-Software-Adrenalin-20.45.01.31-Dec15.exe";
-                        break;
-                    }
-            }
+            if (type == GPUType.AMD)
+                headers.Referer = "https://www.amd.com/";
             await DownloadManager.Instance.Create(url, headers).ConfigureAwait(false);
         }
     }

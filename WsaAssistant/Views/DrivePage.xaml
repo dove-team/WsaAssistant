@@ -20,8 +20,12 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Border Padding="6" BorderBrush="Gray" BorderThickness="1">
+        <Border Padding="6" BorderBrush="Gray" BorderThickness="1" Visibility="{Binding ProcessVisable}">
+            <TextBlock Text="{Binding ProcessVal}" />
+        </Border>
+        <Border Grid.Row="1" Padding="6" BorderBrush="Gray" BorderThickness="1">
             <Grid Height="42">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="28" />
@@ -38,7 +42,7 @@
                 <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding OpenGLEnable}" Command="{Binding InstallOpenGLCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
-        <Border Grid.Row="1" Padding="6" BorderBrush="Gray" BorderThickness="1">
+        <Border Grid.Row="2" Padding="6" BorderBrush="Gray" BorderThickness="1">
             <Grid Height="42">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="28" />
@@ -55,7 +59,7 @@
                 <Button Style="{StaticResource ButtonPrimary}" Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding AmdEnable}" Command="{Binding InstallAmdCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
-        <Border Grid.Row="2" Padding="6" BorderBrush="Gray" BorderThickness="1">
+        <Border Grid.Row="3" Padding="6" BorderBrush="Gray" BorderThickness="1">
             <Grid Height="42">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="28" />
@@ -72,7 +76,7 @@
                 <Button Grid.Column="2" Grid.RowSpan="2" IsEnabled="{Binding IntelEnable}" Command="{Binding InstallIntelCommand}" Content="{DynamicResource Install}" />
             </Grid>
         </Border>
-        <Border Grid.Row="3" Padding="6" BorderBrush="Gray" BorderThickness="1">
+        <Border Grid.Row="4" Padding="6" BorderBrush="Gray" BorderThickness="1">
             <Grid Height="42">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="28" />

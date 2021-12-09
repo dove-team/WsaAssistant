@@ -1,29 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-	  <Version>1.3.3</Version>
-	  <UseWPF>True</UseWPF>
-	  <Authors>michael_eddy</Authors>
-	  <OutputType>WinExe</OutputType>
-	  <DebugType>embedded</DebugType>
-	  <Platforms>x64;ARM64</Platforms>
-	  <PlatformTarget>AnyCPU</PlatformTarget>
-	  <BaseOutputPath>..\OutputDebug</BaseOutputPath>
-	  <NeutralLanguage>zh-Hans;en-US</NeutralLanguage>
-	  <ApplicationIcon>..\WsaAssistant\icon.ico</ApplicationIcon>
-	  <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WsaAssistant.Libs\WsaAssistant.Libs.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Libs\adb.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Libs\AdbWinApi.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Libs\AdbWinUsbApi.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<Version>1.3.4</Version>
+		<UseWPF>True</UseWPF>
+		<Authors>michael_eddy</Authors>
+		<OutputType>WinExe</OutputType>
+		<DebugType>embedded</DebugType>
+		<Platforms>x64;ARM64</Platforms>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<BaseOutputPath>..\OutputDebug</BaseOutputPath>
+		<NeutralLanguage>zh-Hans;en-US</NeutralLanguage>
+		<ApplicationIcon>..\WsaAssistant\icon.ico</ApplicationIcon>
+		<TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\WsaAssistant.Libs\WsaAssistant.Libs.csproj" />
+	</ItemGroup>
 </Project>
