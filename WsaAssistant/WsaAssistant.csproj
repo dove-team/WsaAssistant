@@ -7,10 +7,10 @@
     <DebugType>embedded</DebugType>
     <Platforms>x64;ARM64</Platforms>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseWindowsForms>True</UseWindowsForms>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <BaseOutputPath>..\OutputDebug</BaseOutputPath>
+    <UseWindowsForms>True</UseWindowsForms>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
+    <BaseOutputPath>..\OutputDebug</BaseOutputPath>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
   </PropertyGroup>
