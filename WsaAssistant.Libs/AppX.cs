@@ -45,6 +45,7 @@ namespace WsaAssistant.Libs
                     break;
             }
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
+            handler.ServerCertificateCustomValidationCallback += (_, _, _, _) => { return true; };
             HttpClient = new HttpClient(handler);
         }
         public async Task<Dictionary<string, string>> GetPackages(string productId)
