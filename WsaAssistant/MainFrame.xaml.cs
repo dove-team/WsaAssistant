@@ -47,7 +47,10 @@ namespace WsaAssistant
                 case "exit":
                     {
                         if (MessageBox.Show(this.FindChar("ExitApp"), this.FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            this.Close();
                             Application.Current.Shutdown();
+                        }
                         break;
                     }
             }
