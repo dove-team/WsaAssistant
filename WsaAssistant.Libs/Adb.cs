@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using WsaAssistant.Libs.Model;
 
 namespace WsaAssistant.Libs
 {
@@ -159,12 +160,19 @@ namespace WsaAssistant.Libs
         }
         public List<string> GetAll(string condition = "")
         {
+            List<Package> packagesInfos = new List<Package>();
             try
             {
                 PackageManager manager = new PackageManager(AdbClient, Device);
-                var packages = manager.Packages.Select(x => x.Key);
-                return packages.Where(x => string.IsNullOrEmpty(condition) ||
-                   x.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var packages = manager.Packages.Where(x => string.IsNullOrEmpty(condition) ||
+                   x.Key.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Key);
+                foreach (var package in packages)
+                {
+                    var packagesInfo = new Package(package);
+                    packagesInfo.Init();
+                    packagesInfos.Add(packagesInfo);
+                }
+                return packages.ToList();
             }
             catch (Exception ex)
             {
