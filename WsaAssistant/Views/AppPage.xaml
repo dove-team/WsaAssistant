@@ -3,11 +3,15 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:c="clr-namespace:WsaAssistant.Converter"
       Background="White" xmlns:vm="clr-namespace:WsaAssistant.ViewModels"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d"  d:DesignHeight="400" d:DesignWidth="600" Title="AppPage">
+    <Page.Resources>
+        <c:IconConverter x:Key="iconConverter" />
+    </Page.Resources>
     <Page.DataContext>
-        <vm:AppPageViewModel x:Name="viewModel" />
+        <vm:AppPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -22,7 +26,14 @@
         <ListView Grid.Column="0" ItemsSource="{Binding Packages}" SelectedItem="{Binding SelectPackage}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="{DynamicResource PackageList}" DisplayMemberBinding="{Binding Content}"/>
+                    <GridViewColumn Header="{DynamicResource PackageList}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Width="28" Source="{Binding PackageIcon,Converter={StaticResource iconConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding DisplayName}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -32,12 +43,15 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Center" Text="{DynamicResource SearchPackage}" />
-            <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" Grid.Row="1" Margin="0,12,0,0" />
-            <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" Command="{Binding SearchCommand}" />
-            <Grid Grid.Row="2" Margin="0,12,0,0">
+            <CheckBox Grid.Row="1" Content="仅显示用户程序" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Margin="0,12,0,0" />
+            <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" Grid.Row="2" Margin="0,12,0,0" />
+            <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" 
+                    Command="{Binding SearchCommand}" />
+            <Grid Grid.Row="3" Margin="0,12,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="12" />
@@ -46,7 +60,7 @@
                 <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Install}" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" Command="{Binding InstallApkCommand}" />
                 <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Downgrade}" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding DowngradeCommand}" />
             </Grid>
-            <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid Grid.Row="4" Margin="0,12,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="12" />

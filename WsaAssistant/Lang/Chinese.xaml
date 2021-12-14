@@ -40,6 +40,7 @@
     <sys:String x:Key="DownloadProcess">下载进度：</sys:String>
     <sys:String x:Key="NvidiaName">Nvidia显卡驱动</sys:String>
     <sys:String x:Key="FeatureStatus">Windows环境</sys:String>
+    <sys:String x:Key="WsaFix">修复VirtWifi的连接受限</sys:String>
     <sys:String x:Key="WsaRuning">Android子环境状态</sys:String>
     <sys:String x:Key="OpenGLSuccess">兼容包安装成功！</sys:String>
     <sys:String x:Key="ClientFailed">下载客户端更新失败！</sys:String>

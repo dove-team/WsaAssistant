@@ -1,7 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using WsaAssistant.Libs;
@@ -25,14 +27,15 @@ namespace WsaAssistant.ViewModels
             get => searchKeywords;
             set => SetProperty(ref searchKeywords, value);
         }
-        private ListItem selectPackage;
-        public ListItem SelectPackage
+        private Package selectPackage;
+        public Package SelectPackage
         {
             get => selectPackage;
             set => SetProperty(ref selectPackage, value);
         }
-        private ObservableCollection<ListItem> packages = new ObservableCollection<ListItem>();
-        public ObservableCollection<ListItem> Packages
+        private List<Package> AllPackages;
+        private ObservableCollection<Package> packages = new ObservableCollection<Package>();
+        public ObservableCollection<Package> Packages
         {
             get => packages;
             set => SetProperty(ref packages, value);
@@ -96,7 +99,7 @@ namespace WsaAssistant.ViewModels
                     FileName = string.Empty,
                     Filter = FindChar("ApkFile")
                 };
-                if (!string.IsNullOrEmpty(SelectPackage.Content) && openFileDialog.ShowDialog() == true)
+                if (!string.IsNullOrEmpty(SelectPackage.PackageName) && openFileDialog.ShowDialog() == true)
                 {
                     if (Adb.Instance.Downgrade(openFileDialog.FileName))
                         MessageBox.Show(FindChar("DowngradeSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -112,7 +115,7 @@ namespace WsaAssistant.ViewModels
             RunOnUIThread(() =>
            {
                ShowLoading();
-               var packageName = SelectPackage?.Content;
+               var packageName = SelectPackage?.PackageName;
                if (!string.IsNullOrEmpty(packageName))
                {
                    if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
@@ -190,14 +193,30 @@ namespace WsaAssistant.ViewModels
             else
             {
                 AdbEnable = true;
-                var list = Adb.Instance.GetAll(condition);
-                foreach (var name in list)
-                {
-                    var item = new ListItem(name);
+                AllPackages = Adb.Instance.GetAll(condition);
+                foreach (var item in AllPackages)
                     Dispatcher.Invoke(() => { Packages.Add(item); });
-                }
             }
             HideLoading();
+        }
+        public void FilterPackages(bool userOnly)
+        {
+            try
+            {
+                Dispatcher.Invoke(() => { Packages.Clear(); });
+                if (userOnly)
+                {
+                    var array = AllPackages.Where(x => x.IsSystem == false);
+                    foreach (var obj in array)
+                        Dispatcher.Invoke(() => { Packages.Add(obj); });
+                }
+                else
+                {
+                    foreach (var item in AllPackages)
+                        Dispatcher.Invoke(() => { Packages.Add(item); });
+                }
+            }
+            catch { }
         }
         public override void Dispose()
         {

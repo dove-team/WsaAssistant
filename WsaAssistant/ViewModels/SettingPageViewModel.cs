@@ -22,13 +22,23 @@ namespace WsaAssistant.ViewModels
             get => hasClientUpdate;
             set => SetProperty(ref hasClientUpdate, value);
         }
+        public IAsyncRelayCommand WsaFixCommand { get; }
         public IAsyncRelayCommand UpdateWsaCommand { get; }
         public IAsyncRelayCommand UpdateClientCommand { get; }
         public SettingPageViewModel()
         {
+            WsaFixCommand = new AsyncRelayCommand(WsaFixAsync);
             UpdateWsaCommand = new AsyncRelayCommand(UpdateWsaAsync);
             UpdateClientCommand = new AsyncRelayCommand(UpdateClientAsync);
             Client.Instance.DownloadComplete += Instance_DownloadComplete;
+        }
+        private Task WsaFixAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                Adb.Instance.Excute("");
+            });
+            return Task.CompletedTask;
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {

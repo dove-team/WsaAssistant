@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using WsaAssistant.Libs.Model;
 
@@ -87,6 +88,7 @@ namespace WsaAssistant.Libs
                 {
                     AdbClient = new AdvancedAdbClient();
                     AdbClient.Connect(WsaIp);
+                    AdvancedAdbClient.SetEncoding(Encoding.ASCII);
                     Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
                 }
                 return Device != null;
@@ -158,26 +160,38 @@ namespace WsaAssistant.Libs
             }
             return false;
         }
-        public List<string> GetAll(string condition = "")
+        public List<Package> GetAll(string condition = "")
         {
             List<Package> packagesInfos = new List<Package>();
             try
             {
                 PackageManager manager = new PackageManager(AdbClient, Device);
                 var packages = manager.Packages.Where(x => string.IsNullOrEmpty(condition) ||
-                   x.Key.Contains(condition, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Key);
+                   x.Key.Contains(condition, StringComparison.CurrentCultureIgnoreCase));
                 foreach (var package in packages)
                 {
                     var packagesInfo = new Package(package);
                     packagesInfo.Init();
                     packagesInfos.Add(packagesInfo);
                 }
-                return packages.ToList();
+                return packagesInfos;
             }
             catch (Exception ex)
             {
                 LogManager.Instance.LogError("GetAll", ex);
-                return new List<string>();
+                return new List<Package>();
+            }
+        }
+        public void Excute(string command)
+        {
+            try
+            {
+                ConsoleOutputReceiver receiver = new ConsoleOutputReceiver();
+                AdbClient.ExecuteRemoteCommand(command, Device, receiver); 
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Excute", ex);
             }
         }
     }
