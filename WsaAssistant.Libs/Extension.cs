@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using WsaAssistant.Libs.Model;
@@ -9,6 +10,20 @@ namespace WsaAssistant.Libs
 {
     public static class Extension
     {
+        public static Bitmap ToBitmap(this string base64)
+        {
+            try
+            {
+                byte[] arr = Convert.FromBase64String(base64);
+                using var stream = new MemoryStream(arr);
+                return new Bitmap(stream);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("ToIcon", ex);
+            }
+            return null;
+        }
         public static bool ItemContains(this IEnumerable<string> source, string content)
         {
             int count = 0;
