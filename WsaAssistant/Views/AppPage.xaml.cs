@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace WsaAssistant.Views
 {
@@ -7,6 +8,11 @@ namespace WsaAssistant.Views
         public AppPage()
         {
             InitializeComponent();
+        }
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkState = ((CheckBox)sender).IsChecked;
+            ViewModel?.FilterPackages(checkState ?? false);
         }
     }
 }

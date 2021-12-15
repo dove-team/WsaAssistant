@@ -31,8 +31,16 @@ namespace WsaAssistant.Libs
         }
         public void Start()
         {
-            var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
-            Command.Instance.Excute(cmd, out _);
+            if (Running)
+            {
+                var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
+                Command.Instance.Excute(cmd, out _);
+            }
+        }
+        public async Task ReStart()
+        {
+            await Stop();
+            Start();
         }
         public bool HasFeature
         {
@@ -46,6 +54,14 @@ namespace WsaAssistant.Libs
                 }
                 return count == FeatureList.Count;
             }
+        }
+        public async Task Stop()
+        {
+            try
+            {
+                await Adb.Instance.Excute("shutdown -p", 200);
+            }
+            catch { }
         }
         public async Task<bool> HasUpdate()
         {

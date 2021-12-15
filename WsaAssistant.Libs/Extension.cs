@@ -7,7 +7,7 @@ using WsaAssistant.Libs.Model;
 
 namespace WsaAssistant.Libs
 {
-    public static class Ext
+    public static class Extension
     {
         public static bool ItemContains(this IEnumerable<string> source, string content)
         {

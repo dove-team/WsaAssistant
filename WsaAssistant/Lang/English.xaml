@@ -45,6 +45,7 @@
     <sys:String x:Key="NvidiaDesc">Nvidia GPU Drive for WSL</sys:String>
     <sys:String x:Key="UninstallSuccess">Uninstall Successful！</sys:String>
     <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>
+    <sys:String x:Key="WsaFix">Fix VirtWifi connection is limited</sys:String>
     <sys:String x:Key="OpenGLFailed">Insatll OpenGL Drive Failed!</sys:String>
     <sys:String x:Key="CreateDownloadFailed">Create Download Failed！</sys:String>
     <sys:String x:Key="DowngradeFailed">Downgrade installation failed！</sys:String>
