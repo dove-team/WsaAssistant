@@ -20,6 +20,7 @@ namespace WsaAssistant.Libs
                 return instance;
             }
         }
+        private const string OPENGL_PRODUCE_ID = "9nqpsl29bfff";
         public event BooleanHandler DownloadComplete;
         public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }
         private Drives()
@@ -65,7 +66,7 @@ namespace WsaAssistant.Libs
         {
             try
             {
-                var packages = await AppX.Instance.GetPackages("9nqpsl29bfff");
+                var packages = await AppX.Instance.GetPackages(OPENGL_PRODUCE_ID);
                 for (var idx = 0; idx < packages.Count; idx++)
                 {
                     var package = packages.ElementAt(idx);
