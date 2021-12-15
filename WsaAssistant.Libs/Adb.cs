@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using WsaAssistant.Libs.Model;
 
 namespace WsaAssistant.Libs
@@ -182,12 +183,13 @@ namespace WsaAssistant.Libs
                 return new List<Package>();
             }
         }
-        public void Excute(string command)
+        public async Task Excute(string command, int delay)
         {
             try
             {
                 ConsoleOutputReceiver receiver = new ConsoleOutputReceiver();
-                AdbClient.ExecuteRemoteCommand(command, Device, receiver); 
+                AdbClient.ExecuteRemoteCommand(command, Device, receiver);
+                await Task.Delay(delay);
             }
             catch (Exception ex)
             {

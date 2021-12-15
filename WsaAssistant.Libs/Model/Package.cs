@@ -6,7 +6,7 @@ namespace WsaAssistant.Libs.Model
 {
     public sealed class Package
     {
-        public Package(KeyValuePair<string, string> package)
+        internal Package(KeyValuePair<string, string> package)
         {
             Icons.Instance.Init();
             PackageName = package.Key;
@@ -16,7 +16,7 @@ namespace WsaAssistant.Libs.Model
         public Icon PackageIcon { get; set; }
         public string DisplayName { get; set; }
         public string PackageName { get; set; }
-        public void Init()
+        internal void Init()
         {
             try
             {
