@@ -13,7 +13,7 @@ namespace WsaAssistant.Libs.Model
             IsSystem = !package.Value.Contains("/data/app/", StringComparison.CurrentCultureIgnoreCase);
         }
         public bool IsSystem { get; set; }
-        public Icon PackageIcon { get; set; }
+        public Bitmap PackageIcon { get; set; }
         public string DisplayName { get; set; }
         public string PackageName { get; set; }
         internal void Init()
@@ -21,6 +21,8 @@ namespace WsaAssistant.Libs.Model
             try
             {
                 PackageIcon = Icons.Instance.GetDisplayIcon(PackageName);
+                if (PackageIcon == null)
+                    PackageIcon = Icons.Instance.Default;
                 DisplayName = Icons.Instance.GetDisplayName(PackageName);
                 if (string.IsNullOrEmpty(DisplayName))
                     DisplayName = PackageName;

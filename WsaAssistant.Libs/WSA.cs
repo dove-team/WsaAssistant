@@ -20,6 +20,7 @@ namespace WsaAssistant.Libs
                 return instance;
             }
         }
+        private const string WSA_PRODUCE_ID = "9p3395vx91nr";
         public List<string> FeatureList { get; }
         public event BooleanHandler DownloadComplete;
         public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }
@@ -68,7 +69,7 @@ namespace WsaAssistant.Libs
             bool hasNew = false;
             try
             {
-                var packages = await AppX.Instance.GetPackages("9p3395vx91nr");
+                var packages = await AppX.Instance.GetPackages(WSA_PRODUCE_ID);
                 foreach (var package in packages)
                 {
                     if (package.Key.Contains("windowssubsystemforandroid", StringComparison.CurrentCultureIgnoreCase))
@@ -179,7 +180,7 @@ namespace WsaAssistant.Libs
         }
         public async Task<Node<string, Uri, bool?, DownloadPackage>> GetFilePath()
         {
-            var packages = await AppX.Instance.GetPackages("9p3395vx91nr");
+            var packages = await AppX.Instance.GetPackages(WSA_PRODUCE_ID);
             foreach (var package in packages)
                 PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
             return PackageList;

@@ -18,10 +18,13 @@ namespace WsaAssistant.Converter
                 return default;
             else
             {
-                Icon icon = (Icon)value;
-                Bitmap bitmap = icon.ToBitmap();
-                IntPtr hBitmap = bitmap.GetHbitmap();
-                return Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                if (value is Bitmap bitmap)
+                {
+                    IntPtr hBitmap = bitmap.GetHbitmap();
+                    return Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+                else
+                    return value;
             }
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
