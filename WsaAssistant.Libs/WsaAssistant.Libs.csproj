@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Downloader" Version="2.3.0" />
+    <PackageReference Include="Downloader" Version="2.3.1" />
     <PackageReference Include="HandyControl" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
