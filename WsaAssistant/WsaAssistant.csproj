@@ -25,8 +25,12 @@
     <Resource Include="images\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="images\Icon.png" />
-    <Resource Include="images\loading.gif" />
+    <Resource Include="images\Icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="images\loading.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <ProjectReference Include="..\WsaAssistant.Libs\WsaAssistant.Libs.csproj" />
   </ItemGroup>
   <ItemGroup>
