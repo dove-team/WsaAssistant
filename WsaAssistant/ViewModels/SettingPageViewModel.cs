@@ -30,7 +30,6 @@ namespace WsaAssistant.ViewModels
             WsaFixCommand = new AsyncRelayCommand(WsaFixAsync);
             UpdateWsaCommand = new AsyncRelayCommand(UpdateWsaAsync);
             UpdateClientCommand = new AsyncRelayCommand(UpdateClientAsync);
-            Client.Instance.DownloadComplete += Instance_DownloadComplete;
         }
         private Task WsaFixAsync()
         {
@@ -53,28 +52,32 @@ namespace WsaAssistant.ViewModels
             });
             return Task.CompletedTask;
         }
-        private async void Instance_DownloadComplete(object sender, bool state)
+        private void Instance_DownloadComplete(object sender, bool state)
         {
-            if (!state)
+            RunOnUIThread(async () =>
             {
-                if (MessageBoxResult.Yes == MessageBox.Show(FindChar("ClientFailed"), FindChar("Tips"),
-                    MessageBoxButton.YesNo, MessageBoxImage.Error))
+                if (!state)
                 {
-                    LogManager.Instance.LogInfo("下载客户端异常，重试中！");
-                    await Client.Instance.Start();
+                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("ClientFailed"), FindChar("Tips"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Error))
+                    {
+                        LogManager.Instance.LogInfo("下载客户端异常，重试中！");
+                        await Client.Instance.Start();
+                    }
                 }
-            }
-            else
-            {
-                LogManager.Instance.LogInfo("下载客户端完成，开始安装！");
-                MessageBox.Show(FindChar("ClientSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                Client.Instance.Install();
-                Application.Current.Shutdown();
-            }
-            HideLoading();
+                else
+                {
+                    LogManager.Instance.LogInfo("下载客户端完成，开始安装！");
+                    MessageBox.Show(FindChar("ClientSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    Client.Instance.Install();
+                    Application.Current.Shutdown();
+                }
+                HideLoading();
+            });
         }
-        private  Task UpdateClientAsync()
+        private Task UpdateClientAsync()
         {
+            Client.Instance.DownloadComplete += Instance_DownloadComplete;
             RunOnUIThread(async () =>
             {
                 ShowLoading();
@@ -90,6 +93,7 @@ namespace WsaAssistant.ViewModels
         public void LoadAsync(object sender, EventArgs e)
         {
             Dispatcher = (sender as SettingPage).Dispatcher;
+            Dispose();
             RunOnUIThread(async () =>
             {
                 ShowLoading();
