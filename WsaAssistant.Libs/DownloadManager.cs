@@ -37,8 +37,8 @@ namespace WsaAssistant.Libs
                 BufferBlockSize = 10240,
                 ParallelDownload = true,
                 OnTheFlyDownload = false,
-                MaximumBytesPerSecond = 1024 * 1024,
                 MaxTryAgainOnFailover = int.MaxValue,
+                MaximumBytesPerSecond = long.MaxValue,
                 TempDirectory = Path.Combine(this.ProcessPath(), "temp"),
                 RequestConfiguration =
                 {
