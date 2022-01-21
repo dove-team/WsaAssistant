@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
@@ -21,7 +19,7 @@ namespace WsaAssistant
             if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
             {
                 MessageBox.Show("本程序需要管理员权限运行！", "提示", MessageBoxButton.OK, MessageBoxImage.Error);
-                Shutdown();
+                Current.Shutdown();
             }
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -36,11 +34,6 @@ namespace WsaAssistant
                 base.OnStartup(e);
                 LangManager.Instance.Init();
                 DownloadManager.Instance.Init(this.ProcessPath());
-                try
-                {
-                    Process.Start(Path.Combine(this.ProcessPath(), "WsaAssistant.Update.exe"));
-                }
-                catch { }
             }
             else
             {
