@@ -23,6 +23,7 @@
     <sys:String x:Key="WsaUpdate">Update WSA</sys:String>
     <sys:String x:Key="PackageList">Package List</sys:String>
     <sys:String x:Key="NotRunning">Not Running</sys:String>
+    <sys:String x:Key="InstallDisk">Install Location</sys:String>
     <sys:String x:Key="IntelName">Intel GPU Drive</sys:String>
     <sys:String x:Key="AmdName">AMD GPU Drive</sys:String>
     <sys:String x:Key="InstallFailed">Install Failed！</sys:String>

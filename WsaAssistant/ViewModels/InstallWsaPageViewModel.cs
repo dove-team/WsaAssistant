@@ -24,11 +24,19 @@ namespace WsaAssistant.ViewModels
         public IAsyncRelayCommand OfflineCommand { get; }
         public InstallWsaPageViewModel()
         {
+            InitDisk();
             RreshCommand = new AsyncRelayCommand(RreshAsync);
             InstallCommand = new AsyncRelayCommand(InstallAsync);
             OfflineCommand = new AsyncRelayCommand(OfflineAsync);
             WSA.Instance.DownloadComplete += Instance_DownloadComplete;
             DownloadManager.Instance.ProcessChange += Downloader_ProcessChange;
+        }
+        private void InitDisk()
+        {
+            Disks.Clear();
+            var disks = WSA.Instance.GetDiskList();
+            foreach (var disk in disks)
+                Disks.Add(disk);
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
@@ -60,6 +68,18 @@ namespace WsaAssistant.ViewModels
         {
             get => packages;
             set => SetProperty(ref packages, value);
+        }
+        private ObservableCollection<string> disks = new ObservableCollection<string>();
+        public ObservableCollection<string> Disks
+        {
+            get => disks;
+            set => SetProperty(ref disks, value);
+        }
+        private int diskIndex = 0;
+        public int DiskIndex
+        {
+            get => diskIndex;
+            set => SetProperty(ref diskIndex, value);
         }
         private bool timeoutEnable = true;
         public bool TimeoutEnable
@@ -97,8 +117,14 @@ namespace WsaAssistant.ViewModels
                         try
                         {
                             StringBuilder shellBuilder = new StringBuilder();
+                            var diskName = Disks.ElementAt(DiskIndex);
                             foreach (var f in files)
-                                shellBuilder.AppendLine($"Add-AppxPackage {f} -ForceApplicationShutdown");
+                            {
+                                string location = string.Empty;
+                                if (!f.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
+                                    location = $" -ExternalLocation {diskName}";
+                                shellBuilder.AppendLine($"Add-AppxPackage {f} -ForceApplicationShutdown {location}");
+                            }
                             Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                             Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                             var file = "install.ps1";
@@ -170,8 +196,14 @@ namespace WsaAssistant.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
+                var diskName = Disks.ElementAt(DiskIndex);
                 foreach (Tuple<string, Uri, bool?, DownloadPackage> package in WSA.Instance.PackageList)
-                    shellBuilder.AppendLine($"Add-AppxPackage {package.Item1} -ForceApplicationShutdown");
+                {
+                    string filePath = package.Item1, location = string.Empty;
+                    if (!filePath.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
+                        location = $" -ExternalLocation {diskName}";
+                    shellBuilder.AppendLine($"Add-AppxPackage {filePath} -ForceApplicationShutdown -ExternalLocation {diskName}");
+                }
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                 var file = "install.ps1";
