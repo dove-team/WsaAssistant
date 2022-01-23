@@ -21,6 +21,7 @@ namespace WsaAssistant.Libs
             }
         }
         private const string WSA_PRODUCE_ID = "9p3395vx91nr";
+        public const string WSA_DEPENDENCE = "8wekyb3d8bbwe";
         public List<string> FeatureList { get; }
         public event BooleanHandler DownloadComplete;
         public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }
@@ -177,6 +178,21 @@ namespace WsaAssistant.Libs
                     DownloadComplete?.Invoke(this, count == PackageList.Count);
                 }
             }
+        }
+        public List<string> GetDiskList()
+        {
+            List<string> diskList = new List<string>();
+            try
+            {
+                var disks = DriveInfo.GetDrives();
+                foreach (var disk in disks)
+                    diskList.Add(disk.Name);
+            }
+            catch
+            {
+                diskList.Add("C:\\");
+            }
+            return diskList;
         }
         public async Task<Node<string, Uri, bool?, DownloadPackage>> GetFilePath()
         {

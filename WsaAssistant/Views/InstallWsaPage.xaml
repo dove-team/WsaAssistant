@@ -36,6 +36,8 @@
                     <Run Text="{Binding ProcessVal,UpdateSourceTrigger=PropertyChanged}" />
                     <Run Text="%" />
                 </TextBlock>
+                <TextBlock Text="{DynamicResource InstallDisk}" Margin="0,24,0,0" />
+                <ComboBox Margin="0,24,0,0" ItemsSource="{Binding Disks}" SelectedIndex="{Binding DiskIndex}" />
                 <Button IsEnabled="{Binding InstallEnable}" Style="{StaticResource ButtonPrimary}" Command="{Binding InstallCommand}" Content="{DynamicResource Install}" Width="100" Margin="0,24,0,0" />
                 <Button Command="{Binding RreshCommand}" Content="{DynamicResource Refresh}" Width="100" Margin="0,24,0,0" />
             </StackPanel>
