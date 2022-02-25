@@ -12,6 +12,7 @@
     <sys:String x:Key="Installed">Installed</sys:String>
     <sys:String x:Key="Checking">Checking</sys:String>
     <sys:String x:Key="ExitApp">Exit App?</sys:String>
+    <sys:String x:Key="WsaReset">Reset WSA</sys:String>
     <sys:String x:Key="Offline">offline install</sys:String>
     <sys:String x:Key="NotRegist">Not Regist</sys:String>
     <sys:String x:Key="NotInstall">Not Install</sys:String>

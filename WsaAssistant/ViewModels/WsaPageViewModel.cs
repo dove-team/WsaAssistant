@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -206,8 +207,8 @@ namespace WsaAssistant.ViewModels
         }
         private void UpdateRegist()
         {
-            using DB db = new DB();
-            if (db.GetData<object>("menu", out _))
+            RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open");
+            if (registryKey != null)
             {
                 RegistStatus = FindChar("Regist");
                 HasRegist = Visibility.Visible;

@@ -20,6 +20,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Border Padding="6" BorderBrush="Gray" BorderThickness="1">
                 <Grid Height="42">
@@ -69,6 +70,22 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaFix}" />
                     <Button Grid.Column="2" Grid.RowSpan="2" Command="{Binding WsaFixCommand}"  Content="{DynamicResource Install}" />
+                </Grid>
+            </Border>
+            <Border Grid.Row="3" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
+                <Grid Height="42">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="28" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaReset}" />
+                    <Button Grid.Column="2" Grid.RowSpan="2" Command="{Binding WsaResetCommand}"  Content="{DynamicResource Install}" />
                 </Grid>
             </Border>
         </Grid>

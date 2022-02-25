@@ -39,6 +39,14 @@ namespace WsaAssistant.Libs
                 Command.Instance.Excute(cmd, out _);
             }
         }
+        public void Reset()
+        {
+            try
+            {
+                Command.Instance.Shell("Get-AppxPackage *WindowsSubsystemForAndroid*|Reset-AppxPackage", out _);
+            }
+            catch { }
+        }
         public async Task ReStart()
         {
             await Stop();

@@ -19,6 +19,7 @@
     <sys:String x:Key="NotRunning">未运行</sys:String>
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
+    <sys:String x:Key="WsaReset">重置WSA</sys:String>
     <sys:String x:Key="WsaUpdate">更新WSA</sys:String>
     <sys:String x:Key="OperaFailed">操作失败!</sys:String>
     <sys:String x:Key="OperaSuccess">操作成功!</sys:String>

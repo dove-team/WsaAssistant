@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using WsaAssistant.Libs;
 
 namespace WsaAssistant.ViewModels
 {
@@ -54,7 +55,10 @@ namespace WsaAssistant.ViewModels
                     {
                         action?.Invoke();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        LogManager.Instance.LogError("RunOnUIThread", ex);
+                    }
                 });
             });
         }
@@ -68,7 +72,10 @@ namespace WsaAssistant.ViewModels
                     {
                         await func?.Invoke();
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        LogManager.Instance.LogError("RunOnUIThread", ex);
+                    }
                 });
             });
         }
