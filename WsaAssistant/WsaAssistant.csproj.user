@@ -38,6 +38,9 @@
     <Page Update="Lang\English.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Lang\Russian.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainFrame.xaml">

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>1.4.5</Version>
+		<Version>1.4.6</Version>
 		<UseWPF>True</UseWPF>
 		<Authors>michael_eddy</Authors>
 		<OutputType>WinExe</OutputType>

@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Tips">намекать</sys:String>
+    <sys:String x:Key="Close">закрытие</sys:String>
+    <sys:String x:Key="Start">запускать</sys:String>
+    <sys:String x:Key="Install">Установить</sys:String>
+    <sys:String x:Key="Refresh">обновить</sys:String>
+    <sys:String x:Key="Remove">удалить</sys:String>
+    <sys:String x:Key="Regist">зарегистрирован</sys:String>
+    <sys:String x:Key="Running">Бег</sys:String>
+    <sys:String x:Key="Checking">проверка</sys:String>
+    <sys:String x:Key="Offline">Автономная установка</sys:String>
+    <sys:String x:Key="Installed">Он был установлен</sys:String>
+    <sys:String x:Key="Downgrade">понизить рейтинг</sys:String>
+    <sys:String x:Key="NotRegist">незарегистрированный</sys:String>
+    <sys:String x:Key="NotInstall">незарегистрированный</sys:String>
+    <sys:String x:Key="InstallDisk">Место установки</sys:String>
+    <sys:String x:Key="NotRunning">не бегать</sys:String>
+    <sys:String x:Key="SearchContent">поиск</sys:String>
+    <sys:String x:Key="AppName">WSAпомощник</sys:String>
+    <sys:String x:Key="WsaReset">сброс настроек WSA</sys:String>
+    <sys:String x:Key="WsaUpdate">возобновить WSA</sys:String>
+    <sys:String x:Key="OperaFailed">операция не удалась!</sys:String>
+    <sys:String x:Key="OperaSuccess">Успешная операция!</sys:String>
+    <sys:String x:Key="ExitApp">Выход?</sys:String>
+    <sys:String x:Key="UninstallTips">Удалять ли</sys:String>
+    <sys:String x:Key="ApkFile">APKдокумент|*.apk</sys:String>
+    <sys:String x:Key="PackageList">Приложения установлены</sys:String>
+    <sys:String x:Key="InstallFailed">установка не удалась！</sys:String>
+    <sys:String x:Key="SearchPackage">поисковый пакет：</sys:String>
+    <sys:String x:Key="RegistApk">Быстрая установкаAPK</sys:String>
+    <sys:String x:Key="IntelName">Графический драйверIntel</sys:String>
+    <sys:String x:Key="AmdName">Графический драйверAMD</sys:String>
+    <sys:String x:Key="ClientUpdate">обновить клиент</sys:String>
+    <sys:String x:Key="InstallSuccess">Успешная установка！</sys:String>
+    <sys:String x:Key="UninstallFailed">Ошибка удаления！</sys:String>
+    <sys:String x:Key="UpdateDesc">Обновите до последней версии</sys:String>
+    <sys:String x:Key="WsaStatus">Подсреда Android</sys:String>
+    <sys:String x:Key="DependencyList">Список инсталляционных пакетов</sys:String>
+    <sys:String x:Key="UninstallSuccess">Удаление успешно!</sys:String>
+    <sys:String x:Key="DownloadProcess">Ход загрузки:</sys:String>
+    <sys:String x:Key="NvidiaName">Драйвер видеокарты Nvidia</sys:String>
+    <sys:String x:Key="FeatureStatus">Среда Windows</sys:String>
+    <sys:String x:Key="WsaFix">Исправить ограниченное соединение VirtWifi</sys:String>
+    <sys:String x:Key="WsaRuning">Статус подсреды Android</sys:String>
+    <sys:String x:Key="OpenGLSuccess">Пакет совместимости успешно установлен!</sys:String>
+    <sys:String x:Key="ClientFailed">Ошибка загрузки обновления клиента!</sys:String>
+    <sys:String x:Key="DowngradeFailed">Не удалось установить более раннюю версию!</sys:String>
+    <sys:String x:Key="DowngradeSuccess">Установка более ранней версии прошла успешно!</sys:String>
+    <sys:String x:Key="OpenGLFailed">Не удалось установить драйвер OpenGL!</sys:String>
+    <sys:String x:Key="NeedWsa">WSA не установлен, установите и повторите попытку!</sys:String>
+    <sys:String x:Key="IntelDesc">Драйвер графического процессора для Intel WSL</sys:String>
+    <sys:String x:Key="AmdDesc">Драйвер графического процессора для AMD WSL</sys:String>
+    <sys:String x:Key="CreateDownloadFailed">Создать загрузку не удалось!</sys:String>
+    <sys:String x:Key="DevlopTips">Пожалуйста, проверьте, включен ли режим разработчика!</sys:String>
+    <sys:String x:Key="NvidiaDesc">Драйвер графического процессора для Nvidia WSL</sys:String>
+    <sys:String x:Key="OpenGLDFailed">Загрузка установочного пакета не удалась! Хотите попробовать еще раз?</sys:String>
+    <sys:String x:Key="OpenGLName">Пакет совместимости OpenCL™ и OpenGL®</sys:String>
+    <sys:String x:Key="WsaStatusDesc">Необходимо установить подсреду Android и зависимости</sys:String>
+    <sys:String x:Key="WsaRuningDesc">Текущий статус установленной подсреды Android</sys:String>
+    <sys:String x:Key="WsaSuccess">Поздравляем, похоже, среда WSA теперь в порядке!</sys:String>
+    <sys:String x:Key="WsaFailed">Похоже, установка среды WSA не удалась, установите ее перед использованием!</sys:String>
+    <sys:String x:Key="ClientSuccess">Загрузите обновление клиента успешно, программа завершит установку!</sys:String>
+    <sys:String x:Key="FeatureStatusDesc">Платформа виртуальной машины и платформа гипервизора Windows должны быть включены.</sys:String>
+    <sys:String x:Key="RegistApkDesc">Дважды щелкните или щелкните правой кнопкой мыши зарегистрированный APK-файл, чтобы установить его в подсреду Android.</sys:String>
+    <sys:String x:Key="DownloadDriveFailed">Не удалось загрузить драйвер, повторите попытку позже! Или перейдите на страницу {0}, чтобы загрузить установочный пакет.</sys:String>
+    <sys:String x:Key="OpenGLDesc">Поддерживаемые приложения будут работать с аппаратным ускорением для повышения производительности.</sys:String>
+    <sys:String x:Key="WsaPackageFailed">Произошло исключение, и получение пакета среды WSA завершилось неудачно! Пожалуйста, нажмите кнопку обновления, чтобы повторить попытку!</sys:String>
+    <sys:String x:Key="RebootTips">Для завершения операции требуется перезагрузка системы! (Перезагрузите систему в течение 10 секунд после подтверждения, сохраните данные и перезапустите!!!)</sys:String>
+    <sys:String x:Key="AboutContent" xml:space="preserve">    WSA Ассистент — это инструмент, который помогает пользователям установить подсистему Windows для Android, избегая среды, необходимой для сложных операций, для установки одним щелчком мыши, чтобы ваше устройство могло начать работать с приложениями Android (далее WSA) на компьютере. .
+     Это приложение также включает в себя управление приложениями APK, быструю установку приложения APK (после регистрации его можно установить непосредственно в WSA, дважды щелкнув файл APK или контекстное меню), драйвер графического процессора и функции установки пакета совместимости, которые могут улучшить работу. Удобство и эффективность WSA.
+     Если есть последняя версия WSA, приложение также автоматически обнаружит и напомнит вам, доступна ли новая версия, когда вы запускаете приложение! Вы можете обновлять в соответствии с вашими потребностями, конечно, рекомендуется своевременно обновлять до последней версии для лучшего опыта!
+     В то же время это приложение также может автоматически определять последнюю версию программного обеспечения и напоминать вам, что доступна новая версия.Если вы решите обновить, приложение автоматически загрузит последнюю версию и предложит вам обновить ее при выходе из приложения! Это не повлияет на ваше использование в середине！</sys:String>
+</ResourceDictionary>
