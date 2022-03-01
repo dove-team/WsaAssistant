@@ -3,6 +3,7 @@
     public enum LangType
     {
         Chinese,
+        Russian,
         English
     }
 }

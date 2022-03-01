@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WsaAssistant"
-!define PRODUCT_VERSION "1.4.4"
+!define PRODUCT_VERSION "1.4.6"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WsaAssistant.exe"
@@ -55,6 +55,9 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   File "Publish\x64\Accessibility.dll"
   File "Publish\x64\adb.exe"
+  CreateDirectory "$SMPROGRAMS\WsaAssistant"
+  CreateShortCut "$SMPROGRAMS\WsaAssistant\WsaAssistant.lnk" "$INSTDIR\WsaAssistant.exe"
+  CreateShortCut "$DESKTOP\WsaAssistant.lnk" "$INSTDIR\WsaAssistant.exe"
   File "Publish\x64\AdbWinApi.dll"
   File "Publish\x64\AdbWinUsbApi.dll"
   File "Publish\x64\AdvancedSharpAdbClient.dll"
@@ -258,7 +261,7 @@ Section "MainSection" SEC01
   File "Publish\x64\Microsoft.Windows.SDK.NET.dll"
   File "Publish\x64\Microsoft.Xaml.Behaviors.dll"
   File "Publish\x64\mscordaccore.dll"
-  File "Publish\x64\mscordaccore_amd64_amd64_6.0.121.56705.dll"
+  File "Publish\x64\mscordaccore_amd64_amd64_6.0.222.6406.dll"
   File "Publish\x64\mscordbi.dll"
   File "Publish\x64\mscorlib.dll"
   File "Publish\x64\mscorrc.dll"
@@ -568,9 +571,6 @@ Section "MainSection" SEC01
   File "Publish\x64\WsaAssistant.deps.json"
   File "Publish\x64\WsaAssistant.dll"
   File "Publish\x64\WsaAssistant.exe"
-  CreateDirectory "$SMPROGRAMS\WsaAssistant"
-  CreateShortCut "$SMPROGRAMS\WsaAssistant\WsaAssistant.lnk" "$INSTDIR\WsaAssistant.exe"
-  CreateShortCut "$DESKTOP\WsaAssistant.lnk" "$INSTDIR\WsaAssistant.exe"
   File "Publish\x64\WsaAssistant.Libs.deps.json"
   File "Publish\x64\WsaAssistant.Libs.dll"
   File "Publish\x64\WsaAssistant.runtimeconfig.json"
@@ -983,7 +983,7 @@ Section Uninstall
   Delete "$INSTDIR\mscorrc.dll"
   Delete "$INSTDIR\mscorlib.dll"
   Delete "$INSTDIR\mscordbi.dll"
-  Delete "$INSTDIR\mscordaccore_amd64_amd64_6.0.121.56705.dll"
+  Delete "$INSTDIR\mscordaccore_amd64_amd64_6.0.222.6406.dll"
   Delete "$INSTDIR\mscordaccore.dll"
   Delete "$INSTDIR\Microsoft.Xaml.Behaviors.dll"
   Delete "$INSTDIR\Microsoft.Windows.SDK.NET.dll"
@@ -1181,11 +1181,9 @@ Section Uninstall
   Delete "$INSTDIR\wsa_tools_log\*"
   Delete "$INSTDIR\*.appx"
   Delete "$INSTDIR\*.Msixbundle"
-
   Delete "$SMPROGRAMS\WsaAssistant\Uninstall.lnk"
   Delete "$DESKTOP\WsaAssistant.lnk"
   Delete "$SMPROGRAMS\WsaAssistant\WsaAssistant.lnk"
-
   RMDir "$INSTDIR\temp"
   RMDir "$INSTDIR\wsa_tools_log"
   RMDir "$SMPROGRAMS\WsaAssistant"
@@ -1203,7 +1201,6 @@ Section Uninstall
   RMDir "$INSTDIR\de"
   RMDir "$INSTDIR\cs"
   RMDir "$INSTDIR"
-
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
   SetAutoClose true

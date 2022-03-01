@@ -3,8 +3,13 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="Tips">Tips</sys:String>
     <sys:String x:Key="Close">Close</sys:String>
+    <sys:String x:Key="Apps">Apps</sys:String>
+    <sys:String x:Key="Env">Environment</sys:String>
+    <sys:String x:Key="About">About</sys:String>
+    <sys:String x:Key="Drives">Drives</sys:String>
     <sys:String x:Key="Start">Start</sys:String>
     <sys:String x:Key="Regist">Regist</sys:String>
+    <sys:String x:Key="Setting">Setting</sys:String>
     <sys:String x:Key="Install">Install</sys:String>
     <sys:String x:Key="Refresh">Refresh</sys:String>
     <sys:String x:Key="Remove">Remove</sys:String>
@@ -12,6 +17,7 @@
     <sys:String x:Key="Installed">Installed</sys:String>
     <sys:String x:Key="Checking">Checking</sys:String>
     <sys:String x:Key="ExitApp">Exit App?</sys:String>
+    <sys:String x:Key="WsaReset">Reset WSA</sys:String>
     <sys:String x:Key="Offline">offline install</sys:String>
     <sys:String x:Key="NotRegist">Not Regist</sys:String>
     <sys:String x:Key="NotInstall">Not Install</sys:String>
@@ -48,6 +54,7 @@
     <sys:String x:Key="UninstallTips">Are you sure to uninstall</sys:String>
     <sys:String x:Key="WsaFix">Fix VirtWifi connection is limited</sys:String>
     <sys:String x:Key="OpenGLFailed">Insatll OpenGL Drive Failed!</sys:String>
+    <sys:String x:Key="ShowUseOnly">Display user apps Only</sys:String>
     <sys:String x:Key="CreateDownloadFailed">Create Download Failed！</sys:String>
     <sys:String x:Key="DowngradeFailed">Downgrade installation failed！</sys:String>
     <sys:String x:Key="OpenGLSuccess">Compatibility Pack Install Successful！</sys:String>

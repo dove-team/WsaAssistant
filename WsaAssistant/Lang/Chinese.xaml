@@ -3,7 +3,12 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="Tips">提示</sys:String>
     <sys:String x:Key="Close">关闭</sys:String>
+    <sys:String x:Key="Env">环境</sys:String>
+    <sys:String x:Key="Apps">应用</sys:String>
+    <sys:String x:Key="Drives">驱动</sys:String>
+    <sys:String x:Key="About">关于</sys:String>
     <sys:String x:Key="Start">启动</sys:String>
+    <sys:String x:Key="Setting">设置</sys:String>
     <sys:String x:Key="Install">安装</sys:String>
     <sys:String x:Key="Refresh">刷新</sys:String>
     <sys:String x:Key="Remove">卸载</sys:String>
@@ -19,6 +24,7 @@
     <sys:String x:Key="NotRunning">未运行</sys:String>
     <sys:String x:Key="SearchContent">搜索</sys:String>
     <sys:String x:Key="AppName">WSA助手</sys:String>
+    <sys:String x:Key="WsaReset">重置WSA</sys:String>
     <sys:String x:Key="WsaUpdate">更新WSA</sys:String>
     <sys:String x:Key="OperaFailed">操作失败!</sys:String>
     <sys:String x:Key="OperaSuccess">操作成功!</sys:String>
@@ -38,6 +44,7 @@
     <sys:String x:Key="WsaStatus">Android子环境</sys:String>
     <sys:String x:Key="DependencyList">安装包列表</sys:String>
     <sys:String x:Key="UninstallSuccess">卸载成功！</sys:String>
+    <sys:String x:Key="ShowUseOnly">仅显示用户程序</sys:String>
     <sys:String x:Key="DownloadProcess">下载进度：</sys:String>
     <sys:String x:Key="NvidiaName">Nvidia显卡驱动</sys:String>
     <sys:String x:Key="FeatureStatus">Windows环境</sys:String>

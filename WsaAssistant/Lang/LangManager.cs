@@ -24,8 +24,13 @@ namespace WsaAssistant
         public LangType Current { get; private set; } = LangType.Chinese;
         public void Init()
         {
-            if (!CultureInfo.CurrentCulture.Name.Contains("zh", StringComparison.CurrentCultureIgnoreCase))
-                Switch(LangType.English);
+            var cultureName = CultureInfo.CurrentCulture.Name;
+            if (!cultureName.Contains("zh", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var langType = (cultureName.Contains("ru") || cultureName.Contains("be"))
+                    ? LangType.Russian : LangType.English;
+                Switch(langType);
+            }
             else
                 Resource = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x =>
                 x.Source.ToString().Contains(Current.ToString(), StringComparison.CurrentCultureIgnoreCase));
@@ -49,6 +54,7 @@ namespace WsaAssistant
                 {
                     var resourceDictionary = Application.Current.Resources.MergedDictionaries.FirstOrDefault(x =>
                     x.Source.ToString().Contains("Chinese", StringComparison.CurrentCultureIgnoreCase) ||
+                   x.Source.ToString().Contains("Russian", StringComparison.CurrentCultureIgnoreCase) ||
                    x.Source.ToString().Contains("English", StringComparison.CurrentCultureIgnoreCase));
                     if (resourceDictionary != null)
                         Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);

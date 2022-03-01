@@ -27,11 +27,11 @@
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" IsEnabled="{Binding MenuEnable}">
-            <Button Click="Navigate_Click" CommandParameter="wsa">环境</Button>
-            <Button Click="Navigate_Click" CommandParameter="drive" Margin="0,8,0,0">驱动</Button>
-            <Button Click="Navigate_Click" CommandParameter="app" Margin="0,8,0,0">应用</Button>
-            <Button Click="Navigate_Click" CommandParameter="setting" Margin="0,8,0,0">设置</Button>
-            <Button Click="Navigate_Click" CommandParameter="about" Margin="0,8,0,0">关于</Button>
+            <Button Click="Navigate_Click" CommandParameter="wsa" Content="{DynamicResource Env}" />
+            <Button Click="Navigate_Click" CommandParameter="drive" Margin="0,8,0,0" Content="{DynamicResource Drives}" />
+            <Button Click="Navigate_Click" CommandParameter="app" Margin="0,8,0,0" Content="{DynamicResource Apps}" />
+            <Button Click="Navigate_Click" CommandParameter="setting" Margin="0,8,0,0" Content="{DynamicResource Setting}" />
+            <Button Click="Navigate_Click" CommandParameter="about" Margin="0,8,0,0" Content="{DynamicResource About}" />
             <Button Click="Navigate_Click" CommandParameter="exit" Margin="0,8,0,0" Content="{DynamicResource Close}" />
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="1" >

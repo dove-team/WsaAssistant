@@ -23,13 +23,25 @@ namespace WsaAssistant.ViewModels
             set => SetProperty(ref hasClientUpdate, value);
         }
         public IAsyncRelayCommand WsaFixCommand { get; }
+        public IAsyncRelayCommand WsaResetCommand { get; }
         public IAsyncRelayCommand UpdateWsaCommand { get; }
         public IAsyncRelayCommand UpdateClientCommand { get; }
         public SettingPageViewModel()
         {
             WsaFixCommand = new AsyncRelayCommand(WsaFixAsync);
+            WsaResetCommand = new AsyncRelayCommand(WsaResetAsync);
             UpdateWsaCommand = new AsyncRelayCommand(UpdateWsaAsync);
             UpdateClientCommand = new AsyncRelayCommand(UpdateClientAsync);
+        }
+        private Task WsaResetAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                if (WSA.Instance.HasWsa)
+                    WSA.Instance.Reset();
+                MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+            });
+            return Task.CompletedTask;
         }
         private Task WsaFixAsync()
         {
