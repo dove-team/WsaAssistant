@@ -47,7 +47,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Center" Text="{DynamicResource SearchPackage}" />
-            <CheckBox Grid.Row="1" Content="仅显示用户程序" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Margin="0,12,0,0" />
+            <CheckBox Grid.Row="1" Content="{DynamicResource ShowUseOnly}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Margin="0,12,0,0" />
             <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" Grid.Row="2" Margin="0,12,0,0" />
             <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" 
                     Command="{Binding SearchCommand}" />
