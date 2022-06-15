@@ -33,7 +33,7 @@ namespace WsaAssistant.ViewModels
             get => selectPackage;
             set => SetProperty(ref selectPackage, value);
         }
-        private List<Package> AllPackages;
+        private List<Package> AllPackages = new List<Package>();
         private ObservableCollection<Package> packages = new ObservableCollection<Package>();
         public ObservableCollection<Package> Packages
         {
@@ -46,6 +46,9 @@ namespace WsaAssistant.ViewModels
         public IAsyncRelayCommand InstallApkCommand { get; }
         public IAsyncRelayCommand DowngradeCommand { get; }
         public IAsyncRelayCommand UninstallApkCommand { get; }
+        public IAsyncRelayCommand StartCommand { get; }
+
+
         public AppPageViewModel()
         {
             SearchCommand = new AsyncRelayCommand(SearchAsync);
@@ -54,6 +57,7 @@ namespace WsaAssistant.ViewModels
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
+            StartCommand = new AsyncRelayCommand(StartAsync);
         }
         public void LoadAsync(object sender, EventArgs e)
         {
@@ -110,6 +114,22 @@ namespace WsaAssistant.ViewModels
             });
             return Task.CompletedTask;
         }
+
+        private Task StartAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                ShowLoading();
+                var packageName = SelectPackage?.PackageName;
+                if (!string.IsNullOrEmpty(packageName))
+                {
+                    Adb.Instance.StartApp(packageName);
+                }
+                HideLoading();
+            });
+            return Task.CompletedTask;
+        }
+
         private Task UninstallApkAsync()
         {
             RunOnUIThread(() =>

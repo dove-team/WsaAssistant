@@ -17,7 +17,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="54" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border Grid.Row="0" Grid.ColumnSpan="2" Margin="24,0">
@@ -26,13 +26,13 @@
                 <TextBlock VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Text="{DynamicResource AppName}" Margin="24,0,0,0" />
             </StackPanel>
         </Border>
-        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" IsEnabled="{Binding MenuEnable}">
-            <Button Click="Navigate_Click" CommandParameter="wsa" Content="{DynamicResource Env}" />
-            <Button Click="Navigate_Click" CommandParameter="drive" Margin="0,8,0,0" Content="{DynamicResource Drives}" />
-            <Button Click="Navigate_Click" CommandParameter="app" Margin="0,8,0,0" Content="{DynamicResource Apps}" />
-            <Button Click="Navigate_Click" CommandParameter="setting" Margin="0,8,0,0" Content="{DynamicResource Setting}" />
-            <Button Click="Navigate_Click" CommandParameter="about" Margin="0,8,0,0" Content="{DynamicResource About}" />
-            <Button Click="Navigate_Click" CommandParameter="exit" Margin="0,8,0,0" Content="{DynamicResource Close}" />
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5 0" MinWidth="50" IsEnabled="{Binding MenuEnable}">
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="wsa" Margin="0,3,0,0"  Content="{DynamicResource Env}" />
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="drive" Margin="0,8,0,0" Content="{DynamicResource Drives}" />
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="app" Margin="0,8,0,0" Content="{DynamicResource Apps}" />
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="setting" Margin="0,8,0,0" Content="{DynamicResource Setting}" />
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="about" Margin="0,8,0,0" Content="{DynamicResource About}" />
+            <Button Click="Navigate_Click" HorizontalAlignment="Stretch" CommandParameter="exit" Margin="0,8,0,0" Content="{DynamicResource Close}" />
         </StackPanel>
         <Grid Grid.Row="1" Grid.Column="1" >
             <Grid.RowDefinitions>
