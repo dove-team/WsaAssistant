@@ -24,6 +24,7 @@ namespace WsaAssistant.Libs
             {
                 LogManager.Instance.LogInfo("shell:" + cmd);
                 var process = new Process();
+                process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
@@ -46,6 +47,7 @@ namespace WsaAssistant.Libs
             try
             {
                 Process process = new Process();
+                process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.FileName = "cmd.exe";
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardOutput = true;
@@ -74,6 +76,7 @@ namespace WsaAssistant.Libs
                 var total = cmds.Count();
                 Process process = new Process();
                 process.StartInfo.FileName = "cmd.exe";
+                process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;

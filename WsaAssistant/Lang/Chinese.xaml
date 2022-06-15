@@ -8,8 +8,10 @@
     <sys:String x:Key="Drives">驱动</sys:String>
     <sys:String x:Key="About">关于</sys:String>
     <sys:String x:Key="Start">启动</sys:String>
+    <sys:String x:Key="OpenWsaSetting">打开Wsa设置</sys:String>
     <sys:String x:Key="Setting">设置</sys:String>
     <sys:String x:Key="Install">安装</sys:String>
+    <sys:String x:Key="UnInstall">卸载</sys:String>
     <sys:String x:Key="Refresh">刷新</sys:String>
     <sys:String x:Key="Remove">卸载</sys:String>
     <sys:String x:Key="Regist">已注册</sys:String>

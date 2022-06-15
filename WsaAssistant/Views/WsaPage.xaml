@@ -35,8 +35,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource FeatureStatus}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource FeatureStatusDesc}" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasFeature}" Text="{Binding FeatureStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallFeature}" Command="{Binding InstallFeatureCommand}" Content="{DynamicResource Install}" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasFeature}" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" MinWidth="80" Text="{Binding FeatureStatus}" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallFeature}" Command="{Binding InstallFeatureCommand}" MinWidth="80"  Content="{DynamicResource Install}" />
             </Grid>
         </Border>
         <Border Grid.Row="1" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -53,8 +53,9 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaStatus}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource WsaStatusDesc}" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasWsa}" Text="{Binding WsaStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallWsa}" Command="{Binding InstallWsaCommand}"  Content="{DynamicResource Install}" />
+                <Button Grid.Column="2" Grid.RowSpan="2"  Visibility="{Binding HasWsa}"  Command="{Binding OpenWsaCommand}"  MinWidth="80"  Content="{DynamicResource OpenWsaSetting}" />
+                <!--<TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasWsa}" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" MinWidth="80" Text="{Binding WsaStatus}" />-->
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallWsa}" Command="{Binding InstallWsaCommand}"  MinWidth="80"  Content="{DynamicResource Install}" />
             </Grid>
         </Border>
         <Border Grid.Row="2" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -71,8 +72,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource WsaRuning}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource WsaRuningDesc}" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding WsaRuning}" Text="{Binding WsaRunStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding StartWsa}" Command="{Binding StartWsaCommand}" Content="{DynamicResource Start}" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding WsaRuning}" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" MinWidth="80"  Text="{Binding WsaRunStatus}" />
+                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding StartWsa}" Command="{Binding StartWsaCommand}" MinWidth="80"  Content="{DynamicResource Start}" />
             </Grid>
         </Border>
         <Border Grid.Row="3" Padding="6" BorderBrush="Gray" BorderThickness="1" Margin="0,12,0,0">
@@ -81,7 +82,7 @@
                     <ColumnDefinition Width="28" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="28" />
+                    <ColumnDefinition Width="28"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -89,8 +90,10 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource RegistApk}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource RegistApkDesc}" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding HasRegist}" Text="{Binding RegistStatus}" />
-                <Button Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding InstallRegist}" Command="{Binding RegistCommand}" Content="{DynamicResource Install}" />
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.RowSpan="2">
+                    <Button   Visibility="{Binding InstallRegist}" Command="{Binding RegistCommand}" MinWidth="80" Content="{DynamicResource Install}" />
+                    <Button   Visibility="{Binding UnInstallRegist}" Command="{Binding UnRegistCommand}" MinWidth="80"  Content="{DynamicResource UnInstall}" />
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

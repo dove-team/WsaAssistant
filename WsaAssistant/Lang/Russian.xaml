@@ -7,7 +7,9 @@
     <sys:String x:Key="Apps">Программы</sys:String>
     <sys:String x:Key="Setting">настройки</sys:String>
     <sys:String x:Key="Start">Начинать</sys:String>
+    <sys:String x:Key="OpenWsaSetting">Открыть настройки Wsa</sys:String>
     <sys:String x:Key="Install">Установить</sys:String>
+    <sys:String x:Key="UnInstall">удалить</sys:String>
     <sys:String x:Key="Refresh">обновить</sys:String>
     <sys:String x:Key="Remove">удалить</sys:String>
     <sys:String x:Key="Regist">Регистрация</sys:String>

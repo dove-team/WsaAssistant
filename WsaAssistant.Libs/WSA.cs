@@ -33,12 +33,19 @@ namespace WsaAssistant.Libs
         }
         public void Start()
         {
-            if (Running)
+            if (!Running)
             {
                 var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
                 Command.Instance.Excute(cmd, out _);
             }
         }
+        public void Open()
+        {
+            var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!SettingsApp";
+            Command.Instance.Excute(cmd, out _);
+
+        }
+
         public void Reset()
         {
             try
@@ -174,7 +181,7 @@ namespace WsaAssistant.Libs
                     }
             }
         }
-        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address,string path)
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address, string path)
         {
             var item = PackageList.FindItem(address);
             if (item != null)
