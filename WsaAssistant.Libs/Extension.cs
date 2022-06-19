@@ -73,34 +73,26 @@ namespace WsaAssistant.Libs
         {
             try
             {
-                string filetype = "*";//.apk
-                string applizsto = "System.FileExtension:\"apk\"";
-                var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
+                string filetype = "*", title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
                 RegistryKey shell = Registry.ClassesRoot.OpenSubKey(filetype, true).OpenSubKey("shell", true);
                 if (shell == null) shell = Registry.ClassesRoot.OpenSubKey(filetype, true).CreateSubKey("shell");
                 RegistryKey custome = shell.CreateSubKey("WsaAssistant");
-                custome.SetValue("", title, RegistryValueKind.ExpandString);
+                custome.SetValue(string.Empty, title, RegistryValueKind.ExpandString);
                 custome.SetValue("Icon", Path.Combine(path.ProcessPath(), "icon.ico"), RegistryValueKind.ExpandString);
-                custome.SetValue("AppliesTo", applizsto, RegistryValueKind.String);
+                custome.SetValue("AppliesTo", "System.FileExtension:\"apk\"", RegistryValueKind.String);
                 RegistryKey cmd = custome.CreateSubKey("command");
-                cmd.SetValue("", path + " %1", RegistryValueKind.ExpandString);
+                cmd.SetValue(string.Empty, path + " %1", RegistryValueKind.ExpandString);
                 cmd.Close();
                 custome.Close();
                 shell.Close();
-
                 RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\OpenWithProgids", true);
                 if (registryKey != null)
-                {
                     registryKey.DeleteValue("WsaAssistant.apk", false);
-                }
                 registryKey.SetValue("WsaAssistant.apk", string.Empty);
-
                 registryKey = Registry.ClassesRoot.OpenSubKey("WsaAssistant.apk");
                 if (registryKey != null)
                     Registry.ClassesRoot.DeleteSubKeyTree("WsaAssistant.apk");
-
                 registryKey = Registry.ClassesRoot.CreateSubKey("WsaAssistant.apk");
-
                 registryKey.SetValue(string.Empty, title);
                 var commandKey = registryKey.CreateSubKey("shell\\open\\command");
                 commandKey.SetValue(string.Empty, $"{path} %1");
@@ -117,8 +109,7 @@ namespace WsaAssistant.Libs
                 return false;
             }
         }
-
-        public static bool RemoveMenu(this string path)
+        public static bool RemoveMenu(this object _)
         {
             try
             {
@@ -128,14 +119,12 @@ namespace WsaAssistant.Libs
                     Registry.ClassesRoot.DeleteSubKeyTree(".apk\\shell\\open");
                     registryKey.Close();
                 }
-
                 RegistryKey registryKey4 = Registry.ClassesRoot.OpenSubKey("*\\shell\\WsaAssistant", true);
                 if (registryKey4 != null)
                 {
                     Registry.ClassesRoot.DeleteSubKeyTree("*\\shell\\WsaAssistant", false);
                     registryKey4.Close();
                 }
-
                 RegistryKey registryKey2 = Registry.ClassesRoot.OpenSubKey(".apk\\OpenWithProgids", true);
                 if (registryKey2 != null)
                 {
@@ -156,7 +145,6 @@ namespace WsaAssistant.Libs
                 return false;
             }
         }
-
         public static bool Before(this string str, string start, string end)
         {
             var startIndex = str.IndexOf(start);

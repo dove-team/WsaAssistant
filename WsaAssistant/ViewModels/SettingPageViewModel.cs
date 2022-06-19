@@ -70,8 +70,7 @@ namespace WsaAssistant.ViewModels
             {
                 if (!state)
                 {
-                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("ClientFailed"), FindChar("Tips"),
-                        MessageBoxButton.YesNo, MessageBoxImage.Error))
+                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("ClientFailed"), FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Error))
                     {
                         LogManager.Instance.LogInfo("下载客户端异常，重试中！");
                         await Client.Instance.Start();

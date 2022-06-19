@@ -67,7 +67,7 @@ namespace WsaAssistant.ViewModels
         }
         private void Downloader_ProcessChange(string progressPercentage)
         {
-            ProcessVal = $"已下载：{progressPercentage} %" ;
+            ProcessVal = $"已下载：{progressPercentage} %";
         }
         private async void Instance_DownloadComplete(object sender, bool state)
         {
@@ -97,8 +97,7 @@ namespace WsaAssistant.ViewModels
             {
                 if (!state)
                 {
-                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("OpenGLDFailed"), FindChar("Tips"),
-                        MessageBoxButton.YesNo, MessageBoxImage.Error))
+                    if (MessageBoxResult.Yes == MessageBox.Show(FindChar("OpenGLDFailed"), FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Error))
                     {
                         LogManager.Instance.LogInfo("下载OpenGL异常，重试中！");
                         await Drives.Instance.Retry(true);
