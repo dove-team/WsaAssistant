@@ -147,8 +147,8 @@ namespace WsaAssistant.Libs
         }
         public static bool Before(this string str, string start, string end)
         {
-            var startIndex = str.IndexOf(start);
-            var endIndex = str.IndexOf(end);
+            var startIndex = str.IndexOf(start, StringComparison.CurrentCultureIgnoreCase);
+            var endIndex = str.IndexOf(end, StringComparison.CurrentCultureIgnoreCase);
             if (startIndex != -1)
                 return startIndex < endIndex;
             return false;

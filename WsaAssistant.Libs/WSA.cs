@@ -159,9 +159,9 @@ namespace WsaAssistant.Libs
         {
             try
             {
-                Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
+                Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName} /English", out string message);
                 LogManager.Instance.LogInfo("Check VM:" + message);
-                return message.Before("状态", "已启用");
+                return message.Before("State", "Enabled");
             }
             catch (Exception ex)
             {
