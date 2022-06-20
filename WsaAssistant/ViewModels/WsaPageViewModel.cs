@@ -42,6 +42,13 @@ namespace WsaAssistant.ViewModels
             get => installRegist;
             set => SetProperty(ref installRegist, value);
         }
+        private Visibility unInstallRegist = Visibility.Collapsed;
+        public Visibility UnInstallRegist
+        {
+            get => unInstallRegist;
+            set => SetProperty(ref unInstallRegist, value);
+        }
+
         private string wsaRunStatus;
         public string WsaRunStatus
         {
@@ -85,14 +92,18 @@ namespace WsaAssistant.ViewModels
             set => SetProperty(ref installFeature, value);
         }
         public IAsyncRelayCommand RegistCommand { get; }
+        public IAsyncRelayCommand UnRegistCommand { get; }
+        public IAsyncRelayCommand OpenWsaCommand { get; }
         public IAsyncRelayCommand StartWsaCommand { get; }
         public IAsyncRelayCommand InstallWsaCommand { get; }
         public IAsyncRelayCommand InstallFeatureCommand { get; }
         public WsaPageViewModel()
         {
             RegistCommand = new AsyncRelayCommand(RegistAsync);
+            UnRegistCommand = new AsyncRelayCommand(UnRegistAsync);
             StartWsaCommand = new AsyncRelayCommand(StartWsaAsync);
             InstallWsaCommand = new AsyncRelayCommand(InstallWsaAsync);
+            OpenWsaCommand = new AsyncRelayCommand(OpenWsaCommandAsync);
             InstallFeatureCommand = new AsyncRelayCommand(InstallFeatureAsync);
         }
         private Task RegistAsync()
@@ -105,6 +116,23 @@ namespace WsaAssistant.ViewModels
                     MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                UpdateRegist();
+                HideLoading();
+            });
+            return Task.CompletedTask;
+        }
+        private Task UnRegistAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                ShowLoading();
+                if (MessageBox.Show($"{FindChar("UninstallTips")}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    if (this.RemoveMenu())
+                        MessageBox.Show(FindChar("OperaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    else
+                        MessageBox.Show(FindChar("OperaFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 UpdateRegist();
                 HideLoading();
             });
@@ -125,6 +153,7 @@ namespace WsaAssistant.ViewModels
                     WsaRuning = Visibility.Collapsed;
                     WsaStatus = FindChar("NotRunning");
                 }
+                LoadAsync(null, null);
                 HideLoading();
             });
             return Task.CompletedTask;
@@ -132,6 +161,11 @@ namespace WsaAssistant.ViewModels
         private Task InstallWsaAsync()
         {
             NavigateTo("InstallWsaPage");
+            return Task.CompletedTask;
+        }
+        private Task OpenWsaCommandAsync()
+        {
+            WSA.Instance.Open();
             return Task.CompletedTask;
         }
         private Task InstallFeatureAsync()
@@ -160,7 +194,8 @@ namespace WsaAssistant.ViewModels
         }
         public void LoadAsync(object sender, EventArgs e)
         {
-            Dispatcher = (sender as WsaPage).Dispatcher;
+            if (sender is WsaPage page)
+                Dispatcher = page.Dispatcher;
             WsaRunStatus = WsaStatus = FeatureStatus = FindChar("Checking");
             RunOnUIThread(() =>
             {
@@ -207,18 +242,20 @@ namespace WsaAssistant.ViewModels
         }
         private void UpdateRegist()
         {
-            RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open");
+            using RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey("*\\shell\\WsaAssistant");
             if (registryKey != null)
             {
                 RegistStatus = FindChar("Regist");
                 HasRegist = Visibility.Visible;
                 InstallRegist = Visibility.Collapsed;
+                UnInstallRegist = Visibility.Visible;
             }
             else
             {
                 RegistStatus = FindChar("NotRegist");
-                InstallRegist = Visibility.Visible;
                 HasRegist = Visibility.Collapsed;
+                InstallRegist = Visibility.Visible;
+                UnInstallRegist = Visibility.Collapsed;
             }
         }
         public override void Dispose()

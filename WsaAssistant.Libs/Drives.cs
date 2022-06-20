@@ -57,9 +57,14 @@ namespace WsaAssistant.Libs
         {
             get
             {
-                Command.Instance.Shell("Get-AppxPackage|findstr Microsoft.D3DMappingLayers", out string message);
-                LogManager.Instance.LogInfo("Pepair OpenGL:" + message);
-                return !string.IsNullOrEmpty(message);
+                try
+                {
+                    Command.Instance.Shell("Get-AppxPackage|findstr Microsoft.D3DMappingLayers", out string message);
+                    LogManager.Instance.LogInfo("Pepair OpenGL:" + message);
+                    return !string.IsNullOrEmpty(message);
+                }
+                catch { }
+                return false;
             }
         }
         public async Task<bool> InstallOpenGL()
@@ -72,9 +77,7 @@ namespace WsaAssistant.Libs
                     var package = packages.ElementAt(idx);
                     var path = Path.Combine(this.ProcessPath(), package.Key);
                     if (File.Exists(path))
-                    {
                         PackageList.AddOrUpdate(package.Key, new Uri(package.Value), true, new DownloadPackage { FileName = path });
-                    }
                     else
                     {
                         PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
@@ -142,11 +145,18 @@ namespace WsaAssistant.Libs
         }
         public async Task WSLDrive(GPUType type)
         {
-            string url = GetLink(type);
-            HttpHeader headers = new HttpHeader();
-            if (type == GPUType.AMD)
-                headers.Referer = "https://www.amd.com/";
-            await DownloadManager.Instance.Create(url, headers).ConfigureAwait(false);
+            try
+            {
+                string url = GetLink(type);
+                HttpHeader headers = new HttpHeader();
+                if (type == GPUType.AMD)
+                    headers.Referer = "https://www.amd.com/";
+                await DownloadManager.Instance.Create(url, headers).ConfigureAwait(false);
+            }
+            catch(Exception ex)
+            {
+                LogManager.Instance.LogError("WSLDrive", ex);
+            }
         }
     }
 }

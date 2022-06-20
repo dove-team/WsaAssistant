@@ -89,8 +89,7 @@ namespace WsaAssistant.Libs
         }
         private bool IsSupport(string key)
         {
-            if (key.EndsWith("appx", StringComparison.CurrentCultureIgnoreCase) ||
-                key.EndsWith("msixbundle", StringComparison.CurrentCultureIgnoreCase))
+            if (key.EndsWith("appx", StringComparison.CurrentCultureIgnoreCase) || key.EndsWith("msixbundle", StringComparison.CurrentCultureIgnoreCase))
             {
                 var count = 0;
                 foreach (var type in array)

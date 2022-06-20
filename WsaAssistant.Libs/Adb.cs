@@ -134,6 +134,21 @@ namespace WsaAssistant.Libs
             }
             return false;
         }
+
+        public bool StartApp(string packageName)
+        {
+            try
+            {
+                AdbClient.StartApp(Device, packageName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Install", ex);
+            }
+            return false;
+        }
+
         public bool Downgrade(string packagePath)
         {
             try

@@ -33,11 +33,24 @@ namespace WsaAssistant.Libs
         }
         public void Start()
         {
-            if (Running)
+            try
             {
-                var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
+                if (!Running)
+                {
+                    var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!App";
+                    Command.Instance.Excute(cmd, out _);
+                }
+            }
+            catch { }
+        }
+        public void Open()
+        {
+            try
+            {
+                var cmd = @"explorer.exe shell:appsFolder\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe!SettingsApp";
                 Command.Instance.Excute(cmd, out _);
             }
+            catch { }
         }
         public void Reset()
         {
@@ -102,42 +115,72 @@ namespace WsaAssistant.Libs
         }
         public bool InstallFeature()
         {
-            int count = 0;
-            foreach (var package in FeatureList)
+            try
             {
-                if (!CheckFeature(package))
-                    InstallFeature(package);
-                else
-                    count++;
+                int count = 0;
+                foreach (var package in FeatureList)
+                {
+                    if (!CheckFeature(package))
+                        InstallFeature(package);
+                    else
+                        count++;
+                }
+                return count != FeatureList.Count;
             }
-            return count != FeatureList.Count;
+            catch { }
+            return false;
         }
         public bool Running
         {
             get
             {
-                var ps = Process.GetProcessesByName("vmmemWSA");
-                return ps != null && ps.Length > 0;
+                try
+                {
+                    var ps = Process.GetProcessesByName("vmmemWSA");
+                    return ps != null && ps.Length > 0;
+                }
+                catch { }
+                return false;
             }
         }
         private void InstallFeature(string packageName)
         {
-            Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out string message);
-            LogManager.Instance.LogInfo("Install WSA:" + message);
+            try
+            {
+                Command.Instance.Excute($"DISM /Online /Enable-Feature /All /FeatureName:{packageName} /NoRestart", out string message);
+                LogManager.Instance.LogInfo("Install WSA:" + message);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("InstallFeature", ex);
+            }
         }
         private bool CheckFeature(string packageName)
         {
-            Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
-            LogManager.Instance.LogInfo("Check VM:" + message);
-            return message.Before("状态", "已启用");
+            try
+            {
+                Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName}", out string message);
+                LogManager.Instance.LogInfo("Check VM:" + message);
+                return message.Before("状态", "已启用");
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("CheckFeature", ex);
+            }
+            return false;
         }
         public bool HasWsa
         {
             get
             {
-                Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
-                LogManager.Instance.LogInfo("Pepair WSA:" + message);
-                return !string.IsNullOrEmpty(message);
+                try
+                {
+                    Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+                    LogManager.Instance.LogInfo("Pepair WSA:" + message);
+                    return !string.IsNullOrEmpty(message);
+                }
+                catch { }
+                return false;
             }
         }
         public async Task<bool> Retry(bool reconstruction)
@@ -174,17 +217,24 @@ namespace WsaAssistant.Libs
                     }
             }
         }
-        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address,string path)
+        private void DownloadManager_ProgressComplete(object sender, bool hasError, Uri address, string path)
         {
-            var item = PackageList.FindItem(address);
-            if (item != null)
+            try
             {
-                PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
-                if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+                var item = PackageList.FindItem(address);
+                if (item != null)
                 {
-                    var count = PackageList.GetCount(x => x.Item3 == true);
-                    DownloadComplete?.Invoke(this, count == PackageList.Count);
+                    PackageList.AddOrUpdate(item.Item1, item.Item2, !hasError, default);
+                    if (PackageList.Count == PackageList.GetCount(x => x.Item3.HasValue))
+                    {
+                        var count = PackageList.GetCount(x => x.Item3 == true);
+                        DownloadComplete?.Invoke(this, count == PackageList.Count);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("DownloadManager_ProgressComplete", ex);
             }
         }
         public List<string> GetDiskList()
@@ -204,9 +254,16 @@ namespace WsaAssistant.Libs
         }
         public async Task<Node<string, Uri, bool?, DownloadPackage>> GetFilePath()
         {
-            var packages = await AppX.Instance.GetPackages(WSA_PRODUCE_ID);
-            foreach (var package in packages)
-                PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
+            try
+            {
+                var packages = await AppX.Instance.GetPackages(WSA_PRODUCE_ID);
+                foreach (var package in packages)
+                    PackageList.AddOrUpdate(package.Key, new Uri(package.Value));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("GetFilePath", ex);
+            }
             return PackageList;
         }
         public async Task<bool> PepairAsync()
@@ -235,14 +292,21 @@ namespace WsaAssistant.Libs
         }
         public void Clear()
         {
-            Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
-            var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault().Trim();
-            Command.Instance.Shell($"Remove-AppxPackage {packageName}", out string packageMessage);
-            LogManager.Instance.LogInfo("Clear WSA:" + packageMessage);
-            foreach (var package in PackageList)
+            try
             {
-                Command.Instance.Excute($"DISM /Online /Disable-Feature /All /FeatureName:{package} /NoRestart", out string resultMessage);
-                LogManager.Instance.LogInfo("Clear VM WSA:" + resultMessage);
+                Command.Instance.Shell("Get-AppxPackage|findstr WindowsSubsystemForAndroid", out string message);
+                var packageName = message.Split("\r\n").ElementAt(1).Split(":").LastOrDefault().Trim();
+                Command.Instance.Shell($"Remove-AppxPackage {packageName}", out string packageMessage);
+                LogManager.Instance.LogInfo("Clear WSA:" + packageMessage);
+                foreach (var package in PackageList)
+                {
+                    Command.Instance.Excute($"DISM /Online /Disable-Feature /All /FeatureName:{package} /NoRestart", out string resultMessage);
+                    LogManager.Instance.LogInfo("Clear VM WSA:" + resultMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("Clear", ex);
             }
         }
     }

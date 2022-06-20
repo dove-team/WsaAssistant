@@ -254,9 +254,7 @@ namespace WsaAssistant.ViewModels
                         InstallEnable = true;
                     }
                     else
-                    {
                         MessageBox.Show(FindChar("WsaPackageFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
                 }
             }
             catch (Exception ex)

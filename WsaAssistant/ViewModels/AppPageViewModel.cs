@@ -33,13 +33,14 @@ namespace WsaAssistant.ViewModels
             get => selectPackage;
             set => SetProperty(ref selectPackage, value);
         }
-        private List<Package> AllPackages;
+        private List<Package> AllPackages = new List<Package>();
         private ObservableCollection<Package> packages = new ObservableCollection<Package>();
         public ObservableCollection<Package> Packages
         {
             get => packages;
             set => SetProperty(ref packages, value);
         }
+        public IAsyncRelayCommand StartCommand { get; }
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
         public IAsyncRelayCommand UninstallCommand { get; }
@@ -54,6 +55,7 @@ namespace WsaAssistant.ViewModels
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
+            StartCommand = new AsyncRelayCommand(StartAsync);
         }
         public void LoadAsync(object sender, EventArgs e)
         {
@@ -88,24 +90,34 @@ namespace WsaAssistant.ViewModels
         {
             RunOnUIThread(() =>
             {
+                if (SelectPackage != null)
+                {
+                    ShowLoading();
+                    OpenFileDialog openFileDialog = new OpenFileDialog
+                    {
+                        FileName = string.Empty,
+                        Filter = FindChar("ApkFile")
+                    };
+                    if (!string.IsNullOrEmpty(SelectPackage.PackageName) && openFileDialog.ShowDialog() == true)
+                    {
+                        if (Adb.Instance.Downgrade(openFileDialog.FileName))
+                            MessageBox.Show(FindChar("DowngradeSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        else
+                            MessageBox.Show(FindChar("DowngradeFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    HideLoading();
+                }
+            });
+            return Task.CompletedTask;
+        }
+        private Task StartAsync()
+        {
+            RunOnUIThread(() =>
+            {
                 ShowLoading();
-                if (SelectPackage == null)
-                {
-
-                    return;
-                }
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    FileName = string.Empty,
-                    Filter = FindChar("ApkFile")
-                };
-                if (!string.IsNullOrEmpty(SelectPackage.PackageName) && openFileDialog.ShowDialog() == true)
-                {
-                    if (Adb.Instance.Downgrade(openFileDialog.FileName))
-                        MessageBox.Show(FindChar("DowngradeSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
-                    else
-                        MessageBox.Show(FindChar("DowngradeFailed"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                var packageName = SelectPackage?.PackageName;
+                if (!string.IsNullOrEmpty(packageName))
+                    Adb.Instance.StartApp(packageName);
                 HideLoading();
             });
             return Task.CompletedTask;
@@ -118,8 +130,7 @@ namespace WsaAssistant.ViewModels
                var packageName = SelectPackage?.PackageName;
                if (!string.IsNullOrEmpty(packageName))
                {
-                   if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}？", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question)
-                         == MessageBoxResult.Yes)
+                   if (MessageBox.Show($"{FindChar("UninstallTips")}{packageName}?", FindChar("Tips"), MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                    {
                        if (Adb.Instance.Uninstall(packageName))
                        {

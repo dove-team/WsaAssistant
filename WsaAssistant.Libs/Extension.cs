@@ -73,17 +73,70 @@ namespace WsaAssistant.Libs
         {
             try
             {
-                RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open");
+                string filetype = "*", title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
+                RegistryKey shell = Registry.ClassesRoot.OpenSubKey(filetype, true).OpenSubKey("shell", true);
+                if (shell == null) shell = Registry.ClassesRoot.OpenSubKey(filetype, true).CreateSubKey("shell");
+                RegistryKey custome = shell.CreateSubKey("WsaAssistant");
+                custome.SetValue(string.Empty, title, RegistryValueKind.ExpandString);
+                custome.SetValue("Icon", Path.Combine(path.ProcessPath(), "icon.ico"), RegistryValueKind.ExpandString);
+                custome.SetValue("AppliesTo", "System.FileExtension:\"apk\"", RegistryValueKind.String);
+                RegistryKey cmd = custome.CreateSubKey("command");
+                cmd.SetValue(string.Empty, path + " %1", RegistryValueKind.ExpandString);
+                cmd.Close();
+                custome.Close();
+                shell.Close();
+                RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\OpenWithProgids", true);
                 if (registryKey != null)
-                    Registry.ClassesRoot.DeleteSubKeyTree(".apk\\shell\\open");
-                registryKey = Registry.ClassesRoot.CreateSubKey(".apk\\shell\\open");
-                var title = langType == LangType.Chinese ? "使用 WSA助手 安装" : "Use WsaAssistant Install";
+                    registryKey.DeleteValue("WsaAssistant.apk", false);
+                registryKey.SetValue("WsaAssistant.apk", string.Empty);
+                registryKey = Registry.ClassesRoot.OpenSubKey("WsaAssistant.apk");
+                if (registryKey != null)
+                    Registry.ClassesRoot.DeleteSubKeyTree("WsaAssistant.apk");
+                registryKey = Registry.ClassesRoot.CreateSubKey("WsaAssistant.apk");
                 registryKey.SetValue(string.Empty, title);
-                var commandKey = registryKey.CreateSubKey("Command");
+                var commandKey = registryKey.CreateSubKey("shell\\open\\command");
                 commandKey.SetValue(string.Empty, $"{path} %1");
                 RegistryKey iconKey = registryKey.CreateSubKey("DefaultIcon");
                 var iconPath = Path.Combine(path.ProcessPath(), "icon.ico");
                 iconKey.SetValue(string.Empty, iconPath);
+                iconKey.Close();
+                registryKey.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.LogError("AddMenu", ex);
+                return false;
+            }
+        }
+        public static bool RemoveMenu(this object _)
+        {
+            try
+            {
+                RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\shell\\open", true);
+                if (registryKey != null)
+                {
+                    Registry.ClassesRoot.DeleteSubKeyTree(".apk\\shell\\open");
+                    registryKey.Close();
+                }
+                RegistryKey registryKey4 = Registry.ClassesRoot.OpenSubKey("*\\shell\\WsaAssistant", true);
+                if (registryKey4 != null)
+                {
+                    Registry.ClassesRoot.DeleteSubKeyTree("*\\shell\\WsaAssistant", false);
+                    registryKey4.Close();
+                }
+                RegistryKey registryKey2 = Registry.ClassesRoot.OpenSubKey(".apk\\OpenWithProgids", true);
+                if (registryKey2 != null)
+                {
+                    registryKey2.DeleteValue("WsaAssistant.apk");
+                    registryKey2.Close();
+                }
+                RegistryKey registryKey3 = Registry.ClassesRoot.OpenSubKey("WsaAssistant.apk");
+                if (registryKey3 != null)
+                {
+                    Registry.ClassesRoot.DeleteSubKeyTree("WsaAssistant.apk");
+                    registryKey3.Close();
+                }
                 return true;
             }
             catch (Exception ex)

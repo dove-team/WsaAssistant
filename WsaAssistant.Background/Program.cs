@@ -26,8 +26,6 @@ namespace WsaAssistant.Background
                         else
                             Interaction.MsgBox("未连接设备！请检查子系统相关设置", MsgBoxStyle.Critical, "ERROR");
                     }
-                    else
-                        Interaction.MsgBox("安装失败！未找到文件:" + Path.GetFileName(path), MsgBoxStyle.Critical, "ERROR");
                 }
             }
             catch (Exception ex)

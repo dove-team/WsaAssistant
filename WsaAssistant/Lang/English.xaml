@@ -8,9 +8,11 @@
     <sys:String x:Key="About">About</sys:String>
     <sys:String x:Key="Drives">Drives</sys:String>
     <sys:String x:Key="Start">Start</sys:String>
+    <sys:String x:Key="OpenWsaSetting">Open Wsa Setting</sys:String>
     <sys:String x:Key="Regist">Regist</sys:String>
     <sys:String x:Key="Setting">Setting</sys:String>
     <sys:String x:Key="Install">Install</sys:String>
+    <sys:String x:Key="UnInstall">Uninstall</sys:String>
     <sys:String x:Key="Refresh">Refresh</sys:String>
     <sys:String x:Key="Remove">Remove</sys:String>
     <sys:String x:Key="Running">Running</sys:String>
