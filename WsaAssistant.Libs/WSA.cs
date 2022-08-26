@@ -28,7 +28,7 @@ namespace WsaAssistant.Libs
         private WSA()
         {
             PackageList = new Node<string, Uri, bool?, DownloadPackage>();
-            FeatureList = new List<string> { "HypervisorPlatform", "VirtualMachinePlatform" };
+            FeatureList = new List<string> { "Microsoft-Hyper-V", "VirtualMachinePlatform" };
             DownloadManager.Instance.ProgressComplete += DownloadManager_ProgressComplete;
         }
         public void Start()
@@ -158,7 +158,7 @@ namespace WsaAssistant.Libs
         private bool CheckFeature(string packageName)
         {
             try
-            {
+            { 
                 Command.Instance.Excute($"DISM /Online /Get-FeatureInfo:{packageName} /English", out string message);
                 LogManager.Instance.LogInfo("Check VM:" + message);
                 return message.Before("State", "Enabled");
