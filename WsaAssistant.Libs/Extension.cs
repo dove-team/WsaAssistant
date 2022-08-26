@@ -87,8 +87,16 @@ namespace WsaAssistant.Libs
                 shell.Close();
                 RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(".apk\\OpenWithProgids", true);
                 if (registryKey != null)
+                {
                     registryKey.DeleteValue("WsaAssistant.apk", false);
-                registryKey.SetValue("WsaAssistant.apk", string.Empty);
+                    registryKey.SetValue("WsaAssistant.apk", string.Empty);
+                }
+                else
+                {
+                    registryKey = Registry.ClassesRoot.CreateSubKey(".apk\\OpenWithProgids", true);
+                    registryKey.SetValue("WsaAssistant.apk", string.Empty);
+                }
+
                 registryKey = Registry.ClassesRoot.OpenSubKey("WsaAssistant.apk");
                 if (registryKey != null)
                     Registry.ClassesRoot.DeleteSubKeyTree("WsaAssistant.apk");
