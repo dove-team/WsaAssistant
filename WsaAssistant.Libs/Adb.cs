@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +64,12 @@ namespace WsaAssistant.Libs
                             Thread.Sleep(5000);
                         }
                     }
+                    if(Device==null)
+                    {
+                        AdbClient = new AdvancedAdbClient();
+                        AdbClient.Connect(WsaDefaultIp); 
+                        Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                    } 
                 }
                 return Device != null;
             }
@@ -91,6 +98,13 @@ namespace WsaAssistant.Libs
                     AdbClient.Connect(WsaIp);
                     AdvancedAdbClient.SetEncoding(Encoding.ASCII);
                     Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online);
+                }
+                if (Device == null)
+                {
+                    AdbClient = new AdvancedAdbClient();
+                    AdbClient.Connect(WsaDefaultIp);
+                    AdvancedAdbClient.SetEncoding(Encoding.ASCII);
+                    Device = AdbClient.GetDevices().FirstOrDefault(x => x.State == DeviceState.Online); 
                 }
                 return Device != null;
             }
@@ -121,6 +135,9 @@ namespace WsaAssistant.Libs
                 }
             }
         }
+
+        private static IPEndPoint WsaDefaultIp = IPEndPoint.Parse("127.0.0.1:58526");
+
         public bool Install(string packagePath)
         {
             try

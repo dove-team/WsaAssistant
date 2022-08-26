@@ -8,6 +8,7 @@
     <sys:String x:Key="Drives">驱动</sys:String>
     <sys:String x:Key="About">关于</sys:String>
     <sys:String x:Key="Start">启动</sys:String>
+    <sys:String x:Key="Shortcut">快捷</sys:String>
     <sys:String x:Key="OpenWsaSetting">打开Wsa设置</sys:String>
     <sys:String x:Key="Setting">设置</sys:String>
     <sys:String x:Key="Install">安装</sys:String>
@@ -62,6 +63,7 @@
     <sys:String x:Key="AmdDesc">AMD WSL 的 GPU 驱动程序</sys:String>
     <sys:String x:Key="CreateDownloadFailed">创建下载失败！</sys:String>
     <sys:String x:Key="DevlopTips">请检查是否开启开发人员模式！</sys:String>
+    <sys:String x:Key="ShortcutTips">创建快捷方式成功！</sys:String>
     <sys:String x:Key="NvidiaDesc">Nvidia WSL 的 GPU 驱动程序</sys:String>
     <sys:String x:Key="OpenGLDFailed">兼容包下载失败！是否重试？</sys:String>
     <sys:String x:Key="OpenGLName">OpenCL™ 和 OpenGL® 兼容包</sys:String>

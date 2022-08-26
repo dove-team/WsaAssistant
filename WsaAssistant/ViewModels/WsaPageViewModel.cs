@@ -178,17 +178,17 @@ namespace WsaAssistant.ViewModels
                     FeatureStatus = FindChar("Installed");
                     HasFeature = Visibility.Visible;
                     InstallFeature = Visibility.Collapsed;
-                    HideLoading();
+                   
                 }
                 else
                 {
                     FeatureStatus = FindChar("NotInstall");
                     HasFeature = Visibility.Collapsed;
-                    InstallFeature = Visibility.Visible;
-                    HideLoading();
-                    if (MessageBox.Show(FindChar("RebootTips"), FindChar("Tips"), MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-                        Command.Instance.Excute("shutdown -r -t 10", out _);
+                    InstallFeature = Visibility.Visible; 
                 }
+                HideLoading();
+                if (MessageBox.Show(FindChar("RebootTips"), FindChar("Tips"), MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                    Command.Instance.Excute("shutdown -r -t 10", out _);
             });
             return Task.CompletedTask;
         }
