@@ -1,10 +1,10 @@
-﻿using IWshRuntimeLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WindowsShortcutFactory;
 
 namespace WsaAssistant.Libs
 {
@@ -27,18 +27,17 @@ namespace WsaAssistant.Libs
             if (!System.IO.Directory.Exists(directory))
             {
                 System.IO.Directory.CreateDirectory(directory);
-            }
-
+            } 
+            using var shortcut = new WindowsShortcut
+            {
+                Path = targetPath,
+                Description = description,
+                IconLocation = string.IsNullOrWhiteSpace(iconLocation) ? targetPath : iconLocation,//设置图标路径
+                WorkingDirectory = Path.GetDirectoryName(targetPath),
+                Arguments = arguments
+            }; 
             string shortcutPath = Path.Combine(directory, string.Format("{0}.lnk", shortcutName));
-            WshShell shell = new WshShell();
-            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);//创建快捷方式对象
-            shortcut.TargetPath = targetPath;//指定目标路径
-            shortcut.Arguments = arguments;
-            shortcut.WorkingDirectory = Path.GetDirectoryName(targetPath);//设置起始位置
-            shortcut.WindowStyle = 1;//设置运行方式，默认为常规窗口
-            shortcut.Description = description;//设置备注
-            shortcut.IconLocation = string.IsNullOrWhiteSpace(iconLocation) ? targetPath : iconLocation;//设置图标路径
-            shortcut.Save();//保存快捷方式
+            shortcut.Save(shortcutPath); 
         }
 
         /// <summary>

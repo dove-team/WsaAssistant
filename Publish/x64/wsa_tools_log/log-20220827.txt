@@ -1,0 +1,85 @@
+2022-08-27 10:51:49.988 +08:00 [INF] Check VM:Microsoft Windows [版本 10.0.22000.795]
+(c) Microsoft Corporation。保留所有权利。
+
+d:\Users\zixing\Documents\GitHub\WsaAssistant\Publish\x64>DISM /Online /Get-FeatureInfo:Microsoft-Hyper-V /English&exit
+
+Deployment Image Servicing and Management tool
+Version: 10.0.22000.653
+
+Image Version: 10.0.22000.795
+
+Feature Information:
+
+Feature Name : Microsoft-Hyper-V
+Display Name : Hyper-V 平台
+Description : 提供了可以用来创建和管理虚拟机及其资源的服务。
+Restart Required : Possible
+State : Enabled
+
+Custom Properties:
+
+(No custom properties found)
+
+The operation completed successfully.
+
+2022-08-27 10:51:50.243 +08:00 [INF] GetContent:{
+    "major": 1,
+    "minor": 5,
+    "build": 0,
+    "enMessage": "fix bugs",
+    "chMessage": "修复部分问题",
+    "ruMessage":"Исправлены некоторые проблемы",
+    "urls": [
+        {
+            "platform": "arm64",
+            "url": "https://wwd.lanzouy.com/ivuiQ06oedve",
+            "ext": "exe"
+        },
+        {
+            "platform": "x64",
+            "url": "https://wwd.lanzouy.com/iMGna06oegne",
+            "ext": "exe"
+        }
+    ]
+}
+2022-08-27 10:51:50.296 +08:00 [INF] Check VM:Microsoft Windows [版本 10.0.22000.795]
+(c) Microsoft Corporation。保留所有权利。
+
+d:\Users\zixing\Documents\GitHub\WsaAssistant\Publish\x64>DISM /Online /Get-FeatureInfo:VirtualMachinePlatform /English&exit
+
+Deployment Image Servicing and Management tool
+Version: 10.0.22000.653
+
+Image Version: 10.0.22000.795
+
+Feature Information:
+
+Feature Name : VirtualMachinePlatform
+Display Name : 虚拟机平台
+Description : 为虚拟机启用平台支持
+Restart Required : Possible
+State : Enabled
+
+Custom Properties:
+
+(No custom properties found)
+
+The operation completed successfully.
+
+2022-08-27 10:51:50.297 +08:00 [INF] shell:Get-AppxPackage|findstr WindowsSubsystemForAndroid
+2022-08-27 10:51:51.352 +08:00 [INF] Pepair WSA:Name              : MicrosoftCorporationII.WindowsSubsystemForAndroid
+PackageFullName   : MicrosoftCorporationII.WindowsSubsystemForAndroid_2206.40000.15.0_x64__8wekyb3d8bbwe
+InstallLocation   : C:\Program Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_2206.40000.15.0_x64_
+PackageFamilyName : MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe
+                    ationII.WindowsSubsystemForAndroid_2206.40000.15.0_neutral_split.scale-100_8wekyb3d8bbwe...}
+
+2022-08-27 10:51:53.665 +08:00 [INF] shell:Get-AppxPackage|findstr WindowsSubsystemForAndroid
+2022-08-27 10:51:54.585 +08:00 [INF] Pepair WSA:Name              : MicrosoftCorporationII.WindowsSubsystemForAndroid
+PackageFullName   : MicrosoftCorporationII.WindowsSubsystemForAndroid_2206.40000.15.0_x64__8wekyb3d8bbwe
+InstallLocation   : C:\Program Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_2206.40000.15.0_x64_
+PackageFamilyName : MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe
+                    ationII.WindowsSubsystemForAndroid_2206.40000.15.0_neutral_split.scale-100_8wekyb3d8bbwe...}
+
+2022-08-27 10:51:55.215 +08:00 [INF] WsaIp:  172.31.251.129        00-15-5d-8b-36-35     动态        
+2022-08-27 10:51:55.258 +08:00 [INF] WsaIp:  172.31.251.129        00-15-5d-8b-36-35     动态        
+2022-08-27 10:51:55.308 +08:00 [INF] WsaIp:  172.31.251.129        00-15-5d-8b-36-35     动态        

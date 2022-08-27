@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
     <Authors>michael_eddy</Authors>
     <DebugType>embedded</DebugType>
     <Platforms>x64;ARM64</Platforms>
@@ -11,17 +11,6 @@
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Serilog" Version="2.11.0" />
     <PackageReference Include="Downloader" Version="2.3.5" />
     <PackageReference Include="HandyControl" Version="3.3.0" />
@@ -31,6 +20,7 @@
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
     <PackageReference Include="AdvancedSharpAdbClient" Version="2.5.2" />
+    <PackageReference Include="WindowsShortcutFactory" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Libs\" />
