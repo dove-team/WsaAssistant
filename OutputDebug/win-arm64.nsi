@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WsaAssistant"
-!define PRODUCT_VERSION "1.5.0"
+!define PRODUCT_VERSION "1.5.1"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WsaAssistant.exe"
@@ -236,7 +236,7 @@ Section "MainSection" SEC01
   File "Publish\arm64\hostfxr.dll"
   File "Publish\arm64\hostpolicy.dll"
   File "Publish\arm64\mscordaccore.dll"
-  File "Publish\arm64\mscordaccore_arm64_arm64_6.0.622.26707.dll"
+  File "Publish\arm64\mscordaccore_arm64_arm64_6.0.722.32202.dll"
   File "Publish\arm64\mscorrc.dll"
   File "Publish\arm64\mscordbi.dll"
   File "Publish\arm64\Microsoft.Windows.SDK.NET.dll"
@@ -736,6 +736,7 @@ Section Uninstall
   Delete "$INSTDIR\Microsoft.CSharp.dll"
   Delete "$INSTDIR\WsaAssistant.Libs.dll"
   Delete "$INSTDIR\WsaAssistant.Libs.deps.json"
+  Delete "$INSTDIR\WindowsShortcutFactory.dll"
 
   Delete "$SMPROGRAMS\WsaAssistant\Uninstall.lnk"
   Delete "$DESKTOP\WsaAssistant.lnk"

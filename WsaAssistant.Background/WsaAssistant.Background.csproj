@@ -6,7 +6,7 @@
 		<OutputType>WinExe</OutputType>
 		<DebugType>embedded</DebugType>
 		<Platforms>x64;ARM64</Platforms>
-		<PlatformTarget>x64</PlatformTarget>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 		<BaseOutputPath>..\OutputDebug</BaseOutputPath>
 		<NeutralLanguage>zh-Hans;en-US</NeutralLanguage>
 		<ApplicationIcon>..\WsaAssistant\icon.ico</ApplicationIcon>

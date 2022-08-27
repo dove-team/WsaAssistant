@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WsaAssistant"
-!define PRODUCT_VERSION "1.5.0"
+!define PRODUCT_VERSION "1.5.1"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WsaAssistant.exe"
@@ -274,7 +274,7 @@ Section "MainSection" SEC01
   File "Publish\x64\hostpolicy.dll"
   File "Publish\x64\mscordaccore.dll"
   File "Publish\x64\mscordbi.dll"
-  File "Publish\x64\mscordaccore_amd64_amd64_6.0.622.26707.dll"
+  File "Publish\x64\mscordaccore_amd64_amd64_6.0.722.32202.dll"
   File "Publish\x64\msquic.dll"
   File "Publish\x64\mscorrc.dll"
   File "Publish\x64\WinRT.Runtime.dll"
