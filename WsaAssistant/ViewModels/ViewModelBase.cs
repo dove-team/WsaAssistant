@@ -21,6 +21,7 @@ namespace WsaAssistant.ViewModels
                     MainView = viewModel;
             }
         }
+
         protected void NavigateTo(string pageName)
         {
             Dispatcher.Invoke(() =>
@@ -28,7 +29,8 @@ namespace WsaAssistant.ViewModels
                 var uri = new Uri($"pack://application:,,,/Views/{pageName}.xaml");
                 MainWindow.frame.Navigate(uri);
             });
-        }
+        } 
+
         protected void ShowLoading()
         {
             if (MainView != null)

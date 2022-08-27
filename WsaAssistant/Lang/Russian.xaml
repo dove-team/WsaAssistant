@@ -6,7 +6,8 @@
     <sys:String x:Key="Close">закрытие</sys:String>
     <sys:String x:Key="Apps">Программы</sys:String>
     <sys:String x:Key="Setting">настройки</sys:String>
-    <sys:String x:Key="Start">Начинать</sys:String>
+    <sys:String x:Key="Start">Начинать</sys:String> 
+    <sys:String x:Key="Shortcut">Комбинация клавиш</sys:String> 
     <sys:String x:Key="OpenWsaSetting">Открыть настройки Wsa</sys:String>
     <sys:String x:Key="Install">Установить</sys:String>
     <sys:String x:Key="UnInstall">удалить</sys:String>
@@ -62,6 +63,7 @@
     <sys:String x:Key="AmdDesc">Драйвер графического процессора для AMD WSL</sys:String>
     <sys:String x:Key="CreateDownloadFailed">Создать загрузку не удалось!</sys:String>
     <sys:String x:Key="DevlopTips">Пожалуйста, проверьте, включен ли режим разработчика!</sys:String>
+    <sys:String x:Key="ShortcutTips"> создать комбинацию клавиш </sys:String>
     <sys:String x:Key="NvidiaDesc">Драйвер графического процессора для Nvidia WSL</sys:String>
     <sys:String x:Key="OpenGLDFailed">Загрузка установочного пакета не удалась! Хотите попробовать еще раз?</sys:String>
     <sys:String x:Key="OpenGLName">Пакет совместимости OpenCL™ и OpenGL®</sys:String>

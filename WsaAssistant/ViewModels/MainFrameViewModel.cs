@@ -32,7 +32,10 @@ namespace WsaAssistant.ViewModels
         public bool MenuEnable
         {
             get => menuEnable;
-            set => SetProperty(ref menuEnable, value);
+            set 
+            {
+                SetProperty(ref menuEnable, value); 
+            }
         }
         public override void Dispose()
         {

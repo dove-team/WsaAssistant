@@ -40,7 +40,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <hc:LoadingLine Visibility="{Binding LoadVisable}" Margin="0,8" Foreground="{Binding SysColor}" Style="{StaticResource LoadingLineLarge}" />
-            <Frame x:Name="frame" Grid.Row="1" NavigationUIVisibility="Hidden" Padding="6"
+            <Frame x:Name="frame" Grid.Row="1" IsEnabled="{Binding MenuEnable}" NavigationUIVisibility="Hidden" Padding="6"
                    Source="Views/WsaPage.xaml" />
         </Grid>
     </Grid>

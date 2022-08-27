@@ -21,6 +21,14 @@ namespace WsaAssistant.ViewModels
             get => adbEnable;
             set => SetProperty(ref adbEnable, value);
         }
+
+        private bool showUseOnly = false;
+        public bool ShowUseOnly
+        {
+            get => showUseOnly;
+            set => SetProperty(ref showUseOnly, value);
+        }
+
         private string searchKeywords;
         public string SearchKeywords
         {
@@ -41,6 +49,9 @@ namespace WsaAssistant.ViewModels
             set => SetProperty(ref packages, value);
         }
         public IAsyncRelayCommand StartCommand { get; }
+
+        public IAsyncRelayCommand ShortcutCommand { get; }
+         
         public IAsyncRelayCommand SearchCommand { get; }
         public IAsyncRelayCommand RefreshCommand { get; }
         public IAsyncRelayCommand UninstallCommand { get; }
@@ -55,7 +66,8 @@ namespace WsaAssistant.ViewModels
             InstallApkCommand = new AsyncRelayCommand(InstallApkAsync);
             DowngradeCommand = new AsyncRelayCommand(DowngradeAsync);
             UninstallApkCommand = new AsyncRelayCommand(UninstallApkAsync);
-            StartCommand = new AsyncRelayCommand(StartAsync);
+            StartCommand = new AsyncRelayCommand(StartAsync); 
+            ShortcutCommand = new AsyncRelayCommand(ShortcutAsync);
         }
         public void LoadAsync(object sender, EventArgs e)
         {
@@ -80,12 +92,13 @@ namespace WsaAssistant.ViewModels
         {
             RunOnUIThread(() =>
            {
-               ShowLoading();
+               ShowLoading(); 
                SearchApps();
                HideLoading();
            });
             return Task.CompletedTask;
         }
+        
         private Task DowngradeAsync()
         {
             RunOnUIThread(() =>
@@ -122,6 +135,30 @@ namespace WsaAssistant.ViewModels
             });
             return Task.CompletedTask;
         }
+        private Task ShortcutAsync()
+        {
+            RunOnUIThread(() =>
+            {
+                ShowLoading();
+                var packageName = SelectPackage?.PackageName;
+                if (!string.IsNullOrEmpty(packageName))
+                {
+                    string path = @"%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe\WsaClient.exe";
+                    string arguments = string.Format(@"/launch wsa://{0}", packageName);
+                    string icon = string.Format(@"%USERPROFILE%\AppData\Local\Packages\MicrosoftCorporationII.WindowsSubsystemForAndroid_8wekyb3d8bbwe\LocalState\{0}.ico", packageName);
+                    //if(!System.IO.File.Exists(icon))
+                    //{
+                    //    icon = System.IO.Path.Combine(path.ProcessPath(), "icon.ico");
+                    //}
+                    string name = SelectPackage.DisplayName;
+                    ShortcutHelper.CreateShortcutOnDesktop(name, path, name, icon, arguments); 
+                    MessageBox.Show(FindChar("ShortcutTips"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                HideLoading();
+            });
+            return Task.CompletedTask;
+        }
+
         private Task UninstallApkAsync()
         {
             RunOnUIThread(() =>
@@ -193,7 +230,8 @@ namespace WsaAssistant.ViewModels
             return Task.CompletedTask;
         }
         private void SearchApps(string condition = "")
-        {
+        { 
+            ShowUseOnly = false;
             ShowLoading();
             Dispatcher.Invoke(() => { Packages.Clear(); });
             if (!Adb.Instance.Connect())

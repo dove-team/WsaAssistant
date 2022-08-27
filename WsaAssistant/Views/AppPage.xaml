@@ -48,7 +48,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Center" Text="{DynamicResource SearchPackage}" />
-            <CheckBox Grid.Row="1" Content="{DynamicResource ShowUseOnly}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Margin="0,12,0,0" />
+            <CheckBox Grid.Row="1" Content="{DynamicResource ShowUseOnly}" IsChecked="{Binding ShowUseOnly,Mode=TwoWay}" Click="CheckBox_Checked" Margin="0,12,0,0" />
             <TextBox Width="160" Text="{Binding SearchKeywords,Mode=TwoWay}" Grid.Row="2" Margin="0,12,0,0" />
             <Button Content="{DynamicResource SearchContent}" Margin="12,0,0,0" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" 
                     Command="{Binding SearchCommand}" />
@@ -77,6 +77,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Style="{StaticResource ButtonPrimary}" Content="{DynamicResource Start}" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" Command="{Binding StartCommand}" />
+                <Button Style="{StaticResource ButtonPrimary}" ToolTip="创建快捷方式" Content="{DynamicResource Shortcut}" IsEnabled="{Binding AdbEnable,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Command="{Binding ShortcutCommand}" />
+
             </Grid>
         </Grid>
     </Grid>

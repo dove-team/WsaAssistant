@@ -26,9 +26,10 @@ namespace WsaAssistant.Libs
                 var process = new Process();
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
-                process.StartInfo.Arguments = $" -windowstyle hidden {cmd}";
+                process.StartInfo.Arguments = $" {cmd}";
                 process.Start();
                 message = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
@@ -53,6 +54,7 @@ namespace WsaAssistant.Libs
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
                 process.StandardInput.WriteLine($"{cmd}&exit");
@@ -80,6 +82,7 @@ namespace WsaAssistant.Libs
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();

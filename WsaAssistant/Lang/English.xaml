@@ -8,6 +8,7 @@
     <sys:String x:Key="About">About</sys:String>
     <sys:String x:Key="Drives">Drives</sys:String>
     <sys:String x:Key="Start">Start</sys:String>
+    <sys:String x:Key="Shortcut">Shortcut</sys:String>
     <sys:String x:Key="OpenWsaSetting">Open Wsa Setting</sys:String>
     <sys:String x:Key="Regist">Regist</sys:String>
     <sys:String x:Key="Setting">Setting</sys:String>
@@ -64,6 +65,7 @@
     <sys:String x:Key="OpenGLDFailed">Compatibility Pack Download Failed,retry?</sys:String>
     <sys:String x:Key="OpenGLName">OpenCL™ and OpenGL® Compatibility Pack</sys:String>
     <sys:String x:Key="DevlopTips">Please check whether the developer mode is turned on!</sys:String>
+    <sys:String x:Key="ShortcutTips">Create shortcut success!</sys:String>
     <sys:String x:Key="NeedWsa">Doesnot install WSA，please install it before using this function！</sys:String>
     <sys:String x:Key="WsaRuningDesc">The running status of the Android sub-environment is installed.</sys:String>
     <sys:String x:Key="WsaSuccess">Congratulations, it looks like the current WSA environment is very good!</sys:String>
