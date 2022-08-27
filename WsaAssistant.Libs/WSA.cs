@@ -21,7 +21,7 @@ namespace WsaAssistant.Libs
             }
         }
         private const string WSA_PRODUCE_ID = "9p3395vx91nr";
-        public const string WSA_DEPENDENCE = "8wekyb3d8bbwe";
+        public const string WSA_DEPENDENCE = "8wekyb3d8bbwe.Appx";
         public List<string> FeatureList { get; }
         public event BooleanHandler DownloadComplete;
         public Node<string, Uri, bool?, DownloadPackage> PackageList { get; }

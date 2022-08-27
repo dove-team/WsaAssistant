@@ -98,7 +98,7 @@ namespace WsaAssistant.ViewModels
            });
             return Task.CompletedTask;
         }
-
+        
         private Task DowngradeAsync()
         {
             RunOnUIThread(() =>

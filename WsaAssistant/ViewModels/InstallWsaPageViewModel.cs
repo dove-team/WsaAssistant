@@ -109,20 +109,22 @@ namespace WsaAssistant.ViewModels
                 {
                     var directory = new DirectoryInfo(dialog.Folder);
                     List<string> files = new List<string>();
-                    files.AddRange(directory.GetFiles("*.appx", SearchOption.AllDirectories).Select(x => x.FullName) ?? Array.Empty<string>());
-                    files.AddRange(directory.GetFiles("*.msixbundle", SearchOption.AllDirectories).Select(x => x.FullName) ?? Array.Empty<string>());
+                    files.AddRange(directory.GetFiles("*.appx", new EnumerationOptions() { IgnoreInaccessible=true,MaxRecursionDepth=2,AttributesToSkip=FileAttributes.System }).Select(x => x.FullName) ?? Array.Empty<string>());
+                    files.AddRange(directory.GetFiles("*.msixbundle", new EnumerationOptions() { IgnoreInaccessible = true, MaxRecursionDepth = 2, AttributesToSkip = FileAttributes.System }).Select(x => x.FullName) ?? Array.Empty<string>());
                     LogManager.Instance.LogInfo("选择离线安装包：" + string.Join("#", files));
                     if (files.Count > 0)
                     {
                         try
                         {
                             StringBuilder shellBuilder = new StringBuilder();
-                            var diskName = Disks.ElementAt(DiskIndex);
+                            var diskName = Disks.ElementAt(DiskIndex).Replace(":\\",":");
+                            shellBuilder.AppendLine($"Add-AppxVolume -Path {diskName}");
+
                             foreach (var f in files)
                             {
                                 string location = string.Empty;
                                 if (!f.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
-                                    location = $" -ExternalLocation {diskName}";
+                                    location = $" -Volume {diskName}";
                                 shellBuilder.AppendLine($"Add-AppxPackage {f} -ForceApplicationShutdown {location}");
                             }
                             Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
@@ -196,13 +198,17 @@ namespace WsaAssistant.ViewModels
             try
             {
                 StringBuilder shellBuilder = new StringBuilder();
-                var diskName = Disks.ElementAt(DiskIndex);
+                 
+                var diskName = Disks.ElementAt(DiskIndex).Replace(":\\", ":");
+                //添加卷 
+                shellBuilder.AppendLine($"Add-AppxVolume -Path {diskName}");
+
                 foreach (Tuple<string, Uri, bool?, DownloadPackage> package in WSA.Instance.PackageList)
                 {
                     string filePath = package.Item1, location = string.Empty;
                     if (!filePath.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
-                        location = $" -ExternalLocation {diskName}";
-                    shellBuilder.AppendLine($"Add-AppxPackage {filePath} -ForceApplicationShutdown -ExternalLocation {diskName}");
+                        location = $" -Volume {diskName}";
+                    shellBuilder.AppendLine($"Add-AppxPackage {filePath} -ForceApplicationShutdown {location}");
                 }
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
