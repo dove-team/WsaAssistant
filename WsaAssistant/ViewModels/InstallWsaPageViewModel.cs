@@ -125,15 +125,16 @@ namespace WsaAssistant.ViewModels
                                 string location = string.Empty;
                                 if (!f.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
                                     location = $" -Volume {diskName}";
-                                shellBuilder.AppendLine($"Add-AppxPackage {f} -ForceApplicationShutdown {location}");
+                                shellBuilder.AppendLine($"Add-AppxPackage \"{f}\" -ForceApplicationShutdown {location}");
                             }
                             Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                             Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
-                            var file = "install.ps1";
+                            var file = "install.ps1"; 
+                            file = Path.Combine(this.ProcessPath(), file);
                             if (File.Exists(file))
                                 File.Delete(file);
                             File.WriteAllText(file, shellBuilder.ToString());
-                            Command.Instance.Shell(@".\" + file, out string message);
+                            Command.Instance.Shell(file, out string message);
                             LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                             LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                             MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -208,16 +209,17 @@ namespace WsaAssistant.ViewModels
                     string filePath = package.Item1, location = string.Empty;
                     if (!filePath.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
                         location = $" -Volume {diskName}";
-                    shellBuilder.AppendLine($"Add-AppxPackage {filePath} -ForceApplicationShutdown {location}");
+                    shellBuilder.AppendLine($"Add-AppxPackage \"{filePath}\" -ForceApplicationShutdown {location}");
                 }
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);
                 var file = "install.ps1";
+                file = Path.Combine(this.ProcessPath(), file);
                 if (File.Exists(file))
                     File.Delete(file);
                 File.WriteAllText(file, shellBuilder.ToString());
-                var shellFile = Path.Combine(this.ProcessPath(), file);
-                Command.Instance.Shell(@".\" + file, out string message);
+               
+                Command.Instance.Shell(file, out string message);
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                 File.Delete(file);
