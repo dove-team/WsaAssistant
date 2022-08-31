@@ -209,7 +209,7 @@ namespace WsaAssistant.ViewModels
                     string filePath = package.Item1, location = string.Empty;
                     if (!filePath.Contains(WSA.WSA_DEPENDENCE, StringComparison.CurrentCultureIgnoreCase))
                         location = $" -Volume {diskName}";
-                    shellBuilder.AppendLine($"Add-AppxPackage \"{filePath}\" -ForceApplicationShutdown {location}");
+                    shellBuilder.AppendLine($"Add-AppxPackage \"{Path.Combine(this.ProcessPath(), filePath)}\" -ForceApplicationShutdown {location}");
                 }
                 Command.Instance.Shell("Set-ExecutionPolicy RemoteSigned", out _);
                 Command.Instance.Shell("Set-ExecutionPolicy -ExecutionPolicy Unrestricted", out _);

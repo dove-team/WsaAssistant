@@ -30,7 +30,7 @@ namespace WsaAssistant.Libs
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
                 if(isfile)
-                { 
+                {
                     process.StartInfo.Arguments = $"-File \"{cmd}\"";
                 }
                 else
