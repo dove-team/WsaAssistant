@@ -2,7 +2,7 @@
 ; help -- https://blog.csdn.net/u012896330/article/details/54949024
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "WsaAssistant"
-!define PRODUCT_VERSION "1.5.1"
+!define PRODUCT_VERSION "1.5.2"
 !define PRODUCT_PUBLISHER "michael_eddy"
 !define PRODUCT_WEB_SITE "https://michael-eddy.github.io"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\WsaAssistant.exe"

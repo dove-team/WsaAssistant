@@ -18,7 +18,7 @@ namespace WsaAssistant.Libs
             }
         }
         private Command() { }
-        public bool Shell(string cmd, out string message)
+        public bool Shell(string cmd, out string message,bool isfile = false)
         {
             try
             {
@@ -29,7 +29,14 @@ namespace WsaAssistant.Libs
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.FileName = @"powershell.exe";
-                process.StartInfo.Arguments = $" {cmd}";
+                if(isfile)
+                { 
+                    process.StartInfo.Arguments = $"-File \"{cmd}\"";
+                }
+                else
+                { 
+                    process.StartInfo.Arguments = $" {cmd}";
+                }
                 process.Start();
                 message = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();

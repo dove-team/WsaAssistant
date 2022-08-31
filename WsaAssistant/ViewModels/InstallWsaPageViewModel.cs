@@ -134,7 +134,7 @@ namespace WsaAssistant.ViewModels
                             if (File.Exists(file))
                                 File.Delete(file);
                             File.WriteAllText(file, shellBuilder.ToString());
-                            Command.Instance.Shell(file, out string message);
+                            Command.Instance.Shell(file, out string message,true);
                             LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                             LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                             MessageBox.Show(FindChar("WsaSuccess"), FindChar("Tips"), MessageBoxButton.OK, MessageBoxImage.Information);
@@ -219,7 +219,7 @@ namespace WsaAssistant.ViewModels
                     File.Delete(file);
                 File.WriteAllText(file, shellBuilder.ToString());
                
-                Command.Instance.Shell(file, out string message);
+                Command.Instance.Shell(file, out string message,true);
                 LogManager.Instance.LogInfo("Install WSA Script Result:" + message);
                 LogManager.Instance.LogInfo("Install WSA Script Content:" + shellBuilder.ToString());
                 File.Delete(file);
